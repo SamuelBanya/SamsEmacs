@@ -46,7 +46,8 @@
 
 ;; Install sunrise-commander as its not part of MELPA:
 (unless (package-installed-p 'sunrise-commander)
-  (package-refresh-contents) (package-install 'sunrise-commander))
+  (package-refresh-contents) 
+  (package-install 'sunrise-commander))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
