@@ -4,8 +4,8 @@
 	     '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
-;; Adding Sunrise Commander since its not on MELPA:
-(add-to-list 'load-path (concat user-emacs-directory "sunrise-commander"))
+;; Adding Sunrise Commander to load path by git cloning it to related Emacs config directory since its not on MELPA:
+(add-to-list 'load-path "~/.emacs.d/sunrise-commander")
 
 ;; Install packages if they're not present on the current machine
 (unless (package-installed-p 'use-package)
