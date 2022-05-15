@@ -6,6 +6,7 @@
 
 ;; Adding Sunrise Commander to load path by git cloning it to related Emacs config directory since its not on MELPA:
 (add-to-list 'load-path "~/.emacs.d/sunrise-commander")
+(require 'sunrise)
 
 ;; Install packages if they're not present on the current machine
 (unless (package-installed-p 'use-package)
