@@ -325,8 +325,10 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
 #+begin_src emacs-lisp
 ;; NOTE:
 ;; A few notes in terms of disabling current theme to then create a new one
-;; Disable the current theme --> M-x disable-theme
-;; Set the custom theme load path with the 'custom-theme-load-path' variable in the Emacs config
+;; Workflow:
+;; 'M-x disable theme': Disable the current theme
+;; Use 'custom-theme-load-path' variable in the Emacs config to set theme path
+;; 'M-x describe-face': Describe the face currently under the cursor
   (use-package autothemer
     :ensure t)
 #+end_src
