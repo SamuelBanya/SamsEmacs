@@ -1018,14 +1018,14 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
     #+BEGIN_SRC emacs-lisp
       (defun config-edit ()
 	(interactive)
-	(find-file "~/hub/dotfiles/emacs/.emacs.d/configuration.org"))
+	(find-file "~/hub/SamsEmacs/configuration.org"))
       (global-set-key (kbd "C-c e") 'config-edit)
     #+END_SRC
 **** Reload Config Function
     #+BEGIN_SRC emacs-lisp
       (defun config-reload ()
 	(interactive)
-	(org-babel-load-file (expand-file-name "~/hub/dotfiles/emacs/.emacs.d/configuration.org")))
+	(org-babel-load-file (expand-file-name "~/hub/SamsEmacs/configuration.org")))
       (global-set-key (kbd "C-c r") 'config-reload)
     #+END_SRC
 ** Presenting Slides
