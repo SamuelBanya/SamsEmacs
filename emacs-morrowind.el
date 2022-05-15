@@ -3,7 +3,7 @@
 (autothemer-deftheme
  emacs-morrowind "Morrowind menu style color theme for Emacs, Nerevar approved"
  ((((class color) (min-colors #xFFFFFF))) ;; We're only concerned with graphical Emacs
-  pp
+
   ;; Defining our color palette:
   (morrowind-tan "#c9a557")
   (morrowind-silver "#b2b2b2")
