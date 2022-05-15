@@ -12,8 +12,10 @@
  
  ;; Customize faces:
  ((default (:foreground morrowind-silver :background morrowind-tan))
-  (cursor (:background morrowind-blue))
-  (hl-line (:foreground morrowind-green))))
+  (cursor (:background morrowind-blue))))
+
+;; Not sure if this works:
+;; (hl-line (:foreground morrowind-green))))
 
 (provide-theme 'emacs-morrowind)
 
