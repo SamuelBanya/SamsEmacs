@@ -4,6 +4,9 @@
 	     '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
+;; Adding 'custom-theme-path' variable declaration to get themes working again:
+(add-to-list 'custom-theme-load-path "~/.emacs.d")
+
 ;; Install packages if they're not present on the current machine
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
