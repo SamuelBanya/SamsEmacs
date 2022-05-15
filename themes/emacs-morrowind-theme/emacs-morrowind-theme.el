@@ -14,7 +14,7 @@
   (cursor (:background hallo-blue))
   (hl-line (:foreground #027731))))
 
-(provide-theme 'hallo)
+(provide-theme 'emacs-morrowind-theme)
 
 ;; Main colors to use:
 ;; Colors sampled from Morrowind menu screenshot:
