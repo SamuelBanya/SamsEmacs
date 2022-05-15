@@ -4,6 +4,17 @@
 	     '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
+;; Add value for 'custom-theme-load-path' variable:
+;; From EmacsWiki:
+;; https://www.emacswiki.org/emacs/CustomThemes
+;; Way to recursively go throughout directory to obtain related themes in "~/.emacs.d/themes":
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(let ((basedir "~/.emacs.d/themes/"))
+  (dolist (f (directory-files basedir))
+    (if (and (not (or (equal f ".") (equal f "..")))
+             (file-directory-p (concat basedir f)))
+        (add-to-list 'custom-theme-load-path (concat basedir f)))))
+
 ;; Install packages if they're not present on the current machine
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
