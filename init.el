@@ -4,17 +4,6 @@
 	     '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
-;; Add value for 'custom-theme-load-path' variable:
-;; From EmacsWiki:
-;; https://www.emacswiki.org/emacs/CustomThemes
-;; Way to recursively go throughout directory to obtain related themes in "~/.emacs.d/themes":
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(let ((basedir "~/.emacs.d/themes/"))
-  (dolist (f (directory-files basedir))
-    (if (and (not (or (equal f ".") (equal f "..")))
-             (file-directory-p (concat basedir f)))
-        (add-to-list 'custom-theme-load-path (concat basedir f)))))
-
 ;; Install packages if they're not present on the current machine
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -65,7 +54,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(spacemacs-dark))
  '(custom-safe-themes
-   '("7e6995de79f9e25a0dfae2cf36edc23e9d73921da1390c4d5f0dbd0dd95f0a36" "06e0662b31a2ae8da5c6b5e9a05b25fabd1dc8dd3c3661ac194201131cafb080" "047ec205dcb5edbb94b35800110150a6e41e6cc92c0ccfb2ed25ac3df94331a6" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "69ad4071c7b2d91543fddd9030816404ff22e46f7207549319ce484e23082dee" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476"))
+   '("842120fcfc8dab77a1661d7575b0f35913cf849f16c6ece30ad122b6d4d793d5" "7e6995de79f9e25a0dfae2cf36edc23e9d73921da1390c4d5f0dbd0dd95f0a36" "06e0662b31a2ae8da5c6b5e9a05b25fabd1dc8dd3c3661ac194201131cafb080" "047ec205dcb5edbb94b35800110150a6e41e6cc92c0ccfb2ed25ac3df94331a6" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "69ad4071c7b2d91543fddd9030816404ff22e46f7207549319ce484e23082dee" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476"))
  '(helm-minibuffer-history-key "M-p")
  '(inhibit-startup-screen t)
  '(package-selected-packages
