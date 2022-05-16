@@ -681,6 +681,55 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
   (use-package logview
     :ensure t)
 #+END_SRC
+*** Add 'ruby-mode' for Ruby projects
+#+begin_src emacs-lisp
+  (use-package ruby-mode
+    :ensure t)
+#+end_src
+*** Add 'js2-mode' for improved Javascript editing mode
+#+begin_src emacs-lisp
+  (use-package js2-mode
+    :ensure t
+    :custom
+    (js-indent-level 2)
+    (js2-basic-offset 2)
+    :init
+    (add-to-list 'auto-mode-alist '("\\.js\\'" .js2-mode)))
+#+end_src
+*** Add 'rjsx-mode' to handle '.jsx' files
+#+begin_src emacs-lisp
+  (use-package rjsx-mode
+    :ensure t)
+#+end_src
+*** Add 'typescript-mode' to handle '.tsx' files
+#+begin_src emacs-lisp
+  (use-package typescript-mode
+    :ensure t)
+#+end_src
+*** Add 'web-mode' to handle web template editing
+#+begin_src emacs-lisp
+  (use-package web-mode
+    :ensure t
+    :custom
+    (web-mode-code-indent-offset 2)
+    (web-mode-markup-indent-offset 2))
+#+end_src
+*** Add 'csharp-mode' to handle C# files
+#+begin_src emacs-lisp
+  (use-package csharp-mode
+    :ensure t)
+#+end_src
+*** Add 'vue-mode' to handle Vue projects
+#+begin_src emacs-lisp
+  (use-package vue-mode
+    :ensure t)
+#+end_src
+*** Add 'python-mode' to handle Python projects
+#+begin_src emacs-lisp
+  (use-package python-mode
+    :ensure t
+    :hook (python-mode-hook . jedi:setup))
+#+end_src
 *** Add 'lsp-mode' for better autocompletion for many programming languages (python, ruby, java, C++)
 #+begin_src emacs-lisp
   (defun ef/lsp-mode-setup ()
@@ -703,24 +752,23 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
     (setq lsp-idle-delay 0.5))
 #+end_src
 
-*** Add 'typescript-mode' for Typescript support for 'lsp-mode'
+*** Add 'lsp-ui' for higher-level UI modules for 'lsp-mode'
 #+begin_src emacs-lisp
-  (use-package typescript-mode
+  (use-package lsp-ui
     :ensure t
-    :mode ("\\.ts\\'" "\\.tsx\\'")
-    :hook (typescript-mode . lsp-deferred)
-    :config
-    (setq typescript-indent-level 2))
+    :after lsp-mode
+    :commands lsp-ui-mode
+    :hook (lsp-mode . lsp-ui-mode)
+    :custom
+    (lsp-ui-doc-enable t)
+    (lsp-ui-sideline-enable t)
+    (lsp-ui-flycheck-enable t)
+    (lsp-ui-flycheck-live-reporting t)
+    (lsp-ui-sideline-toggle-symbols-info t)
+    (lsp-ui-sideline-show-hover t)
+    (lsp-ui-peek-enable t))
 #+end_src
-*** Add 'web-mode' for support for .html, .ejs, .tsx, and .jsx files
-#+begin_src emacs-lisp
-(use-package web-mode
-  :mode "(\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'"
-  :config
-  (setq-default web-mode-code-indent-offset 2)
-  (setq-default web-mode-markup-indent-offset 2)
-  (setq-default web-mode-attribute-indent-offset 2))
-#+end_src
+
 *** Add 'yaml-mode' for support for '.yaml' files
 #+begin_src emacs-lisp
 (use-package yaml-mode
@@ -784,7 +832,13 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
   (add-hook 'python-mode-hook 'yas-minor-mode)
   (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
   (add-hook 'org-mode-hook 'yas-minor-mode)
-  (add-hook 'nxml-mode-hook 'yas-minor-mode)
+  (add-hook 'ruby-mode-hook 'yas-minor-mode)
+  (add-hook 'js2-mode-hook 'yas-minor-mode)
+  (add-hook 'rjsx-mode-hook 'yas-minor-mode)
+  (add-hook 'typescript-mode-hook 'yas-minor-mode)
+  (add-hook 'web-mode-hook 'yas-minor-mode)
+  (add-hook 'csharp-mode-hook 'yas-minor-mode)
+  (add-hook 'vue-mode-hook 'yas-minor-mode)
 #+END_SRC
 *** Nuke Emacs 27.2's annoying issue of automatically expanding source blocks which ruins my Yasnippet override template
 #+BEGIN_SRC emacs-lisp
