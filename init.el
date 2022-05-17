@@ -44,7 +44,7 @@
 ;; Commenting out for now:
 ;; Install sunrise-commander as its not part of MELPA:
 ;; (unless (package-installed-p 'sunrise-commander)
-  ;; (package-refresh-contents) 
+  ;; (package-refresh-contents)
   ;; (package-install 'sunrise-commander))
 
 (custom-set-variables
@@ -58,7 +58,7 @@
  '(helm-minibuffer-history-key "M-p")
  '(inhibit-startup-screen t)
  '(package-selected-packages
-   '(lsp-ui python-mode vue-mode csharp-mode web-mode rjsx-mode js2-mode org-menu ytdl webpaste hide-mode-line helm-swoop yasnippet-snippets yasnippet flycheck company lsp-mode magit eyebrowse multiple-cursors expand-region mark-multiple swiper popup-kill-ring switch-window jazz-theme solarized-theme gruvbox-theme scanner ranger ewal-spacemacs-themes ewal typescript-mode gif-screencast free-keys docker dockerfile-mode docker-compose-mode evil-collection evil elfeed-org color-theme-modern discover-my-major goto-line-preview linum-relative visual-regexp rainbow-delimiters-mode log4j-mode log4j vterm org-download window-purpose aggressive-indent aggresive-indent spray sx counsel csv-mode org-mru-clock elfeed erc-image erc-hl-nicks logview rotate org-tree-slide symon dmenu diminish spaceline emacs-dashboard dashboard rainbow-delimiters sudo-edit hungry-delete rainbow-mode avy use-package spacemacs-theme helm hydra emmet-mode htmlize)))
+   '(deft lsp-treemacs gcmh no-littering auto-package-update calfw-org projectile treemacs-magit treemacs company-jedi undo-tree highlight-indent-guides calfw lsp-ui python-mode vue-mode csharp-mode web-mode rjsx-mode js2-mode org-menu ytdl webpaste hide-mode-line helm-swoop yasnippet-snippets yasnippet flycheck company lsp-mode magit eyebrowse multiple-cursors expand-region mark-multiple swiper popup-kill-ring switch-window jazz-theme solarized-theme gruvbox-theme scanner ranger ewal-spacemacs-themes ewal typescript-mode gif-screencast free-keys docker dockerfile-mode docker-compose-mode evil-collection evil elfeed-org color-theme-modern discover-my-major goto-line-preview linum-relative visual-regexp rainbow-delimiters-mode log4j-mode log4j vterm org-download window-purpose aggressive-indent aggresive-indent spray sx counsel csv-mode org-mru-clock elfeed erc-image erc-hl-nicks logview rotate org-tree-slide symon dmenu diminish spaceline emacs-dashboard dashboard rainbow-delimiters sudo-edit hungry-delete rainbow-mode avy use-package spacemacs-theme helm hydra emmet-mode htmlize)))
 
 
 (custom-set-faces

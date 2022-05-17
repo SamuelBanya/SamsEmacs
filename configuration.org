@@ -72,11 +72,11 @@ Sam's Emacs Config
   ;; Goal: '** Week of (current_date, ex: '11-02-2021')'
   ;; 3. Prompt the user for the youtube link via the same exact '' function I use later in the Emacs config
   ;; Goal: User gets prompted for the link, the link is returned with with the name of the video and the link
-  ;; in parentheses 
+  ;; in parentheses
   ;; NOTE: The following is commmented out while I think about how to do this:
   ;; (("y" "YouTube Video Capture Template" entry
   ;; (file+headline "~/hub/notes_private/life.org" "Things To Do (LATER)")
-  ;;"** %^{Status} [#%^{Priority}] %^{Task Title} :%YouTube_Video: \n*** Notes:\n%U: %^{Description}"))	
+  ;;"** %^{Status} [#%^{Priority}] %^{Task Title} :%YouTube_Video: \n*** Notes:\n%U: %^{Description}"))
 
 #+end_src
 n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", "fedoraserver")
@@ -89,7 +89,7 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
 
     (defun ssh-into-musimatic-git ()
       (interactive)
-      (find-file "/ssh:git@musimatic.xyz:/var/www/musimatic"))  
+      (find-file "/ssh:git@musimatic.xyz:/var/www/musimatic"))
 
     (defun ssh-into-musimatic-root ()
       (interactive)
@@ -121,7 +121,7 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
     _q_: quit
     "
       ("a" ssh-into-musimatic-sam)
-      ("b" ssh-into-musimatic-git)    
+      ("b" ssh-into-musimatic-git)
       ("c" ssh-into-musimatic-root)
       ("d" ssh-into-sambanya-sam)
       ("e" ssh-into-sambanya-root)
@@ -351,19 +351,19 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
   ;; Create separate functions to change to each theme
   (defun change-to-spacemacs-theme ()
     (interactive)
-    (load-theme 'spacemacs-dark t) 
+    (load-theme 'spacemacs-dark t)
     (enable-theme 'spacemacs-dark)
     (org-mode-restart))
 
   (defun change-to-wordperfect-theme ()
     (interactive)
-    (load-theme 'word-perfect t) 
+    (load-theme 'word-perfect t)
     (enable-theme 'word-perfect)
     (org-mode-restart))
 
   (defun change-to-gruvbox-dark-medium-theme ()
     (interactive)
-    (load-theme 'gruvbox-dark-medium t) 
+    (load-theme 'gruvbox-dark-medium t)
     (enable-theme 'gruvbox-dark-medium)
     (org-mode-restart))
 
@@ -394,16 +394,18 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
        (setq dashboard-banner-logo-title "Hello! Welcome to Emacs, have a fun time!"))
    #+END_SRC
 *** Rainbow-Mode
-   #+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp
      (use-package rainbow-mode
        :ensure t
-       :init (add-hook 'prog-mode-hook 'rainbow-mode))
-   #+END_SRC
+       :hook prog-mode
+       :config
+       (rainbow-mode))
+#+END_SRC
 *** Beacon
    #+BEGIN_SRC emacs-lisp
    (use-package beacon
    :ensure t
-   :init 
+   :init
    (beacon-mode 1))
    #+END_SRC
 *** Disable Default Tool Bar, Menu Bar, And Scroll Bar
@@ -435,10 +437,11 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
    #+END_SRC
 *** Which-Key
    #+BEGIN_SRC emacs-lisp
-   (use-package which-key
-   :ensure t
-   :init
-   (which-key-mode 1))
+     (use-package which-key
+       :defer 5
+       :ensure t
+       :config
+       (which-key-mode))
    #+END_SRC
 *** Avy: Use 'M-s' for 'avy-goto-word-0', and use 'M-l' for 'avy-goto-line'
    #+BEGIN_SRC emacs-lisp
@@ -633,6 +636,28 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
 
     (global-set-key (kbd "C-$") 'hydra-desktop/body)
 #+end_src
+*** Add 'calfw' for displaying a calendar in Emacs
+#+begin_src emacs-lisp
+  (use-package calfw
+    :ensure t)
+#+end_src
+*** Add 'highlight-indent-guides' to visually observe indents in a buffer
+#+begin_src emacs-lisp
+  (use-package highlight-indent-guides
+    :ensure t
+    :custom
+    (highlight-indent-guides-method 'character)
+    (highlight-indent-guides-character ?\|))
+#+end_src
+*** Add 'undo-tree' to examine what changes were made in a given buffer
+#+begin_src emacs-lisp
+  (use-package undo-tree
+    :ensure t
+    :init
+    (global-undo-tree-mode)
+    :config
+    (setq undo-tree-auto-save-history nil))
+#+end_src
 ** Terminal
 *** Add 'vterm' to enable only decent Emacs terminal
 #+begin_src emacs-lisp
@@ -656,8 +681,7 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
     :ensure t
-    :config
-    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+    :hook (prog-mode . rainbow-delimiters-mode))
 #+END_SRC
 *** Add 'log4j-mode' for viewing logs
 #+BEGIN_SRC emacs-lisp
@@ -694,7 +718,7 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
     (js-indent-level 2)
     (js2-basic-offset 2)
     :init
-    (add-to-list 'auto-mode-alist '("\\.js\\'" .js2-mode)))
+    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 #+end_src
 *** Add 'rjsx-mode' to handle '.jsx' files
 #+begin_src emacs-lisp
@@ -777,23 +801,41 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
 *** Add 'company' Mode for auto-completion in conjunction with 'lsp-mode'
 #+begin_src emacs-lisp
   (use-package company
+    :defer 0.5
     :ensure t
-    :after lsp-mode
-    :hook (lsp-mode . company-mode)
-    :bind (:map company-active-map
-		("<tab>" . company-complete-selection))
-    (:map lsp-mode-map
-	  ("<tab>" . company-indent-or-complete-common))
+    :delight
+    :init (global-company-mode)
     :custom
-    (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0))
+    (company-begin-commands '(self-insert-command))
+    (company-minimum-prefix-length 2)
+    (company-idle-delay 0.1)
+    (company-show-numbers t)
+    (company-tooltip-align-annotations t)
+    :config
+    (add-to-list 'company-backends
+                 '(company-yasnippet
+                   company-files
+                   company-keywords
+                   company-capf
+                   company-dabbrev
+                   company-dabbrev-code)))
+#+end_src
+*** Add 'company-jedi' Mode for Python jedi
+#+begin_src emacs-lisp
+  (use-package company-jedi
+    :ensure t
+    :after company
+    :init
+    (add-to-list 'company-backends 'company-jedi)
+    :config
+    (setq jedi:setup-keys t)
+    (setq jedi:complete-on-dot t))
 #+end_src
 *** Add 'flycheck' for programming syntax checking on-the-fly
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
     :ensure t
-    :init
-    (global-flycheck-mode t))
+    :hook (prog-mode . flycheck-mode))
 #+END_SRC
 *** Use 'Diminish' to hide amazing minor modes which are not necessary to be reminded of all the time
 #+BEGIN_SRC emacs-lisp
@@ -840,24 +882,48 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
   (add-hook 'csharp-mode-hook 'yas-minor-mode)
   (add-hook 'vue-mode-hook 'yas-minor-mode)
 #+END_SRC
+*** Resolve conflicts between 'company' and 'yasnippet'
+#+begin_src emacs-lisp
+  (defun company-yasnippet-or-completion ()
+    "Solve company yasnippet conflicts."
+    (interactive)
+    (let ((yas-fallback-behavior
+           (apply 'company-complete-common nil)))
+      (yas-expand)))
+
+  (add-hook 'company-mode-hook
+            (lambda ()
+              (substitute-key-definition
+               'company-complete-common
+               'company-yasnippet-or-completion
+               company-active-map)))
+#+end_src
 *** Nuke Emacs 27.2's annoying issue of automatically expanding source blocks which ruins my Yasnippet override template
 #+BEGIN_SRC emacs-lisp
   (setq org-src-tab-acts-natively nil)
 #+END_SRC
-*** Enable Electric to auto-complete / add parentheses whenever possible
-   #+BEGIN_SRC emacs-lisp
+*** Enable 'electric-pair-mode' to auto-complete / add parentheses whenever possible
+#+BEGIN_SRC emacs-lisp
      (setq electric-pair-pairs '(
 				 (?\( . ?\))
 				 (?\[ . ?\])
-				 (?\{ . ?\})			    
+				 (?\{ . ?\})
 				 ))
 
-     (electric-pair-mode 1)
+     (electric-pair-mode t)
 
      ;; Disable pairing of '<' with '>' to avoid weird expansion issues in Org-Mode for Yasnippets:
      (add-function :before-until electric-pair-inhibit-predicate
 		   (lambda (c) (eq c ?<)))
-   #+END_SRC
+#+END_SRC
+*** Add 'electric-indent-mode' to auto-indent
+#+begin_src emacs-lisp
+(electric-indent-mode t)
+#+end_src
+*** Enable 'show-paren-mode' to highlight matching parentheses
+#+begin_src emacs-lisp
+(show-paren-mode 1)
+#+end_src
 *** Indent with spaces, not tabs, by nuking 'indent-tabs-mode'
 #+begin_src emacs-lisp
   (progn
@@ -989,6 +1055,45 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
 #+begin_src emacs-lisp
 (remove-hook 'dired-mode-hook 'ranger-set-dired-key)
 #+end_src
+*** Enable 'treemacs' for a tree layout file explorer
+#+begin_src emacs-lisp
+  (use-package treemacs
+    :ensure t
+    :custom
+    (treemacs-no-png-images nil)
+    (treemacs-width 35))
+#+end_src
+*** Enable 'treemacs-magit' to inform treemacs about staging of files and commits happening in 'magit'
+#+begin_src emacs-lisp
+  (use-package treemacs-magit
+    :ensure t)
+#+end_src
+*** Enable 'lsp-treemacs' for a more IDE-looking setup via 'lsp-treemacs-symbols' and 'lsp-treemacs-errors-list'
+#+begin_src emacs-lisp
+  (use-package lsp-treemacs
+    :ensure t)
+#+end_src
+*** Enable 'projectile' interaction library
+#+begin_src emacs-lisp
+  (use-package projectile
+    :ensure t
+    :custom
+    (projectile-enable-caching t)
+    :config
+    (define-key
+      projectile-mode-map
+      (kbd "C-c p")
+      'projectile-command-map)
+    (projectile-mode))
+#+end_src
+*** Enable 'deft' to quickly browse and create text notes
+#+begin_src emacs-lisp
+;; Inspired by these two links:
+;; https://jingsi.space/post/2017/03/19/emacs-deft-basics/#what-is-deft
+;; https://pragmaticemacs.wordpress.com/2015/05/24/make-quick-notes-with-deft/
+  (use-package deft
+    :ensure t)
+#+end_src
 ** eww
 *** Make 'eww' the default browser for Emacs
 #+BEGIN_SRC emacs-lisp
@@ -1013,11 +1118,11 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
 *** Nuke 'org-adapt-indentation' variable setting value introduced in Emacs 27.2 so lines aren't auto-indented after headlines
 #+BEGIN_SRC emacs-lisp
 (setq org-adapt-indentation nil)
-#+END_SRC   
+#+END_SRC
 *** Nuke 'org-startup-folded' variable setting value introduced in Emacs 27.2 so org docs aren't automatically expanded
 #+BEGIN_SRC emacs-lisp
 (setq org-startup-folded t)
-#+END_SRC   
+#+END_SRC
 *** Add time-tracking for Org-Mode todo item state changes to place into ':LOGBOOK:' drawer
    #+BEGIN_SRC emacs-lisp
      (setq org-log-into-drawer "LOGBOOK")
@@ -1055,18 +1160,50 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
   (add-hook #'org-trigger-hook
 	    #'my/org-trigger-hook)
 #+end_src
+*** Add 'calfw-org' to display org schedules
+#+begin_src emacs-lisp
+  (use-package calfw-org
+    :ensure t
+    :defer 2
+    :config
+    (setq cfw:org-agenda-schedule-args '(:timestamp :scheduled :deadline)))
+#+end_src
 ** ediff
 *** Force 'ediff' to open up vertically in new windows NOT frames
 #+BEGIN_SRC emacs-lisp
 (advice-add 'ediff-window-display-p :override #'ignore) ; Open up ediff results in new windows not frames
 (setq ediff-split-window-function 'split-window-vertically) ; Split the ediff results vertically
 #+END_SRC
+** Performance Packages
+*** Add garbage collection to make Emacs snappier
+#+begin_src emacs-lisp
+(add-hook 'focus-out-hook #'garbage-collect)
+#+end_src
+*** Auto-update packages with 'auto-package-update'
+#+begin_src emacs-lisp
+  (use-package auto-package-update
+    :ensure t
+    :commands update-packages
+    :custom
+    (auto-package-update-delete-old-versions t)
+    :config
+    (auto-package-update-maybe))
+#+end_src
+*** Use 'no-littering' package to keep '~/.emacs.d' clean
+#+begin_src emacs-lisp
+  (use-package no-littering
+    :ensure t
+    :demand t)
+#+end_src
+*** Use 'gmch' ('Garbage Collector Magic Hack') to minimize GC interference with user activity
+#+begin_src emacs-lisp
+  (use-package gcmh
+    :ensure t
+    :demand t
+    :config
+    (gcmh-mode 1))
+#+end_src
 ** Quality Of Life Custom Changes To Improve Default Emacs Behavior
-*** Nuke Emacs' ability to make backups and autosaves since its annoying and too bloated
-   #+BEGIN_SRC emacs-lisp
-     (setq make-backup-files nil)
-     (setq auto-save-default nil)
-   #+END_SRC
 *** Config Edit / Reload Function
 **** Edit Config Function
     #+BEGIN_SRC emacs-lisp
@@ -1082,6 +1219,22 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
 	(org-babel-load-file (expand-file-name "~/hub/SamsEmacs/configuration.org")))
       (global-set-key (kbd "C-c r") 'config-reload)
     #+END_SRC
+*** Nuke Emacs' ability to make backups and autosaves since its annoying and too bloated
+   #+BEGIN_SRC emacs-lisp
+     (setq make-backup-files nil)
+     (setq auto-save-default nil)
+   #+END_SRC
+*** Remove trailing whitespace on save
+#+begin_src emacs-lisp
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+end_src
+*** Default to UTF-8 encoding
+#+begin_src emacs-lisp
+(set-default-coding-systems 'utf-8)
+(set-language-environment "UTF-8")
+(prefer-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+#+end_src
 ** Presenting Slides
 *** Add 'org-tree-slide' for easy-to-make Org mode based presentations
 #+BEGIN_SRC emacs-lisp
@@ -1154,4 +1307,3 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
   (use-package ytdl
     :ensure t)
 #+end_src
-
