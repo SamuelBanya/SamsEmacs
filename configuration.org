@@ -1086,14 +1086,6 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
       'projectile-command-map)
     (projectile-mode))
 #+end_src
-*** Enable 'deft' to quickly browse and create text notes
-#+begin_src emacs-lisp
-;; Inspired by these two links:
-;; https://jingsi.space/post/2017/03/19/emacs-deft-basics/#what-is-deft
-;; https://pragmaticemacs.wordpress.com/2015/05/24/make-quick-notes-with-deft/
-  (use-package deft
-    :ensure t)
-#+end_src
 ** eww
 *** Make 'eww' the default browser for Emacs
 #+BEGIN_SRC emacs-lisp
