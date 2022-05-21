@@ -230,7 +230,9 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
     :ensure t
     :init
     (setq evil-want-integration t)
-    (setq evil-want-keybinding nil))
+    (setq evil-want-keybinding nil)
+    ;; Allow Vim style page-up and page-down functionality with 'C-u' and 'C-d':
+    (setq evil-want-C-u-scroll t))
 
   (use-package evil-collection
     :after evil
@@ -239,9 +241,6 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
     (evil-collection-init))
 
   (global-set-key (kbd "C-M-z") 'evil-mode)
-
-  ;; Allow Vim style page-up and page-down functionality with 'C-u' and 'C-d':
-  (setq evil-want-C-u-scroll t)
 #+END_SRC
 ** Super+Return to launch 'vterm'
 #+BEGIN_SRC emacs-lisp
