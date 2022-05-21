@@ -239,6 +239,9 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
     (evil-collection-init))
 
   (global-set-key (kbd "C-M-z") 'evil-mode)
+
+  ;; Allow Vim style page-up and page-down functionality with 'C-u' and 'C-d':
+  (setq evil-want-C-u-scroll t)
 #+END_SRC
 ** Super+Return to launch 'vterm'
 #+BEGIN_SRC emacs-lisp
@@ -1043,6 +1046,11 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
       (kbd "C-c p")
       'projectile-command-map)
     (projectile-mode))
+#+end_src
+*** Enable 'dirvish' to add a nicer variant of 'dired' to use as a file manager
+#+begin_src emacs-lisp
+  (use-package dirvish
+    :ensure t)
 #+end_src
 ** eww
 *** Make 'eww' the default browser for Emacs
