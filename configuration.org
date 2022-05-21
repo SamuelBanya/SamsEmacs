@@ -683,11 +683,6 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
     :ensure t
     :hook (prog-mode . rainbow-delimiters-mode))
 #+END_SRC
-*** Add 'log4j-mode' for viewing logs
-#+BEGIN_SRC emacs-lisp
-  (use-package log4j-mode
-    :ensure t)
-#+END_SRC
 *** Add 'counsel' to specifically use the 'counsel-grep-or-swiper' for searching through large log files
 #+BEGIN_SRC emacs-lisp
   (use-package counsel
@@ -770,10 +765,22 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
     ;; https://www.mattduck.com/lsp-python-getting-started.html
     :init
     (setq lsp-keymap-prefix "C-c l")
+    (add-hook 'c-mode-hook 'lsp)
+    (add-hook 'c++-mode-hook 'lsp)
+    (add-hook 'python-mode-hook 'lsp)
+    (add-hook 'ruby-mode-hook 'lsp)
+    (add-hook 'js2-mode-hook 'lsp)
+    (add-hook 'typescript-mode-hook 'lsp)
+    (add-hook 'web-mode-hook 'lsp)
+    (add-hook 'csharp-mode-hook 'lsp)
+    (add-hook 'vue-mode-hook 'lsp)
+    (add-hook 'yaml-mode-hook 'lsp)
     :config
     (lsp-enable-which-key-integration t)
     ;; Set 'lsp-idle-delay' to 0.5 seconds for quick autocompletion
-    (setq lsp-idle-delay 0.5))
+    (setq lsp-idle-delay 0.5)
+    ;; Adding this to force lsp to auto-guess the root directory of the project:
+    (setq lsp-auto-guess-root t))
 #+end_src
 
 *** Add 'lsp-ui' for higher-level UI modules for 'lsp-mode'
@@ -797,39 +804,6 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
 #+begin_src emacs-lisp
 (use-package yaml-mode
   :mode "\\.ya?ml\\'")
-#+end_src
-*** Add 'company' Mode for auto-completion in conjunction with 'lsp-mode'
-#+begin_src emacs-lisp
-  (use-package company
-    :defer 0.5
-    :ensure t
-    :delight
-    :init (global-company-mode)
-    :custom
-    (company-begin-commands '(self-insert-command))
-    (company-minimum-prefix-length 2)
-    (company-idle-delay 0.1)
-    (company-show-numbers t)
-    (company-tooltip-align-annotations t)
-    :config
-    (add-to-list 'company-backends
-                 '(company-yasnippet
-                   company-files
-                   company-keywords
-                   company-capf
-                   company-dabbrev
-                   company-dabbrev-code)))
-#+end_src
-*** Add 'company-jedi' Mode for Python jedi
-#+begin_src emacs-lisp
-  (use-package company-jedi
-    :ensure t
-    :after company
-    :init
-    (add-to-list 'company-backends 'company-jedi)
-    :config
-    (setq jedi:setup-keys t)
-    (setq jedi:complete-on-dot t))
 #+end_src
 *** Add 'flycheck' for programming syntax checking on-the-fly
 #+BEGIN_SRC emacs-lisp
@@ -882,22 +856,6 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
   (add-hook 'csharp-mode-hook 'yas-minor-mode)
   (add-hook 'vue-mode-hook 'yas-minor-mode)
 #+END_SRC
-*** Resolve conflicts between 'company' and 'yasnippet'
-#+begin_src emacs-lisp
-  (defun company-yasnippet-or-completion ()
-    "Solve company yasnippet conflicts."
-    (interactive)
-    (let ((yas-fallback-behavior
-           (apply 'company-complete-common nil)))
-      (yas-expand)))
-
-  (add-hook 'company-mode-hook
-            (lambda ()
-              (substitute-key-definition
-               'company-complete-common
-               'company-yasnippet-or-completion
-               company-active-map)))
-#+end_src
 *** Nuke Emacs 27.2's annoying issue of automatically expanding source blocks which ruins my Yasnippet override template
 #+BEGIN_SRC emacs-lisp
   (setq org-src-tab-acts-natively nil)
