@@ -79,7 +79,7 @@ Sam's Emacs Config
   ;;"** %^{Status} [#%^{Priority}] %^{Task Title} :%YouTube_Video: \n*** Notes:\n%U: %^{Description}"))
 
 #+end_src
-n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", "fedoraserver")
+** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", "fedoraserver")
 #+begin_src emacs-lisp
   (when (member (system-name) '("notestation" "fossastation"))
     ;; Create separate connection based functions to later call within the 'hydra-connect' hydra:
@@ -890,7 +890,7 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
     (setq-default indent-tabs-mode nil)
     )
 #+end_src
-*** Add 'aggressive-intent' to every thing
+*** Add 'aggressive-indent' to every thing
 #+begin_src emacs-lisp
   (use-package aggressive-indent
     :ensure t
@@ -904,6 +904,8 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
     (aggressive-indent-comments-too t)
     :config
     (add-to-list 'aggressive-indent-protected-commands 'comment-dwim))
+
+  (global-aggressive-indent-mode 1)
 #+end_src
 *** Add 'css-mode' for working with '.css' stylesheets
 #+begin_src emacs-lisp
@@ -1131,34 +1133,16 @@ n** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", 
 (advice-add 'ediff-window-display-p :override #'ignore) ; Open up ediff results in new windows not frames
 (setq ediff-split-window-function 'split-window-vertically) ; Split the ediff results vertically
 #+END_SRC
-** Performance Packages
+** Performance Tweaks
 *** Add garbage collection to make Emacs snappier
 #+begin_src emacs-lisp
 (add-hook 'focus-out-hook #'garbage-collect)
-#+end_src
-*** Auto-update packages with 'auto-package-update'
-#+begin_src emacs-lisp
-  (use-package auto-package-update
-    :ensure t
-    :commands update-packages
-    :custom
-    (auto-package-update-delete-old-versions t)
-    :config
-    (auto-package-update-maybe))
 #+end_src
 *** Use 'no-littering' package to keep '~/.emacs.d' clean
 #+begin_src emacs-lisp
   (use-package no-littering
     :ensure t
     :demand t)
-#+end_src
-*** Use 'gmch' ('Garbage Collector Magic Hack') to minimize GC interference with user activity
-#+begin_src emacs-lisp
-  (use-package gcmh
-    :ensure t
-    :demand t
-    :config
-    (gcmh-mode 1))
 #+end_src
 ** Quality Of Life Custom Changes To Improve Default Emacs Behavior
 *** Config Edit / Reload Function
