@@ -165,6 +165,11 @@ Sam's Emacs Config
   (when (string= system-name "Samuels-MBP.tampabay.rr.com")
     (global-set-key (kbd "<A-return>") 'vterm))
 #+END_SRC
+** Apply 'text-scale-increase' so that the default zoom behavior is '+1' on the Macbook
+#+begin_src emacs-lisp
+  (when (string= system-name "Samuels-MBP.tampabay.rr.com")
+    (if (not (active-minibuffer-window)) (text-scale-increase)))
+#+end_src
 * Keybinding Changes
 ** Add related hydra to remind me of all the super custom specific keybindings I have ever made
 #+begin_src emacs-lisp
@@ -904,8 +909,6 @@ Sam's Emacs Config
     (aggressive-indent-comments-too t)
     :config
     (add-to-list 'aggressive-indent-protected-commands 'comment-dwim))
-
-  (global-aggressive-indent-mode 1)
 #+end_src
 *** Add 'css-mode' for working with '.css' stylesheets
 #+begin_src emacs-lisp
