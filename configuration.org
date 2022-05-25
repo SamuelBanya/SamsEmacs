@@ -167,8 +167,11 @@ Sam's Emacs Config
 #+END_SRC
 ** Apply 'text-scale-increase' so that the default zoom behavior is '+1' on the Macbook
 #+begin_src emacs-lisp
-  (when (string= system-name "Samuels-MBP.tampabay.rr.com")
-    (if (not (active-minibuffer-window)) (text-scale-increase)))
+;; Inspired from this StackOverflow post:
+;; https://stackoverflow.com/questions/7899949/is-there-an-emacs-hook-that-runs-after-every-buffer-is-created
+;; Commented out for now as the person's solution is unfortunately pseudocode:
+  ;; (when (string= system-name "Samuels-MBP.tampabay.rr.com")
+    ;; (if (not (active-minibuffer-window)) (text-scale-increase)))
 #+end_src
 * Keybinding Changes
 ** Add related hydra to remind me of all the super custom specific keybindings I have ever made
