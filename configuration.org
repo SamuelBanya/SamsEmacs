@@ -791,6 +791,9 @@ Sam's Emacs Config
     (setq lsp-idle-delay 0.5)
     ;; Adding this to force lsp to auto-guess the root directory of the project:
     (setq lsp-auto-guess-root t))
+
+  ;; Force 'display-line-numbers-mode' to be enabled when LSP mode is enabled:
+  (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
 #+end_src
 
 *** Add 'lsp-ui' for higher-level UI modules for 'lsp-mode'
