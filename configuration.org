@@ -165,13 +165,15 @@ Sam's Emacs Config
   (when (string= system-name "Samuels-MBP.tampabay.rr.com")
     (global-set-key (kbd "<A-return>") 'vterm))
 #+END_SRC
-** Apply 'text-scale-increase' so that the default zoom behavior is '+1' on the Macbook
+** Utilize custom function for 'text-scale-mode-amount'  so that the default zoom is '+1' on the Macbook
 #+begin_src emacs-lisp
-;; Inspired from this StackOverflow post:
-;; https://stackoverflow.com/questions/7899949/is-there-an-emacs-hook-that-runs-after-every-buffer-is-created
-;; Commented out for now as the person's solution is unfortunately pseudocode:
-  ;; (when (string= system-name "Samuels-MBP.tampabay.rr.com")
-    ;; (if (not (active-minibuffer-window)) (text-scale-increase)))
+  (when (string= system-name "Samuels-MBP.tampabay.rr.com")
+    (setf text-scale-mode-amount 1)
+    (define-global-minor-mode
+      global-text-scale-mode
+      text-scale-mode
+      (lambda () (text-scale-mode 1)))
+    (global-text-scale-mode))
 #+end_src
 * Keybinding Changes
 ** Add related hydra to remind me of all the super custom specific keybindings I have ever made
