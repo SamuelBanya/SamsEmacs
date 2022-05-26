@@ -165,17 +165,6 @@ Sam's Emacs Config
   (when (string= system-name "Samuels-MBP.tampabay.rr.com")
     (global-set-key (kbd "<A-return>") 'vterm))
 #+END_SRC
-** Utilize 'GlobalTextScaleMode' function from EmacsWiki to nuke weird zoom behavior on MacOS with 'M-0', 'M-+', and 'M--' keybindings
-#+begin_src emacs-lisp
-  (when (string= system-name "Samuels-MBP.tampabay.rr.com")
-    ;; Taken from this link:
-    ;; https://www.emacswiki.org/emacs/GlobalTextScaleMode
-    (use-package default-text-scale
-      :ensure t)
-
-    ;; Set the default scale to +1 by default:
-    (default-text-scale-increase))
-#+end_src
 * Keybinding Changes
 ** Add related hydra to remind me of all the super custom specific keybindings I have ever made
 #+begin_src emacs-lisp
