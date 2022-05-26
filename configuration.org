@@ -785,8 +785,6 @@ Sam's Emacs Config
     (add-hook 'csharp-mode-hook 'lsp)
     (add-hook 'vue-mode-hook 'lsp)
     (add-hook 'yaml-mode-hook 'lsp)
-    :hook
-    (display-line-numbers-mode)
     :config
     (lsp-enable-which-key-integration t)
     ;; Set 'lsp-idle-delay' to 0.5 seconds for quick autocompletion
