@@ -751,7 +751,20 @@ Sam's Emacs Config
     :ensure t
     :hook (python-mode-hook . jedi:setup))
 #+end_src
-*** Add 'lsp-mode' for better autocompletion for many programming languages (python, ruby, java, C++)
+*** Add 'company' for auto-completion
+#+begin_src emacs-lisp
+(use-package company
+    :config
+    (setq company-idle-delay 0.5)
+    (setq company-minimum-prefix-length 3)
+    (define-key company-active-map (kbd "M-n") nil)
+    (define-key company-active-map (kbd "M-p") nil)
+    (define-key company-active-map (kbd "C-n") #'company-select-next)
+    (define-key company-active-map (kbd "C-p") #'company-select-previous)
+    :hook
+    (prog-mode . global-company-mode))
+#+end_src
+*** Add 'lsp-mode' for intellisense for many programming languages (python, ruby, java, C++)
 #+begin_src emacs-lisp
   (defun ef/lsp-mode-setup ()
     ;; Taken from this 'System Crafters' video:
@@ -767,6 +780,16 @@ Sam's Emacs Config
     ;; https://www.mattduck.com/lsp-python-getting-started.html
     :init
     (setq lsp-keymap-prefix "C-c l")
+    ;; From this page:
+    ;; https://emacs-lsp.github.io/lsp-mode/page/settings/completion/
+    (setq lsp-completion-provider :capf)
+    ;; 'Point 12' from this link's screenshot:
+    ;; https://emacs-lsp.github.io/lsp-mode/page/settings/completion/
+    (setq lsp-signature-auto-activate t)
+    ;; Turns off signature documentation at the bottom:
+    (setq lsp-signature-render-documentation nil)
+    ;; Turn on eldoc's ability to show hints upon hover
+    (setq lsp-eldoc-enable-hover t)
     (add-hook 'c-mode-hook 'lsp)
     (add-hook 'c++-mode-hook 'lsp)
     (add-hook 'python-mode-hook 'lsp)
@@ -786,6 +809,9 @@ Sam's Emacs Config
 
   ;; Force 'display-line-numbers-mode' to be enabled when LSP mode is enabled:
   (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
+
+  ;; Force 'lsp-treemacs-errors-list' to be enabled when LSP mode is enabled to get errors on the bottom like a true IDE:
+  (add-hook 'lsp-mode-hook #'lsp-treemacs-errors-list)
 #+end_src
 
 *** Add 'lsp-ui' for higher-level UI modules for 'lsp-mode'
@@ -892,21 +918,6 @@ Sam's Emacs Config
   (progn
     (setq-default indent-tabs-mode nil)
     )
-#+end_src
-*** Add 'aggressive-indent' to every thing
-#+begin_src emacs-lisp
-  (use-package aggressive-indent
-    :ensure t
-    :hook
-    (css-mode . aggressive-indent-mode)
-    (emacs-lisp-mode . aggressive-indent-mode)
-    (js-mode . aggressive-indent-mode)
-    (typescript-mode . aggressive-indent-mode)
-    (lisp-mode . aggressive-indent-mode)
-    :custom
-    (aggressive-indent-comments-too t)
-    :config
-    (add-to-list 'aggressive-indent-protected-commands 'comment-dwim))
 #+end_src
 *** Add 'css-mode' for working with '.css' stylesheets
 #+begin_src emacs-lisp
