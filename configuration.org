@@ -665,6 +665,10 @@ Sam's Emacs Config
 #+begin_src emacs-lisp
   (use-package vterm
     :ensure t)
+
+  ;; Configure vterm so that you can open up different instances of it so that it automatically renames new instances accordingly:
+  ;; This is to prevent myself from having to use 'tmux' in order to get the same effect:
+  (add-hook 'vterm-mode-hook 'rename-uniquely)
 #+end_src
 
 ** Programming
