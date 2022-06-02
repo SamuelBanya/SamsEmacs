@@ -220,9 +220,10 @@ Sam's Emacs Config
   ;; _M-x ytdl_: download YouTube videos directly from Emacs
   ;; _C-c m_: enable Org-Menu to discover keybindings in Org Mode
   ;; _C-c t_: enable treemacs and lsp-treemacs-errors-list
-  ;; _M-`_ . enable popper-toggle-latest to toggle latest popper buffer
-  ;; _M-~_ . enable popper-cycle to cycle through popper buffers
-  ;; _C-x M-`_ . enable popper-toggle-latest to toggle the type of popper buffer
+  ;; _M-`_: enable popper-toggle-latest to toggle latest popper buffer
+  ;; _M-~_: enable popper-cycle to cycle through popper buffers
+  ;; _C-x M-`_: enable popper-toggle-latest to toggle the type of popper buffer
+  ;; _C-|_: call kill-all-dired-buffers function to kill all open dired buffers
 
   ;; "
   ;;   ("q" nil))
@@ -1043,6 +1044,18 @@ Sam's Emacs Config
       (lambda () (interactive)
 	(find-alternate-file ".."))))
 #+END_SRC
+*** Add 'kill-all-dired-buffers' function to kill all dired-mode buffers that are currently open
+#+begin_src emacs-lisp
+  (defun kill-all-dired-buffers ()
+    "Kills all dired-mode buffers that are currently open."
+    (interactive)
+    (let* ((buffers (seq-filter (lambda (x) (equal (buffer-local-value 'major-mode x) 'dired-mode)) (buffer-list)))
+           (count (length buffers)))
+      (mapc (lambda (x) (kill-buffer x)) buffers)
+      (message "Killed %s dired buffer%s." count (if (= count 1) "" "s"))))
+
+  (global-set-key (kbd "C-|") 'kill-all-dired-buffers)
+#+end_src
 *** Enable 'ranger.el' for occassional use
 #+begin_src emacs-lisp
   (use-package ranger
