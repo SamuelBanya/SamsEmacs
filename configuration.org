@@ -219,6 +219,11 @@ Sam's Emacs Config
   ;; _C-c s_: search for a specific issue on Stack Exchange aka StackOverflow
   ;; _M-x ytdl_: download YouTube videos directly from Emacs
   ;; _C-c m_: enable Org-Menu to discover keybindings in Org Mode
+  ;; _C-c t_: enable treemacs and lsp-treemacs-errors-list
+  ;; _M-`_ . enable popper-toggle-latest to toggle latest popper buffer
+  ;; _M-~_ . enable popper-cycle to cycle through popper buffers
+  ;; _C-x M-`_ . enable popper-toggle-latest to toggle the type of popper buffer
+
   ;; "
   ;;   ("q" nil))
 
@@ -671,6 +676,27 @@ Sam's Emacs Config
   (add-hook 'vterm-mode-hook 'rename-uniquely)
 #+end_src
 
+*** Add 'popper' to popup terminal buffers quickly with 'M-`' keybinding to toggle the latest, 'M-~' keybinding to cycle, and 'C-x M-`' to toggle the type
+#+begin_src emacs-lisp
+  ;; Borrowed from Gavin Freeborn's config:
+  ;; https://github.com/Gavinok/emacs.d/blob/main/init.el
+
+  ;; Also init section was borrowed from docs:
+  ;; https://github.com/karthink/popper
+  (use-package popper
+    :ensure t
+    :bind (("M-`" . popper-toggle-latest)
+           ("M-~" . popper-cycle)
+           ("C-x M-`" . popper-toggle-type))
+    :init
+    (setq popper-reference-buffers
+          '("^\\*eshell.*\\*$" eshell-mode ;eshell as a popup
+            "^\\*shell.*\\*$"  shell-mode  ;shell as a popup
+            "^\\*term.*\\*$"   term-mode   ;term as a popup
+            "^\\*vterm.*\\*$"  vterm-mode  ;vterm as a popup
+            ))
+    (popper-mode +1))
+#+end_src
 ** Programming
 *** Add 'magit' for making dealing with Git repositories easier
 #+begin_src emacs-lisp
@@ -770,52 +796,49 @@ Sam's Emacs Config
 #+end_src
 *** Add 'lsp-mode' for intellisense for many programming languages (python, ruby, java, C++)
 #+begin_src emacs-lisp
-  (defun ef/lsp-mode-setup ()
-    ;; Taken from this 'System Crafters' video:
-    ;; https://www.youtube.com/watch?v=E-NAM9U5JYE
-    ;; This allows breadcrumb segments to appear in projects
-    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-    (lsp-headerline-breadcrumb-mode))
+    (defun ef/lsp-mode-setup ()
+      ;; Taken from this 'System Crafters' video:
+      ;; https://www.youtube.com/watch?v=E-NAM9U5JYE
+      ;; This allows breadcrumb segments to appear in projects
+      (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+      (lsp-headerline-breadcrumb-mode))
 
-  (use-package lsp-mode
-    :ensure t
-    :commands (lsp lsp-deferred)
-    ;; Taken from this page:
-    ;; https://www.mattduck.com/lsp-python-getting-started.html
-    :init
-    (setq lsp-keymap-prefix "C-c l")
-    ;; From this page:
-    ;; https://emacs-lsp.github.io/lsp-mode/page/settings/completion/
-    (setq lsp-completion-provider :capf)
-    ;; 'Point 12' from this link's screenshot:
-    ;; https://emacs-lsp.github.io/lsp-mode/page/settings/completion/
-    (setq lsp-signature-auto-activate t)
-    ;; Turns off signature documentation at the bottom:
-    (setq lsp-signature-render-documentation nil)
-    ;; Turn on eldoc's ability to show hints upon hover
-    (setq lsp-eldoc-enable-hover t)
-    (add-hook 'c-mode-hook 'lsp)
-    (add-hook 'c++-mode-hook 'lsp)
-    (add-hook 'python-mode-hook 'lsp)
-    (add-hook 'ruby-mode-hook 'lsp)
-    (add-hook 'js2-mode-hook 'lsp)
-    (add-hook 'typescript-mode-hook 'lsp)
-    (add-hook 'web-mode-hook 'lsp)
-    (add-hook 'csharp-mode-hook 'lsp)
-    (add-hook 'vue-mode-hook 'lsp)
-    (add-hook 'yaml-mode-hook 'lsp)
-    :config
-    (lsp-enable-which-key-integration t)
-    ;; Set 'lsp-idle-delay' to 0.5 seconds for quick autocompletion
-    (setq lsp-idle-delay 0.5)
-    ;; Adding this to force lsp to auto-guess the root directory of the project:
-    (setq lsp-auto-guess-root t))
+    (use-package lsp-mode
+      :ensure t
+      :commands (lsp lsp-deferred)
+      ;; Taken from this page:
+      ;; https://www.mattduck.com/lsp-python-getting-started.html
+      :init
+      (setq lsp-keymap-prefix "C-c l")
+      ;; From this page:
+      ;; https://emacs-lsp.github.io/lsp-mode/page/settings/completion/
+      (setq lsp-completion-provider :capf)
+      ;; 'Point 12' from this link's screenshot:
+      ;; https://emacs-lsp.github.io/lsp-mode/page/settings/completion/
+      (setq lsp-signature-auto-activate t)
+      ;; Turns off signature documentation at the bottom:
+      (setq lsp-signature-render-documentation nil)
+      ;; Turn on eldoc's ability to show hints upon hover
+      (setq lsp-eldoc-enable-hover t)
+      (add-hook 'c-mode-hook 'lsp)
+      (add-hook 'c++-mode-hook 'lsp)
+      (add-hook 'python-mode-hook 'lsp)
+      (add-hook 'ruby-mode-hook 'lsp)
+      (add-hook 'js2-mode-hook 'lsp)
+      (add-hook 'typescript-mode-hook 'lsp)
+      (add-hook 'web-mode-hook 'lsp)
+      (add-hook 'csharp-mode-hook 'lsp)
+      (add-hook 'vue-mode-hook 'lsp)
+      (add-hook 'yaml-mode-hook 'lsp)
+      :config
+      (lsp-enable-which-key-integration t)
+      ;; Set 'lsp-idle-delay' to 0.5 seconds for quick autocompletion
+      (setq lsp-idle-delay 0.5)
+      ;; Adding this to force lsp to auto-guess the root directory of the project:
+      (setq lsp-auto-guess-root t))
 
-  ;; Force 'display-line-numbers-mode' to be enabled when LSP mode is enabled:
-  (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
-
-  ;; Force 'lsp-treemacs-errors-list' to be enabled when LSP mode is enabled to get errors on the bottom like a true IDE:
-  (add-hook 'lsp-mode-hook #'lsp-treemacs-errors-list)
+    ;; Force 'display-line-numbers-mode' to be enabled when LSP mode is enabled:
+    (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
 #+end_src
 
 *** Add 'lsp-ui' for higher-level UI modules for 'lsp-mode'
@@ -1033,6 +1056,10 @@ Sam's Emacs Config
 #+begin_src emacs-lisp
 (remove-hook 'dired-mode-hook 'ranger-set-dired-key)
 #+end_src
+*** Force 'ranger-refresh' function to be called each time 'dired-create-directory' function is called
+#+begin_src emacs-lisp
+  (advice-add #'dired-create-directory :after (lambda (&rest arg) (ranger-refresh)))
+#+end_src
 *** Enable 'treemacs' for a tree layout file explorer
 #+begin_src emacs-lisp
   (use-package treemacs
@@ -1051,6 +1078,15 @@ Sam's Emacs Config
   (use-package lsp-treemacs
     :ensure t)
 #+end_src
+*** Use custom function to call 'treemacs' and 'lsp-treemacs-errors-list'
+#+begin_src emacs-lisp
+  (defun launch-treemacs-and-errors ()
+    (interactive)
+    (treemacs)
+    (lsp-treemacs-errors-list))
+
+  (global-set-key (kbd "C-c t") 'launch-treemacs-and-errors)
+#+end_src
 *** Enable 'projectile' interaction library
 #+begin_src emacs-lisp
   (use-package projectile
@@ -1062,7 +1098,7 @@ Sam's Emacs Config
       projectile-mode-map
       (kbd "C-c p")
       'projectile-command-map)
-    (projectile-mode))
+    (projectile-mode +1))
 #+end_src
 *** Enable 'dirvish' to add a nicer variant of 'dired' to use as a file manager
 #+begin_src emacs-lisp
