@@ -1056,9 +1056,11 @@ Sam's Emacs Config
 #+begin_src emacs-lisp
 (remove-hook 'dired-mode-hook 'ranger-set-dired-key)
 #+end_src
-*** Force 'ranger-refresh' function to be called each time 'dired-create-directory' function is called
+*** Force 'ranger-refresh' function to be called each time 'mkdir' function is called
 #+begin_src emacs-lisp
-  (advice-add #'dired-create-directory :after (lambda (&rest arg) (ranger-refresh)))
+  ;; According to this GitHub section, it's actually mkdir that is called when + is hit in Ranger.el:
+  ;; https://github.com/ralesi/ranger.el/blob/master/ranger.el#L509
+  (advice-add #'mkdir :after (lambda (&rest arg) (ranger-refresh)))
 #+end_src
 *** Enable 'treemacs' for a tree layout file explorer
 #+begin_src emacs-lisp
@@ -1078,12 +1080,18 @@ Sam's Emacs Config
   (use-package lsp-treemacs
     :ensure t)
 #+end_src
-*** Use custom function to call 'treemacs' and 'lsp-treemacs-errors-list'
+*** Use custom function, 'launch-treemacs-and-errors' to call 'treemacs' and 'lsp-treemacs-errors-list'
 #+begin_src emacs-lisp
   (defun launch-treemacs-and-errors ()
     (interactive)
-    (treemacs)
-    (lsp-treemacs-errors-list))
+    (let ((current-window (selected-window))
+          (error-window (get-buffer-window "*LSP Error List*"))
+          (treemacs-window (equal (treemacs-current-visibility) 'visible)))
+      (if (and error-window treemacs-window)
+          (progn (treemacs) (delete-window error-window))
+        (treemacs)
+        (lsp-treemacs-errors-list)
+        (select-window current-window))))
 
   (global-set-key (kbd "C-c t") 'launch-treemacs-and-errors)
 #+end_src
