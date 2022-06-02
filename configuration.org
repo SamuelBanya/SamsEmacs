@@ -1073,7 +1073,10 @@ Sam's Emacs Config
 #+begin_src emacs-lisp
   ;; According to this GitHub section, it's actually mkdir that is called when + is hit in Ranger.el:
   ;; https://github.com/ralesi/ranger.el/blob/master/ranger.el#L509
-  (advice-add #'mkdir :after (lambda (&rest arg) (ranger-refresh)))
+  (advice-add #'mkdir :after
+              (lambda (&rest _)
+                (when (eq major-mode 'dired-mode)
+                  (ranger-refresh))))
 #+end_src
 *** Enable 'treemacs' for a tree layout file explorer
 #+begin_src emacs-lisp
