@@ -784,7 +784,8 @@ Sam's Emacs Config
 #+end_src
 *** Add 'company' for auto-completion
 #+begin_src emacs-lisp
-(use-package company
+  (use-package company
+    :ensure t
     :config
     (setq company-idle-delay 0.5)
     (setq company-minimum-prefix-length 3)
