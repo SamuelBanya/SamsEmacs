@@ -1095,7 +1095,9 @@ Sam's Emacs Config
 *** Enable 'lsp-treemacs' for a more IDE-looking setup via 'lsp-treemacs-symbols' and 'lsp-treemacs-errors-list'
 #+begin_src emacs-lisp
   (use-package lsp-treemacs
-    :ensure t)
+    :ensure t
+    :config
+    (lsp-treemacs-sync-mode 1))
 #+end_src
 *** Use custom function, 'launch-treemacs-and-errors' to call 'treemacs' and 'lsp-treemacs-errors-list'
 #+begin_src emacs-lisp
