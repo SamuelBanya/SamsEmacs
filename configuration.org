@@ -745,7 +745,16 @@ Sam's Emacs Config
     (js-indent-level 2)
     (js2-basic-offset 2)
     :init
-    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+    :config
+    ;; Patch in basic private field support since it clearly doesn't work at all
+    ;; This also has the super annoying side effect of causing tons of syntax issues
+    ;; afterwards, so this HAS to be patched in order to use private methods
+    ;; Used this blog post as a basis for this:
+    ;; https://draketo.de/software/emacs-javascript.html
+    (advice-add #'js2-identifier-part-p
+                :after-until
+                (lambda (c) (eq c ?#))))
 #+end_src
 *** Add 'rjsx-mode' to handle '.jsx' files
 #+begin_src emacs-lisp
