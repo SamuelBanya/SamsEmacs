@@ -844,22 +844,6 @@ Sam's Emacs Config
   (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
 #+end_src
 
-*** Add 'lsp-ui' for higher-level UI modules for 'lsp-mode'
-#+begin_src emacs-lisp
-  (use-package lsp-ui
-    :ensure t
-    :after lsp-mode
-    :commands lsp-ui-mode
-    :hook (lsp-mode . lsp-ui-mode)
-    :custom
-    (lsp-ui-doc-enable t)
-    (lsp-ui-flycheck-enable t)
-    (lsp-ui-flycheck-live-reporting t)
-    (lsp-ui-peek-enable t)
-    ;; Set the delay to be 2 seconds to display any docs about a given function:
-    (lsp-ui-doc-delay 2))
-#+end_src
-
 *** Add 'yaml-mode' for support for '.yaml' files
 #+begin_src emacs-lisp
 (use-package yaml-mode
