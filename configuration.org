@@ -786,7 +786,7 @@ Sam's Emacs Config
   (use-package company
     :ensure t
     :config
-    (setq company-idle-delay 0.01)
+    (setq company-idle-delay 0)
     (setq company-minimum-prefix-length 3)
     (define-key company-active-map (kbd "M-n") nil)
     (define-key company-active-map (kbd "M-p") nil)
@@ -833,8 +833,8 @@ Sam's Emacs Config
       (add-hook 'yaml-mode-hook 'lsp)
       :config
       (lsp-enable-which-key-integration t)
-      ;; Set 'lsp-idle-delay' to 0.01 seconds for quick autocompletion
-      (setq lsp-idle-delay 0.01)
+      ;; Set 'lsp-idle-delay' to 0 seconds for quick autocompletion
+      (setq lsp-idle-delay 0)
       ;; Adding this to force lsp to auto-guess the root directory of the project:
       (setq lsp-auto-guess-root t))
 
