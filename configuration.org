@@ -786,7 +786,7 @@ Sam's Emacs Config
   (use-package company
     :ensure t
     :config
-    (setq company-idle-delay 0.0)
+    (setq company-idle-delay 0.3)
     (setq company-minimum-prefix-length 1)
     (define-key company-active-map (kbd "M-n") nil)
     (define-key company-active-map (kbd "M-p") nil)
@@ -833,8 +833,8 @@ Sam's Emacs Config
     (add-hook 'yaml-mode-hook 'lsp)
     :config
     (lsp-enable-which-key-integration t)
-    ;; Set 'lsp-idle-delay' to 0.0 seconds for quick autocompletion
-    (setq lsp-idle-delay 0.0)
+    ;; Set 'lsp-idle-delay' to 0.3 seconds for quick autocompletion
+    (setq lsp-idle-delay 0.3)
     ;; Adding this to force lsp to auto-guess the root directory of the project:
     (setq lsp-auto-guess-root t)
     ;; Force the docs to NOT appear in the modeline:
@@ -844,6 +844,17 @@ Sam's Emacs Config
   (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
 #+end_src
 
+*** Add 'lsp-ui' so that I can nuke it accordingly with 'use-package' config settings
+#+begin_src emacs-lisp
+  (use-package lsp-ui
+    :ensure t
+    :after lsp-mode
+    :commands lsp-ui-mode
+    :hook (lsp-mode . lsp-ui-mode)
+    :custom
+    ;; Nuke sideline as it extends past lines on MacOS for some reason:
+    (lsp-ui-sideline-enable nil))
+#+end_src
 *** Add 'yaml-mode' for support for '.yaml' files
 #+begin_src emacs-lisp
 (use-package yaml-mode
