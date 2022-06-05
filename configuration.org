@@ -786,8 +786,8 @@ Sam's Emacs Config
   (use-package company
     :ensure t
     :config
-    (setq company-idle-delay 0)
-    (setq company-minimum-prefix-length 3)
+    (setq company-idle-delay 0.0)
+    (setq company-minimum-prefix-length 1)
     (define-key company-active-map (kbd "M-n") nil)
     (define-key company-active-map (kbd "M-p") nil)
     (define-key company-active-map (kbd "C-n") #'company-select-next)
@@ -797,49 +797,51 @@ Sam's Emacs Config
 #+end_src
 *** Add 'lsp-mode' for intellisense for many programming languages (python, ruby, java, C++)
 #+begin_src emacs-lisp
-    (defun ef/lsp-mode-setup ()
-      ;; Taken from this 'System Crafters' video:
-      ;; https://www.youtube.com/watch?v=E-NAM9U5JYE
-      ;; This allows breadcrumb segments to appear in projects
-      (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-      (lsp-headerline-breadcrumb-mode))
+  (defun ef/lsp-mode-setup ()
+    ;; Taken from this 'System Crafters' video:
+    ;; https://www.youtube.com/watch?v=E-NAM9U5JYE
+    ;; This allows breadcrumb segments to appear in projects
+    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+    (lsp-headerline-breadcrumb-mode))
 
-    (use-package lsp-mode
-      :ensure t
-      :commands (lsp lsp-deferred)
-      ;; Taken from this page:
-      ;; https://www.mattduck.com/lsp-python-getting-started.html
-      :init
-      (setq lsp-keymap-prefix "C-c l")
-      ;; From this page:
-      ;; https://emacs-lsp.github.io/lsp-mode/page/settings/completion/
-      (setq lsp-completion-provider :capf)
-      ;; 'Point 12' from this link's screenshot:
-      ;; https://emacs-lsp.github.io/lsp-mode/page/settings/completion/
-      (setq lsp-signature-auto-activate t)
-      ;; Turns off signature documentation at the bottom:
-      (setq lsp-signature-render-documentation nil)
-      ;; Turn on eldoc's ability to show hints upon hover
-      (setq lsp-eldoc-enable-hover t)
-      (add-hook 'c-mode-hook 'lsp)
-      (add-hook 'c++-mode-hook 'lsp)
-      (add-hook 'python-mode-hook 'lsp)
-      (add-hook 'ruby-mode-hook 'lsp)
-      (add-hook 'js2-mode-hook 'lsp)
-      (add-hook 'typescript-mode-hook 'lsp)
-      (add-hook 'web-mode-hook 'lsp)
-      (add-hook 'csharp-mode-hook 'lsp)
-      (add-hook 'vue-mode-hook 'lsp)
-      (add-hook 'yaml-mode-hook 'lsp)
-      :config
-      (lsp-enable-which-key-integration t)
-      ;; Set 'lsp-idle-delay' to 0 seconds for quick autocompletion
-      (setq lsp-idle-delay 0)
-      ;; Adding this to force lsp to auto-guess the root directory of the project:
-      (setq lsp-auto-guess-root t))
+  (use-package lsp-mode
+    :ensure t
+    :commands (lsp lsp-deferred)
+    ;; Taken from this page:
+    ;; https://www.mattduck.com/lsp-python-getting-started.html
+    :init
+    (setq lsp-keymap-prefix "C-c l")
+    ;; From this page:
+    ;; https://emacs-lsp.github.io/lsp-mode/page/settings/completion/
+    (setq lsp-completion-provider :capf)
+    ;; 'Point 12' from this link's screenshot:
+    ;; https://emacs-lsp.github.io/lsp-mode/page/settings/completion/
+    (setq lsp-signature-auto-activate t)
+    ;; Turns off signature documentation at the bottom:
+    (setq lsp-signature-render-documentation nil)
+    ;; Turn on eldoc's ability to show hints upon hover
+    (setq lsp-eldoc-enable-hover t)
+    (add-hook 'c-mode-hook 'lsp)
+    (add-hook 'c++-mode-hook 'lsp)
+    (add-hook 'python-mode-hook 'lsp)
+    (add-hook 'ruby-mode-hook 'lsp)
+    (add-hook 'js2-mode-hook 'lsp)
+    (add-hook 'typescript-mode-hook 'lsp)
+    (add-hook 'web-mode-hook 'lsp)
+    (add-hook 'csharp-mode-hook 'lsp)
+    (add-hook 'vue-mode-hook 'lsp)
+    (add-hook 'yaml-mode-hook 'lsp)
+    :config
+    (lsp-enable-which-key-integration t)
+    ;; Set 'lsp-idle-delay' to 0.0 seconds for quick autocompletion
+    (setq lsp-idle-delay 0.0)
+    ;; Adding this to force lsp to auto-guess the root directory of the project:
+    (setq lsp-auto-guess-root t)
+    ;; Force the docs to NOT appear in the modeline:
+    (setq lsp-eldoc-hook nil))
 
-    ;; Force 'display-line-numbers-mode' to be enabled when LSP mode is enabled:
-    (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
+  ;; Force 'display-line-numbers-mode' to be enabled when LSP mode is enabled:
+  (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
 #+end_src
 
 *** Add 'lsp-ui' for higher-level UI modules for 'lsp-mode'
@@ -851,12 +853,11 @@ Sam's Emacs Config
     :hook (lsp-mode . lsp-ui-mode)
     :custom
     (lsp-ui-doc-enable t)
-    (lsp-ui-sideline-enable t)
     (lsp-ui-flycheck-enable t)
     (lsp-ui-flycheck-live-reporting t)
-    (lsp-ui-sideline-toggle-symbols-info t)
-    (lsp-ui-sideline-show-hover t)
-    (lsp-ui-peek-enable t))
+    (lsp-ui-peek-enable t)
+    ;; Set the delay to be 2 seconds to display any docs about a given function:
+    (lsp-ui-doc-delay 2))
 #+end_src
 
 *** Add 'yaml-mode' for support for '.yaml' files
