@@ -694,7 +694,6 @@ Sam's Emacs Config
           '("^\\*eshell.*\\*$" eshell-mode ;eshell as a popup
             "^\\*shell.*\\*$"  shell-mode  ;shell as a popup
             "^\\*term.*\\*$"   term-mode   ;term as a popup
-            "^\\*vterm.*\\*$"  vterm-mode  ;vterm as a popup
             ))
     (popper-mode +1))
 #+end_src
@@ -1101,7 +1100,8 @@ Sam's Emacs Config
 #+end_src
 *** Use custom function, 'launch-treemacs-and-errors' to call 'treemacs' and 'lsp-treemacs-errors-list'
 #+begin_src emacs-lisp
-  (defun launch-treemacs-and-errors ()
+  ;; (defun launch-treemacs-and-errors ()
+  (defun launch-treemacs-and-vterm ()
     (interactive)
     (let ((current-window (selected-window))
           (error-window (get-buffer-window "*LSP Error List*"))
@@ -1109,10 +1109,12 @@ Sam's Emacs Config
       (if (and error-window treemacs-window)
           (progn (treemacs) (delete-window error-window))
         (treemacs)
-        (lsp-treemacs-errors-list)
+        ;; (lsp-treemacs-errors-list)
+        (vterm)
         (select-window current-window))))
 
-  (global-set-key (kbd "C-c t") 'launch-treemacs-and-errors)
+  ;; (global-set-key (kbd "C-c t") 'launch-treemacs-and-errors)
+  (global-set-key (kbd "C-c t") 'launch-treemacs-and-vterm)
 #+end_src
 *** Enable 'projectile' interaction library
 #+begin_src emacs-lisp
