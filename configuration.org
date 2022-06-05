@@ -844,7 +844,7 @@ Sam's Emacs Config
   (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
 #+end_src
 
-*** Add 'lsp-ui' so that I can nuke it accordingly with 'use-package' config settings
+*** Add 'lsp-ui' to adjust UI portion of LSP mode's features
 #+begin_src emacs-lisp
   (use-package lsp-ui
     :ensure t
@@ -853,7 +853,10 @@ Sam's Emacs Config
     :hook (lsp-mode . lsp-ui-mode)
     :custom
     (lsp-ui-doc-enable t)
-    (lsp-ui-sideline-enable t)
+    ;; Nuking sideline as it doesn't work with MacOS nicely with fonts (Part 1):
+    (lsp-ui-sideline-enable nil)
+    ;; Nuking sideline as it doesn't work with MacOS nicely with fonts (Part 2):
+    (lsp-ui-sideline-show-hover nil)
     (lsp-ui-flycheck-enable t)
     (lsp-ui-flycheck-live-reporting t)
     (lsp-ui-sideline-toggle-symbols-info t)
