@@ -836,7 +836,7 @@ Sam's Emacs Config
     :ensure t
     :hook (python-mode-hook . jedi:setup))
 #+end_src
-*** Add 'company' for auto-completion
+*** Add 'company' for auto-completion for programming projects
 #+begin_src emacs-lisp
     (use-package company
       :ensure t
