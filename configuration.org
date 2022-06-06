@@ -807,6 +807,11 @@ Sam's Emacs Config
   (use-package typescript-mode
     :ensure t)
 #+end_src
+*** Add 'prettier-mode' to use with 'typescript-mode'
+#+begin_src emacs-lisp
+(use-package prettier
+  :hook (typescript-mode . prettier-mode))
+#+end_src
 *** Add 'web-mode' to handle web template editing
 #+begin_src emacs-lisp
   (use-package web-mode
@@ -833,19 +838,20 @@ Sam's Emacs Config
 #+end_src
 *** Add 'company' for auto-completion
 #+begin_src emacs-lisp
-  (use-package company
-    :ensure t
-    :config
-    (setq company-idle-delay 0.2)
-    (setq company-minimum-prefix-length 1)
-    ;; Force Company Mode to NOT be enabled in Org Mode since its way too annoying for note taking:
-    (setq company-global-modes '(not org-mode))
-    (define-key company-active-map (kbd "M-n") nil)
-    (define-key company-active-map (kbd "M-p") nil)
-    (define-key company-active-map (kbd "C-n") #'company-select-next)
-    (define-key company-active-map (kbd "C-p") #'company-select-previous)
-    :hook
-    (prog-mode . global-company-mode))
+    (use-package company
+      :ensure t
+      :config
+      (setq company-idle-delay 0.2)
+      (setq company-minimum-prefix-length 1)
+      ;; Force Company Mode to NOT be enabled in Org Mode since its way too annoying for note taking:
+      (setq company-global-modes '(not org-mode))
+      (define-key company-active-map (kbd "M-n") nil)
+      (define-key company-active-map (kbd "M-p") nil)
+      (define-key company-active-map (kbd "C-n") #'company-select-next)
+      (define-key company-active-map (kbd "C-p") #'company-select-previous)
+      (setq lsp-completion-provider :capf)
+      :hook
+      (prog-mode . global-company-mode))
 #+end_src
 *** Add 'lsp-mode' for intellisense for many programming languages (python, ruby, java, C++)
 #+begin_src emacs-lisp
@@ -861,36 +867,16 @@ Sam's Emacs Config
     :commands (lsp lsp-deferred)
     ;; Taken from this page:
     ;; https://www.mattduck.com/lsp-python-getting-started.html
-    :init
-    (setq lsp-keymap-prefix "C-c l")
-    ;; From this page:
-    ;; https://emacs-lsp.github.io/lsp-mode/page/settings/completion/
-    (setq lsp-completion-provider :capf)
-    ;; 'Point 12' from this link's screenshot:
-    ;; https://emacs-lsp.github.io/lsp-mode/page/settings/completion/
-    (setq lsp-signature-auto-activate t)
-    ;; Turns off signature documentation at the bottom:
-    (setq lsp-signature-render-documentation nil)
-    ;; Turn on eldoc's ability to show hints upon hover
-    (setq lsp-eldoc-enable-hover t)
-    (add-hook 'c-mode-hook 'lsp)
-    (add-hook 'c++-mode-hook 'lsp)
-    (add-hook 'python-mode-hook 'lsp)
-    (add-hook 'ruby-mode-hook 'lsp)
-    (add-hook 'js2-mode-hook 'lsp)
-    (add-hook 'typescript-mode-hook 'lsp)
-    (add-hook 'web-mode-hook 'lsp)
-    (add-hook 'csharp-mode-hook 'lsp)
-    (add-hook 'vue-mode-hook 'lsp)
-    (add-hook 'yaml-mode-hook 'lsp)
     :config
-    (lsp-enable-which-key-integration t)
+    (setq lsp-keymap-prefix "C-c l")
+    (setq lsp-enable-which-key-integration t)
     ;; Set 'lsp-idle-delay' to 0.2 seconds for quick autocompletion
     (setq lsp-idle-delay 0.2)
     ;; Adding this to force lsp to auto-guess the root directory of the project:
     (setq lsp-auto-guess-root t)
     ;; Force the docs to NOT appear in the modeline:
-    (setq lsp-eldoc-hook nil))
+    (setq lsp-eldoc-hook nil)
+    :hook (((typescript-mode go-mode javascript-mode js-mode c-mode c++-mode python-mode ruby-mode web-mode csharp-mode vue-mode yaml-mode) . lsp) (lsp-mode . lsp-lens-mode)))
 
   ;; Force 'display-line-numbers-mode' to be enabled when LSP mode is enabled:
   (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
@@ -898,27 +884,13 @@ Sam's Emacs Config
 
 *** Add 'lsp-ui' to adjust UI portion of LSP mode's features
 #+begin_src emacs-lisp
-  (use-package lsp-ui
-    :ensure t
-    :after lsp-mode
-    :commands lsp-ui-mode
-    :hook (lsp-mode . lsp-ui-mode)
-    :custom
-    (lsp-ui-doc-enable t)
-    ;; Nuking sideline as it doesn't work with MacOS nicely with fonts (Part 1):
-    (lsp-ui-sideline-enable nil)
-    ;; Nuking sideline as it doesn't work with MacOS nicely with fonts (Part 2):
-    (lsp-ui-sideline-show-hover nil)
-    (lsp-ui-flycheck-enable t)
-    (lsp-ui-flycheck-live-reporting t)
-    (lsp-ui-sideline-toggle-symbols-info t)
-    (lsp-ui-sideline-show-hover t)
-    (lsp-ui-peek-enable t))
+  (use-package lsp-ui)
 #+end_src
 *** Add 'yaml-mode' for support for '.yaml' files
 #+begin_src emacs-lisp
-(use-package yaml-mode
-  :mode "\\.ya?ml\\'")
+  (use-package yaml-mode
+    :mode "\\.ya?ml\\'"
+    :hook (yaml-mode . flycheck-mode))
 #+end_src
 *** Add 'flycheck' for programming syntax checking on-the-fly
 #+BEGIN_SRC emacs-lisp
