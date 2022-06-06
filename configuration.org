@@ -145,7 +145,7 @@ Sam's Emacs Config
       :config
       (setq erc-track-exclude-types
             '("JOIN" "KICK" "NICK" "PART" "QUIT" "MODE" "333" "353"))
-      (setq erc-autojoin-channels-alist '(("libera.chat" . "#emacs")))
+      (setq erc-autojoin-channels-alist '(("libera.chat" . ("#emacs"))))
       (setq erc-autojoin-mode t)
       (setq erc-button-buttonize-nicks nil)
       (setq erc-common-server-suffixes
@@ -1231,6 +1231,12 @@ Sam's Emacs Config
     :defer 2
     :config
     (setq cfw:org-agenda-schedule-args '(:timestamp :scheduled :deadline)))
+#+end_src
+*** Destroy annoying 'bookmark-set-fringe-mark' which shows up as a weird orange mark in Org Mode
+#+begin_src emacs-lisp
+;; Related post on this behavior:
+;; https://www.reddit.com/r/orgmode/comments/u156dd/strange_orange_marker_on_captured_tasks/
+(setq-default bookmark-set-fringe-mark nil)
 #+end_src
 ** ediff
 *** Force 'ediff' to open up vertically in new windows NOT frames
