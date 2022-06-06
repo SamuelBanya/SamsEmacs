@@ -851,7 +851,7 @@ Sam's Emacs Config
       (define-key company-active-map (kbd "C-p") #'company-select-previous)
       (setq lsp-completion-provider :capf)
       :hook
-      (prog-mode . global-company-mode))
+      (prog-mode . company-mode))
 #+end_src
 *** Add 'lsp-mode' for intellisense for many programming languages (python, ruby, java, C++)
 #+begin_src emacs-lisp
