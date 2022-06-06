@@ -130,6 +130,47 @@ Sam's Emacs Config
 
     (global-set-key (kbd "M-n") 'hydra-connect/body))
 #+end_src
+** Add 'erc' for IRC communication
+#+begin_src emacs-lisp
+  (use-package erc
+    ;; Parts borrowed from this post:
+    ;; https://www.reddit.com/r/emacs/comments/8ml6na/tip_how_to_make_erc_fun_to_use/
+    :ensure t
+    :config
+    (setq erc-track-exclude-types
+      '("JOIN" "KICK" "NICK" "PART" "QUIT" "MODE" "333" "353"))
+    (setq erc-autojoin-channels-alist '(("libera.chat" "#emacs")))
+    (setq erc-autojoin-mode t)
+    (setq erc-button-buttonize-nicks nil)
+    (setq erc-common-server-suffixes
+     '(("libera.chat" . "LC")
+       ("oftc.net\\'" . "OFTC")))
+    (setq erc-join-buffer 'bury)
+    (setq erc-log-insert-log-on-open t)
+    (setq erc-log-write-after-insert t)
+    (setq erc-log-write-after-send t)
+    (setq erc-mode-line-format "%%b %a")
+    (setq erc-modules
+     '(autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly ring services stamp track))
+    (setq erc-prompt-for-nickserv-password nil)
+    (setq erc-prompt-for-password nil)
+    (setq erc-scrolltobottom-mode t)
+    (setq erc-track-faces-priority-list
+     '(setq erc-error-face erc-current-nick-face erc-keyword-face erc-pal-face erc-nick-msg-face erc-direct-msg-face erc-dangerous-host-face erc-fool-face erc-input-face))
+    (setq erc-track-position-in-mode-line t)
+    (setq erc-track-priority-faces-only nil))
+
+  (defun my-erc-libera ()
+    "Start ERC on Libera."
+    (interactive)
+    (erc-tls :server "irc.libera.chat" :port "6697" :nick "Shortstop"))
+
+  (defun my-erc-mode-hook ()
+    "Hook for erc-mode."
+    (setq-local scroll-conservatively 1000))
+
+  (add-hook 'erc-mode-hook 'my-erc-mode-hook)
+#+end_src
 * Work Specific
 ** Org-Capture templates for Zendesk tickets and Intercom chats
 #+BEGIN_SRC emacs-lisp
