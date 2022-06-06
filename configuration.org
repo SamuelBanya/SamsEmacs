@@ -838,6 +838,8 @@ Sam's Emacs Config
     :config
     (setq company-idle-delay 0.2)
     (setq company-minimum-prefix-length 1)
+    ;; Force Company Mode to NOT be enabled in Org Mode since its way too annoying for note taking:
+    (setq company-global-modes '(not org-mode))
     (define-key company-active-map (kbd "M-n") nil)
     (define-key company-active-map (kbd "M-p") nil)
     (define-key company-active-map (kbd "C-n") #'company-select-next)
