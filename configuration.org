@@ -130,6 +130,11 @@ Sam's Emacs Config
 
     (global-set-key (kbd "M-n") 'hydra-connect/body))
 #+end_src
+** Set 'auth-sources' for IRC config for personal computer
+#+begin_src emacs-lisp
+  (when (member (system-name) '("notestation" "fossastation"))
+    (setq auth-sources '((:source "~/.authinfo" :host t :port t))))
+#+end_src
 ** Add 'erc' for IRC communication
 #+begin_src emacs-lisp
   (when (member (system-name) '("notestation" "fossastation"))
@@ -140,7 +145,7 @@ Sam's Emacs Config
       :config
       (setq erc-track-exclude-types
             '("JOIN" "KICK" "NICK" "PART" "QUIT" "MODE" "333" "353"))
-      (setq erc-autojoin-channels-alist '(("libera.chat" "#emacs")))
+      (setq erc-autojoin-channels-alist '(("libera.chat" . "#emacs")))
       (setq erc-autojoin-mode t)
       (setq erc-button-buttonize-nicks nil)
       (setq erc-common-server-suffixes
@@ -159,7 +164,10 @@ Sam's Emacs Config
       (setq erc-track-faces-priority-list
             '(setq erc-error-face erc-current-nick-face erc-keyword-face erc-pal-face erc-nick-msg-face erc-direct-msg-face erc-dangerous-host-face erc-fool-face erc-input-face))
       (setq erc-track-position-in-mode-line t)
-      (setq erc-track-priority-faces-only nil))
+      (setq erc-track-priority-faces-only nil)
+      ;; Force ERC to not prompt for a password and to look for ~/.authinfo:
+      (setq erc-prompt-for-password nil)
+      (setq erc-prompt-for-nickserv-password nil))
 
     (defun my-erc-libera ()
       "Start ERC on Libera."
