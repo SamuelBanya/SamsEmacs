@@ -477,7 +477,8 @@ Sam's Emacs Config
    Load color theme, and do 'org-restart' to make sure the theme loads correctly:
    #+BEGIN_SRC emacs-lisp
    ;; (load-theme 'wheatgrass)
-   (load-theme 'spacemacs-dark)
+   ;; (load-theme 'spacemacs-dark)
+   (load-theme 'morrowind-emacs)
    (org-mode-restart)
    #+END_SRC
 *** Highlight Current Line In GUI Version Of Emacs
