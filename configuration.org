@@ -390,57 +390,10 @@ Sam's Emacs Config
   (use-package autothemer
     :ensure t)
 #+end_src
-*** 'Spaceline' Modeline
-#+BEGIN_SRC emacs-lisp
-  (use-package spaceline
-    :ensure t
-    :config
-    (require 'spaceline-config)
-    (setq powerline-default-separator (quote arrow))
-    (spaceline-spacemacs-theme))
-#+END_SRC
 *** Add 'gruvbox' themes from MELPA
 #+begin_src emacs-lisp
   (use-package gruvbox-theme
     :ensure t)
-#+end_src
-*** Add 'hydra-colortheme' Hydra to change themes on the fly
-#+begin_src emacs-lisp
-  ;; Create separate functions to change to each theme
-  (defun change-to-spacemacs-theme ()
-    (interactive)
-    (load-theme 'spacemacs-dark t)
-    (enable-theme 'spacemacs-dark)
-    (org-mode-restart))
-
-  (defun change-to-wordperfect-theme ()
-    (interactive)
-    (load-theme 'word-perfect t)
-    (enable-theme 'word-perfect)
-    (org-mode-restart))
-
-  (defun change-to-gruvbox-dark-medium-theme ()
-    (interactive)
-    (load-theme 'gruvbox-dark-medium t)
-    (enable-theme 'gruvbox-dark-medium)
-    (org-mode-restart))
-
-  (defhydra hydra-colortheme (:color pink
-				     :hint nil)
-    "
-	    ^Change theme^
-	    ^^^^^^^^^^-----------------------------
-	    _a_: Spacemacs theme
-	    _b_: Wordperfect theme
-	    _c_: Gruvbox theme
-	    _q_: quit
-	    "
-    ("a" change-to-spacemacs-theme)
-    ("b" change-to-wordperfect-theme)
-    ("c" change-to-gruvbox-dark-medium-theme)
-    ("q" nil))
-
-  (global-set-key (kbd "C-!") 'hydra-colortheme/body)
 #+end_src
 *** Dashboard
    #+BEGIN_SRC emacs-lisp
@@ -476,8 +429,6 @@ Sam's Emacs Config
 *** Color Theme
    Load color theme, and do 'org-restart' to make sure the theme loads correctly:
    #+BEGIN_SRC emacs-lisp
-   ;; (load-theme 'wheatgrass)
-   ;; (load-theme 'spacemacs-dark)
    (load-theme 'morrowind-emacs)
    (org-mode-restart)
    #+END_SRC
