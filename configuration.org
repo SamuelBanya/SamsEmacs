@@ -1236,7 +1236,7 @@ Sam's Emacs Config
 #+end_src
 *** Add 'ox-hugo' so that I can export blog posts from Org mode to 'hugo'
 #+begin_src emacs-lisp
-  (use-package hugo
+  (use-package ox-hugo
     :ensure t
     :after ox)
 #+end_src
