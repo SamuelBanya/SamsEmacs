@@ -782,20 +782,16 @@ Sam's Emacs Config
   (use-package logview
     :ensure t)
 #+END_SRC
+*** Add 'js-mode' built-in related tweaks to adjust the default indent level to '2'
+#+begin_src emacs-lisp
+  (add-hook 'js-mode-hook
+            (function (lambda ()
+                        (setq setq js-indent-level 2))))
+#+end_src
 *** Add 'ruby-mode' for Ruby projects
 #+begin_src emacs-lisp
   (use-package ruby-mode
     :ensure t)
-#+end_src
-*** Add 'js2-mode' for improved Javascript editing mode
-#+begin_src emacs-lisp
-  (use-package js2-mode
-    :ensure t
-    :custom
-    (js-indent-level 2)
-    (js2-basic-offset 2)
-    :init
-    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 #+end_src
 *** Add 'rjsx-mode' to handle '.jsx' files
 #+begin_src emacs-lisp
@@ -936,7 +932,7 @@ Sam's Emacs Config
   (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
   (add-hook 'org-mode-hook 'yas-minor-mode)
   (add-hook 'ruby-mode-hook 'yas-minor-mode)
-  (add-hook 'js2-mode-hook 'yas-minor-mode)
+  (add-hook 'js-mode-hook 'yas-minor-mode)
   (add-hook 'rjsx-mode-hook 'yas-minor-mode)
   (add-hook 'typescript-mode-hook 'yas-minor-mode)
   (add-hook 'web-mode-hook 'yas-minor-mode)
@@ -1237,6 +1233,12 @@ Sam's Emacs Config
 ;; Related post on this behavior:
 ;; https://www.reddit.com/r/orgmode/comments/u156dd/strange_orange_marker_on_captured_tasks/
 (setq-default bookmark-set-fringe-mark nil)
+#+end_src
+*** Add 'ox-hugo' so that I can export blog posts from Org mode to 'hugo'
+#+begin_src emacs-lisp
+  (use-package hugo
+    :ensure t
+    :after ox)
 #+end_src
 ** ediff
 *** Force 'ediff' to open up vertically in new windows NOT frames
