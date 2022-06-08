@@ -709,7 +709,7 @@ Sam's Emacs Config
 #+BEGIN_SRC emacs-lisp
   (use-package emmet-mode
     :ensure t
-    :hook ((mhtml-mode css-mode scss-mode rjsx-mode) . emmet-mode))
+    :hook ((mhtml-mode css-mode scss-mode rjsx-mode sgml-mode web-mode) . emmet-mode))
 #+END_SRC
 *** Add 'rainbow-delimiters' to easily view delimiters in code
 #+BEGIN_SRC emacs-lisp
@@ -767,6 +767,10 @@ Sam's Emacs Config
     :custom
     (web-mode-code-indent-offset 2)
     (web-mode-markup-indent-offset 2))
+
+;; Force 'web-mode' and 'sgml-mode' to kick in when an HTML file is opened:
+(add-hook 'auto-mode-alist '("\\.html\\'" . web-mode))
+(add-hook 'auto-mode-alist '("\\.html\\'" . sgml-mode))
 #+end_src
 *** Add 'csharp-mode' to handle C# files
 #+begin_src emacs-lisp
