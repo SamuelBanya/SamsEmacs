@@ -772,6 +772,11 @@ Sam's Emacs Config
 (add-hook 'auto-mode-alist '("\\.html\\'" . web-mode))
 (add-hook 'auto-mode-alist '("\\.html\\'" . sgml-mode))
 #+end_src
+*** Add 'htmlize' for HTML editing
+#+begin_src emacs-lisp
+  (use-package htmlize
+    :ensure t)
+#+end_src
 *** Add 'csharp-mode' to handle C# files
 #+begin_src emacs-lisp
   (use-package csharp-mode
@@ -945,6 +950,11 @@ Sam's Emacs Config
 *** Add 'free-keys' to determine the free keybindings present currently available in Emacs
 #+begin_src emacs-lisp
   (use-package free-keys
+    :ensure t)
+#+end_src
+*** Add 'hydra' to do some cool keybinding macro functions
+#+begin_src emacs-lisp
+  (use-package hydra
     :ensure t)
 #+end_src
 ** Helm Related Packages
