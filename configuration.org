@@ -841,7 +841,8 @@ Sam's Emacs Config
 
 *** Add 'lsp-ui' to adjust UI portion of LSP mode's features
 #+begin_src emacs-lisp
-  (use-package lsp-ui)
+  (use-package lsp-ui
+    :ensure t)
 #+end_src
 *** Add 'yaml-mode' for support for '.yaml' files
 #+begin_src emacs-lisp
