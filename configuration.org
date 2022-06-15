@@ -734,11 +734,15 @@ Sam's Emacs Config
   (use-package logview
     :ensure t)
 #+END_SRC
-*** Add 'js-mode' built-in related tweaks to adjust the default indent level to '2'
+*** Add 'js2-mode' for improved JavaScript editing mode
 #+begin_src emacs-lisp
-  (add-hook 'js-mode-hook
-            (function (lambda ()
-                        (setq setq js-indent-level 2))))
+  (use-package js2-mode
+    :ensure t
+    :custom
+    (js-indent-level 2)
+    (js2-basic-offset 2)
+    :init
+    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 #+end_src
 *** Add 'ruby-mode' for Ruby projects
 #+begin_src emacs-lisp
@@ -833,7 +837,7 @@ Sam's Emacs Config
     (setq lsp-auto-guess-root t)
     ;; Force the docs to NOT appear in the modeline:
     (setq lsp-eldoc-hook nil)
-    :hook (((typescript-mode go-mode javascript-mode js-mode c-mode c++-mode python-mode ruby-mode web-mode csharp-mode vue-mode yaml-mode) . lsp) (lsp-mode . lsp-lens-mode)))
+    :hook (((typescript-mode go-mode js2-mode c-mode c++-mode python-mode ruby-mode web-mode csharp-mode vue-mode yaml-mode) . lsp) (lsp-mode . lsp-lens-mode)))
 
   ;; Force 'display-line-numbers-mode' to be enabled when LSP mode is enabled:
   (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
