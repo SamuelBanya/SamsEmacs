@@ -848,6 +848,15 @@ Sam's Emacs Config
   (use-package lsp-ui
     :ensure t)
 #+end_src
+*** Add custom function to fix UI bugs for 'lsp-ui-sideline-mode' when displaying helper text on screen
+#+begin_src emacs-lisp
+  ;; From this GitHub thread:
+  ;; https://github.com/emacs-lsp/lsp-ui/issues/716
+  (eval-after-load 'lsp-ui-sideline '(progn
+                                       (defun lsp-ui-sideline--align (&rest lengths)
+                                         "Align sideline string by LENGTHS from the right of the window."
+                                         (cons (+ (apply '+ lengths) (if (display-graphic-p) 1 2)) 'width))))
+#+end_src
 *** Add 'yaml-mode' for support for '.yaml' files
 #+begin_src emacs-lisp
   (use-package yaml-mode
