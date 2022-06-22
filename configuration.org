@@ -429,8 +429,9 @@ Sam's Emacs Config
 *** Color Theme
    Load color theme, and do 'org-restart' to make sure the theme loads correctly:
    #+BEGIN_SRC emacs-lisp
-   (load-theme 'morrowind-emacs)
-   (org-mode-restart)
+     ;; (load-theme 'morrowind-emacs)
+     (load-theme 'kirby-emacs)
+     (org-mode-restart)
    #+END_SRC
 *** Highlight Current Line In GUI Version Of Emacs
    #+BEGIN_SRC emacs-lisp
