@@ -231,7 +231,6 @@ Sam's Emacs Config
   ;; _f7 and S-f7_: start 'org-tree-slide-mode' for Org Mode based presentations, and stop them
   ;; _f6_: insert YouTube video link, and return the YouTube video name into pasted buffer
   ;; _C-x b_: enable iBuffer to check available buffers
-  ;; _C-x C-b_: enable 'helm-buffers-list' to check list of available buffers to switch to via a Helm Mode prompt
   ;; _f2_: enable zoom-based Hydra to zoom in and out of available Emacs buffer
   ;; _C-c a_: enable 'Org-Agenda' to view agenda of tasks
   ;; _C-!_: enable color-theme based Hydra to change color themes on the fly
@@ -257,10 +256,6 @@ Sam's Emacs Config
   ;; _C-h M-a_: show the major mode keybindings with the 'discover-my-major' function
   ;; _C-h M-o_: show the minor mode keybindings with the 'discover-my-mode' function
   ;; _M-x free-keys_: show the available keybindings to use for later use in my Emacs config
-  ;; _M-i_: hover over a word, and find that word in any open buffer on screen via the 'helm-swoop' function
-  ;; _M-I_: hover over a word, and jump to the next instance of the word in the buffer via the 'helm-swoop-back-to-last-point' function
-  ;; _C-c M-i_: hover over a word, and find the next file that contains that specific word via the 'helm-multi-swoop' function
-  ;; _C-x M-i_: hover over a word, and find the next file that contains that specific word via the 'helm-multi-swoop-all' function
   ;; _C-c e_: edit Emacs config at any time
   ;; _C-c r_: reload Emacs config at any time
   ;; _C-c C-p C-b_: add the entire current buffer to an online webpaste, specifically at dpaste.org
@@ -358,20 +353,16 @@ Sam's Emacs Config
    #+BEGIN_SRC emacs-lisp
    (setq ibuffer-expert t)
    #+END_SRC
-** Switch Buffers Using 'helm-buffers-list' with 'C-x C-b'
-   #+BEGIN_SRC emacs-lisp
-   (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
-   #+END_SRC
+** Switch Buffers Using 'ivy-switch-buffer' With 'C-x C-b'
+#+begin_src emacs-lisp
+    (global-set-key (kbd "C-x C-b") 'ivy-switch-buffer)
+#+end_src
 ** Hydra for zooming in and out of buffers with 'f2'
    #+BEGIN_SRC emacs-lisp
    (defhydra hydra-zoom (global-map "<f2>")
    "zoom"
    ("g" text-scale-increase "in")
    ("l" text-scale-decrease "out"))
-   #+END_SRC
-** Helm Keybinding For 'M-x'
-   #+BEGIN_SRC emacs-lisp
-   (global-set-key (kbd "M-x") 'helm-M-x)
    #+END_SRC
 ** 'C-c a' for Org-Agenda Keybinding
    #+BEGIN_SRC emacs-lisp
@@ -972,60 +963,18 @@ Sam's Emacs Config
   (use-package hydra
     :ensure t)
 #+end_src
-** Helm Related Packages
-*** Helm-Mode
-   #+BEGIN_SRC emacs-lisp
-     (use-package helm
-       :ensure t
-       :init
-       (helm-mode 1)
-       :config
-       (setq helm-move-to-line-cycle-in-source t))
-   #+END_SRC
-*** Add 'helm-swoop' and bind to 'M-i', 'C-c M-i', 'C-x M-i'
-#+BEGIN_SRC emacs-lisp
-  (use-package helm-swoop
+** Counsel Related Packages
+*** Install 'counsel' to get access to 'ivy' component
+#+begin_src emacs-lisp
+  (use-package counsel
     :ensure t)
-
-  (global-set-key (kbd "M-i") 'helm-swoop)
-  (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
-  (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
-  (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
-
-  ;; When doing isearch, hand the word over to helm-swoop
-  (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
-
-  ;; From helm-swoop to helm-multi-swoop-all
-  (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
-
-  ;; Move up and down like isearch
-  (define-key helm-swoop-map (kbd "C-p") 'helm-previous-line)
-  (define-key helm-swoop-map (kbd "C-n") 'helm-next-line)
-  (define-key helm-multi-swoop-map (kbd "C-p") 'helm-previous-line)
-  (define-key helm-multi-swoop-map (kbd "C-n") 'helm-next-line)
-
-  ;; Save buffer when helm-multi-swoop-edit complete
-  (setq helm-multi-swoop-edit-save t)
-
-  ;; If this value is t, split window inside the current window
-  (setq helm-swoop-split-with-multiple-windows nil)
-
-  ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
-  (setq helm-swoop-split-direction 'split-window-vertically)
-
-  ;; If nil, you can slightly boost invoke speed in exchange for text color
-  (setq helm-swoop-speed-or-color nil)
-
-  ;; ;; Go to the opposite side of line from the end or beginning of line
-  (setq helm-swoop-move-to-line-cycle t)
-
-  ;; Optional face for line numbers
-  ;; Face name is `helm-swoop-line-number-face`
-  (setq helm-swoop-use-line-number-face t)
-
-  ;; If you prefer fuzzy matching
-  (setq helm-swoop-use-fuzzy-match t)
-#+END_SRC
+#+end_src
+*** Enable 'ivy' everywhere
+#+begin_src emacs-lisp
+;; Taken from the 'swiper' Docs page:
+;; https://oremacs.com/swiper/
+(ivy-mode 1)
+#+end_src
 ** File Manager
 *** Nuke 'dired' mode's ability to open so many buffers
 #+BEGIN_SRC emacs-lisp
