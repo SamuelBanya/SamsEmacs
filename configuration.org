@@ -879,6 +879,16 @@ Sam's Emacs Config
                            (require 'lsp-python-ms)
                            (lsp))))
 #+end_src
+*** Add 'enable-minor-mode' custom function from Luke Wesley-Holley
+#+begin_src emacs-lisp
+  ;; Taken from here:
+  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
+  (defun enable-minor-mode (my-pair)
+    "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
+    (if (buffer-file-name)
+        (if (string-match (car my-pair) buffer-file-name)
+      (funcall (cdr my-pair)))))
+#+end_src
 *** Add 'prettier-js' for '.jsx' and '.tsx' files
 #+begin_src emacs-lisp
   ;; NOTE: You need to install this with 'npm install -g prettier' on the local machine
