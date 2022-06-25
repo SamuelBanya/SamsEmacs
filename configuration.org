@@ -903,15 +903,6 @@ Sam's Emacs Config
        (add-hook 'web-mode-hook #'prettier-js-mode)))
 
 #+end_src
-*** Add 'npm-mode' to access 'npm' from Emacs
-#+begin_src emacs-lisp
-  ;; Taken from here:
-  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
-  (use-package npm-mode
-    :ensure t
-    :config
-    (npm-global-mode))
-#+end_src
 *** Add 'json-mode' for '.json' files
 #+begin_src emacs-lisp
   (use-package json-mode
