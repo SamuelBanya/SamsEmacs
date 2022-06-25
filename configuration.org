@@ -1,4 +1,11 @@
 Sam's Emacs Config
+* Garbage Collector Speed Trick
+#+begin_src emacs-lisp
+;; This is to set the garbage collector to speedup the entire Emacs config startup time
+;; and must go at the beginning of the config itself:
+(setq gc-cons-threshold 100000000)
+(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
+#+end_src
 * Personal Specific
 ** Add Gnus for personal email
 #+begin_src emacs-lisp
@@ -180,6 +187,14 @@ Sam's Emacs Config
 
     (add-hook 'erc-mode-hook 'my-erc-mode-hook))
 #+end_src
+** Add font specific changes for personal machines
+#+begin_src emacs-lisp
+    (when (member (system-name) '("notestation" "fossastation"))
+      (set-face-attribute 'default nil
+                          :height (pcase (system-name)
+                                    ("notestation" 125)
+                                    ("fossastation" 125))))
+#+end_src
 * Work Specific
 ** Org-Capture templates for Zendesk tickets and Intercom chats
 #+BEGIN_SRC emacs-lisp
@@ -215,6 +230,13 @@ Sam's Emacs Config
   (when (string= system-name "Samuels-MBP.tampabay.rr.com")
     (global-set-key (kbd "<A-return>") 'vterm))
 #+END_SRC
+** Add font specific changes for work Macbook to make it larger because default Mac font size sucks
+#+begin_src emacs-lisp
+  (when (string= system-name "Samuels-MBP.tampabay.rr.com")
+    (set-face-attribute 'default nil
+                        :height (pcase (system-name)
+                                  ("Samuels-MBP.tampabay.rr.com" 140))))
+#+end_src
 * Keybinding Changes
 ** Add related hydra to remind me of all the super custom specific keybindings I have ever made
 #+begin_src emacs-lisp
@@ -615,34 +637,6 @@ Sam's Emacs Config
 ;; https://www.reddit.com/r/emacs/comments/43vfl1/enable_wordwrap_in_orgmode/czl98d4/
 (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
 #+end_src
-*** Add 'hydra-desktop' to add desktop functionality to save workspaces in Emacs
-#+begin_src emacs-lisp
-  ;; Taken from this Wordpress blog post:
-  ;; https://ericjmritz.wordpress.com/2015/10/14/some-personal-hydras-for-gnu-emacs/#desktops
-  (defhydra hydra-desktop (:color pink
-				  :hint nil)
-    "
-      ^Change desktops^
-      ^^^^^^^^^^-----------------------------
-      _c_: clear the desktop
-      _s_: save the desktop
-      _r_: revert the desktop
-      _d_: change the directory for the desktop
-      _q_: quit
-      "
-    ("c" desktop-clear "clear")
-    ("s" desktop-save "save")
-    ("r" desktop-revert "revert")
-    ("d" desktop-change-dir "dir")
-    ("q" nil))
-
-    (global-set-key (kbd "C-$") 'hydra-desktop/body)
-#+end_src
-*** Add 'calfw' for displaying a calendar in Emacs
-#+begin_src emacs-lisp
-  (use-package calfw
-    :ensure t)
-#+end_src
 *** Add 'highlight-indent-guides' to visually observe indents in a buffer
 #+begin_src emacs-lisp
   (use-package highlight-indent-guides
@@ -650,15 +644,6 @@ Sam's Emacs Config
     :custom
     (highlight-indent-guides-method 'character)
     (highlight-indent-guides-character ?\|))
-#+end_src
-*** Add 'undo-tree' to examine what changes were made in a given buffer
-#+begin_src emacs-lisp
-  (use-package undo-tree
-    :ensure t
-    :init
-    (global-undo-tree-mode)
-    :config
-    (setq undo-tree-auto-save-history nil))
 #+end_src
 ** Terminal
 *** Add 'vterm' to enable only decent Emacs terminal
@@ -756,17 +741,36 @@ Sam's Emacs Config
 (use-package prettier
   :hook (typescript-mode . prettier-mode))
 #+end_src
-*** Add 'web-mode' to handle web template editing
+*** Add 'web-mode' hooks
 #+begin_src emacs-lisp
-  (use-package web-mode
-    :ensure t
-    :custom
-    (web-mode-code-indent-offset 2)
-    (web-mode-markup-indent-offset 2))
-
-;; Force 'web-mode' and 'sgml-mode' to kick in when an HTML file is opened:
-(add-hook 'auto-mode-alist '("\\.html\\'" . web-mode))
-(add-hook 'auto-mode-alist '("\\.html\\'" . sgml-mode))
+  ;; Taken from here:
+  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
+  (setq-default tab-width 2)
+  (setq indent-tabs-mode nil)
+  (defun sam/webmode-hook ()
+          "Webmode hooks."
+          (setq web-mode-enable-comment-annotation t)
+          (setq web-mode-markup-indent-offset 2)
+          (setq web-mode-code-indent-offset 2)
+          (setq web-mode-css-indent-offset 2)
+          (setq web-mode-attr-indent-offset 0)
+          (setq web-mode-enable-auto-indentation t)
+          (setq web-mode-enable-auto-closing t)
+          (setq web-mode-enable-auto-pairing t)
+          (setq web-mode-enable-css-colorization t)
+  )
+#+end_src
+*** Add 'web-mode' for HTML, JS, and TS based files (.html, .js, .jsx, .ts, .tsx, .html)
+#+begin_src emacs-lisp
+    (use-package web-mode
+      :ensure t
+      :mode (("\\.js\\'" . web-mode)
+             ("\\.jsx\\'" .  web-mode)
+             ("\\.ts\\'" . web-mode)
+             ("\\.tsx\\'" . web-mode)
+             ("\\.html\\'" . web-mode))
+      :commands web-mode
+      :hook (web-mode . sam/webmode-hook))
 #+end_src
 *** Add 'htmlize' for HTML editing
 #+begin_src emacs-lisp
@@ -783,28 +787,58 @@ Sam's Emacs Config
   (use-package vue-mode
     :ensure t)
 #+end_src
-*** Add 'python-mode' to handle Python projects
+*** Add 'exec-path-from-shell' package so that utilities such as 'node' can be found, and so that 'prettier-js' works:
 #+begin_src emacs-lisp
-  (use-package python-mode
+  (use-package exec-path-from-shell
     :ensure t
-    :hook (python-mode-hook . jedi:setup))
+    :config
+    (exec-path-from-shell-initialize))
+#+end_src
+*** Add the 'add-node-modules-path' for 'NodeJS'
+#+begin_src emacs-lisp
+  (use-package add-node-modules-path
+    :ensure t)
 #+end_src
 *** Add 'company' for auto-completion for programming projects
 #+begin_src emacs-lisp
-    (use-package company
-      :ensure t
-      :config
-      (setq company-idle-delay 0.2)
-      (setq company-minimum-prefix-length 1)
-      ;; Force Company Mode to NOT be enabled in Org Mode since its way too annoying for note taking:
-      (setq company-global-modes '(not org-mode))
-      (define-key company-active-map (kbd "M-n") nil)
-      (define-key company-active-map (kbd "M-p") nil)
-      (define-key company-active-map (kbd "C-n") #'company-select-next)
-      (define-key company-active-map (kbd "C-p") #'company-select-previous)
-      (setq lsp-completion-provider :capf)
-      :hook
-      (prog-mode . company-mode))
+  (use-package company
+    :ensure t
+    :config
+    (global-company-mode t)
+    (setq company-idle-delay 0.0)
+    (setq company-minimum-prefix-length 1)
+    ;; Force Company Mode to NOT be enabled in Org Mode since its way too annoying for note taking:
+    (setq company-global-modes '(not org-mode))
+    (define-key company-active-map (kbd "M-n") nil)
+    (define-key company-active-map (kbd "M-p") nil)
+    (define-key company-active-map (kbd "C-n") #'company-select-next)
+    (define-key company-active-map (kbd "C-p") #'company-select-previous)
+    (setq lsp-completion-provider :capf)
+    :hook
+    (prog-mode . company-mode))
+#+end_src
+*** Combined 'lsp' and 'lsp-ui' tweaks
+#+begin_src emacs-lisp
+  (setq lsp-keymap-prefix "C-c l")
+  (setq lsp-enable-which-key-integration t)
+  ;; Set 'lsp-idle-delay' to 0.2 seconds for quick autocompletion
+  (setq lsp-idle-delay 0.2)
+  ;; Adding this to force lsp to auto-guess the root directory of the project:
+  (setq lsp-auto-guess-root t)
+  ;; Force the docs to NOT appear in the modeline:
+  (setq lsp-eldoc-hook nil)
+  ;; Force lsp mode to not log everything for speed purposes:
+  (setq lsp-log-io nil)
+  (setq lsp-ui-sideline-show-hover t)
+  (setq lsp-ui-sideline-show-code-actions t)
+  ;; Force 'lsp' mode to use 'flymake' as its diagnostics provider:
+  (setq lsp-diagnostics-provider :flymake)
+  ;; Enable 'lsp-ui-doc' setting:
+  (setq lsp-ui-doc-enable t)
+  ;; Force LSP Mode to not automatically install language servers:
+  ;; Taken from here:
+  ;; https://emacs-lsp.github.io/lsp-mode/page/faq/#how-do-i-disable-automatic-installation
+  (setq lsp-enable-suggest-server-download nil)
 #+end_src
 *** Add 'lsp-mode' for intellisense for many programming languages (python, ruby, java, C++)
 #+begin_src emacs-lisp
@@ -818,18 +852,11 @@ Sam's Emacs Config
   (use-package lsp-mode
     :ensure t
     :commands (lsp lsp-deferred)
-    ;; Taken from this page:
-    ;; https://www.mattduck.com/lsp-python-getting-started.html
-    :config
-    (setq lsp-keymap-prefix "C-c l")
-    (setq lsp-enable-which-key-integration t)
-    ;; Set 'lsp-idle-delay' to 0.2 seconds for quick autocompletion
-    (setq lsp-idle-delay 0.2)
-    ;; Adding this to force lsp to auto-guess the root directory of the project:
-    (setq lsp-auto-guess-root t)
-    ;; Force the docs to NOT appear in the modeline:
-    (setq lsp-eldoc-hook nil)
-    :hook (((typescript-mode go-mode js2-mode c-mode c++-mode python-mode ruby-mode web-mode csharp-mode vue-mode yaml-mode) . lsp) (lsp-mode . lsp-lens-mode)))
+    :hook (
+           (web-mode . lsp-deferred)
+           (lsp-mode . lsp-enable-which-key-integration)
+           )
+    )
 
   ;; Force 'display-line-numbers-mode' to be enabled when LSP mode is enabled:
   (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
@@ -838,16 +865,57 @@ Sam's Emacs Config
 *** Add 'lsp-ui' to adjust UI portion of LSP mode's features
 #+begin_src emacs-lisp
   (use-package lsp-ui
-    :ensure t)
+    :ensure t
+    :commands lsp-ui-mode)
 #+end_src
-*** Add custom function to fix UI bugs for 'lsp-ui-sideline-mode' when displaying helper text on screen
+*** Add 'lsp-python-ms' for Python projects
 #+begin_src emacs-lisp
-  ;; From this GitHub thread:
-  ;; https://github.com/emacs-lsp/lsp-ui/issues/716
-  (eval-after-load 'lsp-ui-sideline '(progn
-                                       (defun lsp-ui-sideline--align (&rest lengths)
-                                         "Align sideline string by LENGTHS from the right of the window."
-                                         (cons (+ (apply '+ lengths) (if (display-graphic-p) 1 2)) 'width))))
+  ;; Taken from here:
+  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
+  (use-package lsp-python-ms
+    :ensure t
+    :init (setq lsp-python-ms-auto-install-server t)
+    :hook (python-mode . (lambda ()
+                           (require 'lsp-python-ms)
+                           (lsp))))
+#+end_src
+*** Add 'prettier-js' for '.jsx' and '.tsx' files
+#+begin_src emacs-lisp
+  ;; NOTE: You need to install this with 'npm install -g prettier' on the local machine
+  ;; Taken from this example:
+  ;; https://gist.github.com/Lukewh/47b200f0af5a632205f0fbec48669647
+  (use-package prettier-js
+    :ensure t)
+
+  (add-hook 'web-mode-hook #'(lambda ()
+                               (enable-minor-mode
+                                '("\\.jsx?\\'" . prettier-js-mode))
+                               (enable-minor-mode
+                                '("\\.tsx?\\'" . prettier-js-mode))))
+#+end_src
+*** More 'web-mode' based hooks
+#+begin_src emacs-lisp
+  ;; Taken from here:
+  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
+  (eval-after-load 'web-mode
+    '(progn
+       (add-hook 'web-mode-hook #'add-node-modules-path)
+       (add-hook 'web-mode-hook #'prettier-js-mode)))
+
+#+end_src
+*** Add 'npm-mode' to access 'npm' from Emacs
+#+begin_src emacs-lisp
+  ;; Taken from here:
+  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
+  (use-package npm-mode
+    :ensure t
+    :config
+    (npm-global-mode))
+#+end_src
+*** Add 'json-mode' for '.json' files
+#+begin_src emacs-lisp
+  (use-package json-mode
+    :ensure t)
 #+end_src
 *** Add 'yaml-mode' for support for '.yaml' files
 #+begin_src emacs-lisp
@@ -1066,19 +1134,6 @@ Sam's Emacs Config
 
   (global-set-key (kbd "C-c t") 'launch-treemacs)
 #+end_src
-*** Enable 'projectile' interaction library
-#+begin_src emacs-lisp
-  (use-package projectile
-    :ensure t
-    :custom
-    (projectile-enable-caching t)
-    :config
-    (define-key
-      projectile-mode-map
-      (kbd "C-c p")
-      'projectile-command-map)
-    (projectile-mode +1))
-#+end_src
 *** Enable 'dirvish' to add a nicer variant of 'dired' to use as a file manager
 #+begin_src emacs-lisp
   (use-package dirvish
@@ -1250,34 +1305,6 @@ Sam's Emacs Config
 #+BEGIN_SRC emacs-lisp
   (use-package hide-mode-line
     :ensure t)
-#+END_SRC
-** Online Pasting
-*** Add 'webpaste.el' to easily paste code snippets to online paste bins
-#+BEGIN_SRC emacs-lisp
-  (use-package webpaste
-    :ensure t
-    :bind (("C-c C-p C-b" . webpaste-paste-buffer)
-	   ("C-c C-p C-r" . webpaste-paste-region)
-	   ("C-c C-p C-p" . webpaste-paste-buffer-or-region))
-    :config
-    (progn
-      (setq webpaste-provider-priority '("dpaste.org"))))
-#+END_SRC
-** Online Research
-*** Add 'SX' to look up issues on Stack Exchange
-#+BEGIN_SRC emacs-lisp
-  (use-package sx
-    :ensure t
-    :config
-    (bind-keys :prefix "C-c s"
-	       :prefix-map sx-map
-	       :prefix-docstring "Global keymap for SX."
-	       ("q" . sx-tab-all-questions)
-	       ("i" . sx-inbox)
-	       ("o" . sx-open-link)
-	       ("u" . sx-tab-unanswered-my-tags)
-	       ("a" . sx-ask)
-	       ("s" . sx-search)))
 #+END_SRC
 ** YouTube
 *** Add 'ytdl', a package for using 'youtube-dl' within Emacs to easily download YouTube videos
