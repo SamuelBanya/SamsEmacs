@@ -392,20 +392,14 @@ Sam's Emacs Config
    #+END_SRC
 * Useful Packages And QOL Changes To Make Emacs Better
 ** UI
-*** Add 'autothemer' to create Emacs themes more easily
-#+begin_src emacs-lisp
-;; NOTE:
-;; A few notes in terms of disabling current theme to then create a new one
-;; Workflow:
-;; 'M-x disable theme': Disable the current theme
-;; Use 'custom-theme-load-path' variable in the Emacs config to set theme path
-;; 'M-x describe-face': Describe the face currently under the cursor
-  (use-package autothemer
-    :ensure t)
-#+end_src
 *** Add 'gruvbox' themes from MELPA
 #+begin_src emacs-lisp
   (use-package gruvbox-theme
+    :ensure t)
+#+end_src
+*** Add 'solarized' themes from MELPA
+#+begin_src emacs-lisp
+  (use-package solarized-theme
     :ensure t)
 #+end_src
 *** Dashboard
@@ -445,8 +439,9 @@ Sam's Emacs Config
      ;; (load-theme 'wordperfect-plus-emacs)
      ;; (load-theme 'kojak-emacs)
      ;; (load-theme 'super-nintendo-emacs)
-     (load-theme 'morrowind-emacs)
+     ;; (load-theme 'morrowind-emacs)
      ;; (load-theme 'kirby-emacs)
+     (load-theme solarized-dark t)
      (org-mode-restart)
    #+END_SRC
 *** Highlight Current Line In GUI Version Of Emacs
