@@ -397,11 +397,6 @@ Sam's Emacs Config
   (use-package gruvbox-theme
     :ensure t)
 #+end_src
-*** Add 'solarized' themes from MELPA
-#+begin_src emacs-lisp
-  (use-package solarized-theme
-    :ensure t)
-#+end_src
 *** Dashboard
    #+BEGIN_SRC emacs-lisp
      (use-package dashboard
@@ -441,7 +436,7 @@ Sam's Emacs Config
      ;; (load-theme 'super-nintendo-emacs)
      ;; (load-theme 'morrowind-emacs)
      ;; (load-theme 'kirby-emacs)
-     (load-theme solarized-dark t)
+     (load-theme 'gruvbox)
      (org-mode-restart)
    #+END_SRC
 *** Highlight Current Line In GUI Version Of Emacs
