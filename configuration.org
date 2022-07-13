@@ -198,7 +198,7 @@ Sam's Emacs Config
 * Work Specific
 ** Org-Capture templates for Zendesk tickets and Intercom chats
 #+BEGIN_SRC emacs-lisp
-  (when (string= system-name "Samuels-MBP.tampabay.rr.com")
+  (when (member (system-name) '("Samuels-MBP.tampabay.rr.com" "Samuels-MacBook-Pro))
     (setq org-capture-templates
 	  ;; Using backtick to allow for 'format-time-string' to be escaped:
 	  `(("a" "OPEN Ticket Capture Template" entry
@@ -227,12 +227,12 @@ Sam's Emacs Config
 #+END_SRC
 ** 'Option' MacOS Key + Return to launch 'vterm'
 #+BEGIN_SRC emacs-lisp
-  (when (string= system-name "Samuels-MBP.tampabay.rr.com")
+  (when (member (system-name) '("Samuels-MBP.tampabay.rr.com" "Samuels-MacBook-Pro))
     (global-set-key (kbd "<A-return>") 'vterm))
 #+END_SRC
 ** Add font specific changes for work Macbook to make it larger because default Mac font size sucks
 #+begin_src emacs-lisp
-  (when (string= system-name "Samuels-MBP.tampabay.rr.com")
+  (when (member (system-name) '("Samuels-MBP.tampabay.rr.com" "Samuels-MacBook-Pro))
     (set-face-attribute 'default nil
                         :height (pcase (system-name)
                                   ("Samuels-MBP.tampabay.rr.com" 140))))
