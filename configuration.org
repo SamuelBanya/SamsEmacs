@@ -230,13 +230,6 @@ Sam's Emacs Config
   (when (member (system-name) '("Samuels-MBP.tampabay.rr.com" "Samuels-MacBook-Pro.local"))
     (global-set-key (kbd "<A-return>") 'vterm))
 #+END_SRC
-** Add font specific changes for work Macbook to make it larger because default Mac font size sucks
-#+begin_src emacs-lisp
-  (when (member (system-name) '("Samuels-MBP.tampabay.rr.com" "Samuels-MacBook-Pro.local"))
-    (set-face-attribute 'default nil
-                        :height (pcase (system-name)
-                                  ("Samuels-MBP.tampabay.rr.com" 140))))
-#+end_src
 * Keybinding Changes
 ** Add related hydra to remind me of all the super custom specific keybindings I have ever made
 #+begin_src emacs-lisp
