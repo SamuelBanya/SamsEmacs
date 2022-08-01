@@ -392,10 +392,15 @@ Sam's Emacs Config
    #+END_SRC
 * Useful Packages And QOL Changes To Make Emacs Better
 ** UI
+*** Add 'xresources-theme' from MELPA to allow Emacs to use '~/.Xresources' as the Emacs theme
+#+begin_src emacs-lisp
+(use-package xresources-theme
+:ensure t)
+#+end_src
 *** Add 'gruvbox' themes from MELPA
 #+begin_src emacs-lisp
-  (use-package gruvbox-theme
-    :ensure t)
+  ;; (use-package gruvbox-theme
+    ;; :ensure t)
 #+end_src
 *** Dashboard
    #+BEGIN_SRC emacs-lisp
@@ -436,7 +441,7 @@ Sam's Emacs Config
      ;; (load-theme 'super-nintendo-emacs)
      ;; (load-theme 'morrowind-emacs)
      ;; (load-theme 'kirby-emacs)
-     (load-theme 'gruvbox)
+     ;; (load-theme 'gruvbox)
      (org-mode-restart)
    #+END_SRC
 *** Highlight Current Line In GUI Version Of Emacs
