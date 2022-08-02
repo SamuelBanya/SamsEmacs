@@ -25,40 +25,40 @@
 
 ;;; Commentary:
 
-;; Colors Used:
-;; mainbg: #bfbac0
-;; mainfg: #a294cf
-;; builtin: #44235a
-;; keyword: #444442
-;; string: #002a83
-;; functionname: #1f0033
-;; variable: #743c9a
-;; type: #a90df5
-;; constant: #707681
-;; comment: #0a000f
-;; warning: #ff0000
-;; warning2: #ff8800
-
 ;;; Code:
+
+;; Colors:
+;; mainbg: #22165a
+;; mainfg: #bdb1f4
+;; builtin: #a90df5
+;; keyword: #a90df5
+;; string: #8f07ff
+;; functionname: #b9a1ef
+;; variable: #e3bfd1
+;; type: #d43a61
+;; constant: #ffe213
+;; comment: #ffe213
+;; warning: #e3bfd1
+;; warning2: #ff8800
 
  (deftheme super-nintendo-emacs)
  (let ((class '((class color) (min-colors 89)))
-       (fg1 "#a294cf")
-       (fg2 "#a99dd3")
-       (fg3 "#b1a5d7")
-       (fg4 "#b8aedb")
-       (bg1 "#bfbac0")
-       (bg2 "#b0abb1")
-       (bg3 "#a09ca1")
-       (bg4 "#918d92")
-       (builtin "#44235a")
-       (keyword "#444442")
-       (const   "#707681")
-       (comment "#0a000f")
-       (func    "#1f0033")
-       (str     "#002a83")
-       (type    "#a90df5")
-       (var     "#743c9a")
+       (fg1 "#bdb1f4")
+       (fg2 "#aea3e0")
+       (fg3 "#9f95cd")
+       (fg4 "#9087b9")
+       (bg1 "#22165a")
+       (bg2 "#342967")
+       (bg3 "#453b74")
+       (bg4 "#574e82")
+       (builtin "#a90df5")
+       (keyword "#a90df5")
+       (const   "#ffe213")
+       (comment "#ffe213")
+       (func    "#b9a1ef")
+       (str     "#8f07ff")
+       (type    "#d43a61")
+       (var     "#e3bfd1")
        (warning "#ff0000")
        (warning2 "#ff8800"))
    (custom-theme-set-faces
@@ -82,7 +82,6 @@
 	`(hl-line ((,class (:background  ,bg2))))
 	`(fringe ((,class (:background ,bg2 :foreground ,fg4))))
 	`(cursor ((,class (:background ,bg3))))
-        `(show-paren-match-face ((,class (:background ,warning))))
         `(isearch ((,class (:bold t :foreground ,warning :background ,bg3))))
         `(mode-line ((,class (:box (:line-width 1 :color nil) :bold t :foreground ,fg4 :background ,bg2))))
         `(mode-line-inactive ((,class (:box (:line-width 1 :color nil :style pressed-button) :foreground ,var :background ,bg1 :weight normal))))
@@ -256,12 +255,24 @@
         `(jde-java-font-lock-number-face ((t (:foreground ,var))))
         `(yas-field-highlight-face ((t (:background ,bg4))))
         )
+  ;; Legacy
+  (if (< emacs-major-version 22)
+    (custom-theme-set-faces
+      'super-nintendo-emacs
+      `(show-paren-match-face ((,class (:background ,warning)))) ;; obsoleted in 22.1, removed 2016
+    )
+   (custom-theme-set-faces
+      'super-nintendo-emacs
+      `(show-paren-match ((,class (:foreground ,bg1 :background ,str))))
+      `(show-paren-mismatch ((,class (:foreground ,bg1 :background ,warning))))
+   )
+  )
   ;; emacs >= 26.1
   (when (>= emacs-major-version 26)
     (custom-theme-set-faces
      'super-nintendo-emacs
      `(line-number ((t (:inherit fringe))))
-     `(line-number-current-line ((t (:inherit fringe :foreground "black" :weight bold))))))
+     `(line-number-current-line ((t (:inherit fringe :foreground "white" :weight bold))))))
   ;; emacs >= 27.1
   (when (>= emacs-major-version 27)
     (custom-theme-set-faces

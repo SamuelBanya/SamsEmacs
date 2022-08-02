@@ -399,8 +399,8 @@ Sam's Emacs Config
 #+end_src
 *** Add 'gruvbox' themes from MELPA
 #+begin_src emacs-lisp
-  ;; (use-package gruvbox-theme
-    ;; :ensure t)
+  (use-package gruvbox-theme
+    :ensure t)
 #+end_src
 *** Dashboard
    #+BEGIN_SRC emacs-lisp
@@ -438,7 +438,7 @@ Sam's Emacs Config
    #+BEGIN_SRC emacs-lisp
      ;; (load-theme 'wordperfect-plus-emacs)
      ;; (load-theme 'kojak-emacs)
-     ;; (load-theme 'super-nintendo-emacs)
+     (load-theme 'super-nintendo-emacs)
      ;; (load-theme 'morrowind-emacs)
      ;; (load-theme 'kirby-emacs)
      ;; (load-theme 'gruvbox)
