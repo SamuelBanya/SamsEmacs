@@ -88,7 +88,7 @@ Sam's Emacs Config
 #+end_src
 ** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", "fedoraserver")
 #+begin_src emacs-lisp
-  (when (member (system-name) '("notestation" "fossastation"))
+  (when (member (system-name) '("notestation" "fossastation" "Samuels-MBP.tampabay.rr.com"))
     ;; Create separate connection based functions to later call within the 'hydra-connect' hydra:
     (defun ssh-into-musimatic-sam ()
       (interactive)
