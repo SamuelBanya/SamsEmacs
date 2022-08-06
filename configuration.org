@@ -446,7 +446,7 @@ Sam's Emacs Config
      ;; (load-theme 'super-nintendo-emacs)
      ;; (load-theme 'morrowind-emacs)
      ;; (load-theme 'kirby-emacs)
-     (load-theme 'gruvbox)
+     (load-theme 'gruvbox-dark-hard)
      ;; (load-theme 'base16-bespin t)
      (org-mode-restart)
    #+END_SRC
