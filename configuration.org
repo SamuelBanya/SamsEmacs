@@ -404,8 +404,8 @@ Sam's Emacs Config
 #+end_src
 *** Add 'base16-theme' from MELPA
 #+begin_src emacs-lisp
-  (use-package base16-theme
-    :ensure t)
+  ;; (use-package base16-theme
+    ;; :ensure t)
 #+end_src
 *** Dashboard
    #+BEGIN_SRC emacs-lisp
