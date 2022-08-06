@@ -402,6 +402,11 @@ Sam's Emacs Config
   (use-package gruvbox-theme
     :ensure t)
 #+end_src
+*** Add 'base16-theme' from MELPA
+#+begin_src emacs-lisp
+  (use-package base16-theme
+    :ensure t)
+#+end_src
 *** Dashboard
    #+BEGIN_SRC emacs-lisp
      (use-package dashboard
@@ -438,10 +443,11 @@ Sam's Emacs Config
    #+BEGIN_SRC emacs-lisp
      ;; (load-theme 'wordperfect-plus-emacs)
      ;; (load-theme 'kojak-emacs)
-     (load-theme 'super-nintendo-emacs)
+     ;; (load-theme 'super-nintendo-emacs)
      ;; (load-theme 'morrowind-emacs)
      ;; (load-theme 'kirby-emacs)
-     ;; (load-theme 'gruvbox)
+     (load-theme 'gruvbox)
+     ;; (load-theme 'base16-bespin t)
      (org-mode-restart)
    #+END_SRC
 *** Highlight Current Line In GUI Version Of Emacs
