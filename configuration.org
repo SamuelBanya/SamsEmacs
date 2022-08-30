@@ -740,11 +740,6 @@ Sam's Emacs Config
   (use-package typescript-mode
     :ensure t)
 #+end_src
-*** Add 'prettier-mode' to use with 'typescript-mode'
-#+begin_src emacs-lisp
-(use-package prettier
-  :hook (typescript-mode . prettier-mode))
-#+end_src
 *** Add 'web-mode' hooks
 #+begin_src emacs-lisp
   ;; Taken from here:
@@ -786,23 +781,6 @@ Sam's Emacs Config
   (use-package csharp-mode
     :ensure t)
 #+end_src
-*** Add 'vue-mode' to handle Vue projects
-#+begin_src emacs-lisp
-  (use-package vue-mode
-    :ensure t)
-#+end_src
-*** Add 'exec-path-from-shell' package so that utilities such as 'node' can be found, and so that 'prettier-js' works:
-#+begin_src emacs-lisp
-  (use-package exec-path-from-shell
-    :ensure t
-    :config
-    (exec-path-from-shell-initialize))
-#+end_src
-*** Add the 'add-node-modules-path' for 'NodeJS'
-#+begin_src emacs-lisp
-  (use-package add-node-modules-path
-    :ensure t)
-#+end_src
 *** Add 'company' for auto-completion for programming projects
 #+begin_src emacs-lisp
   (use-package company
@@ -820,6 +798,22 @@ Sam's Emacs Config
     (setq lsp-completion-provider :capf)
     :hook
     (prog-mode . company-mode))
+#+end_src
+*** Add 'aggressive-indent' for better indentation
+#+begin_src emacs-lisp
+  (use-package aggressive-indent
+    :ensure t)
+
+  ;; Adding modes to enable 'aggressive-indent' mode via hooks:
+  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+  (add-hook 'python-mode-hook #'aggressive-indent-mode)
+  (add-hook 'css-mode-hook #'aggressive-indent-mode)
+  (add-hook 'web-mode-hook #'aggressive-indent-mode)
+  (add-hook 'rjsx-mode-hook #'aggressive-indent-mode)
+  (add-hook 'js2-mode-hook #'aggressive-indent-mode)
+  (add-hook 'ruby-mode-hook #'aggressive-indent-mode)
+  (add-hook 'python-mode-hook #'aggressive-indent-mode)
+
 #+end_src
 *** Combined 'lsp' and 'lsp-ui' tweaks
 #+begin_src emacs-lisp
@@ -858,14 +852,15 @@ Sam's Emacs Config
     :commands (lsp lsp-deferred)
     :hook (
            (web-mode . lsp-deferred)
+           (ruby-mode . lsp-deferred)
            (lsp-mode . lsp-enable-which-key-integration)
            )
     )
-
-  ;; Force 'display-line-numbers-mode' to be enabled when LSP mode is enabled:
+#+end_src
+*** Force 'display-line-numbers-mode' to be enabled when LSP mode is enabled
+#+begin_src emacs-lisp
   (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
 #+end_src
-
 *** Add 'lsp-ui' to adjust UI portion of LSP mode's features
 #+begin_src emacs-lisp
   (use-package lsp-ui
@@ -883,6 +878,17 @@ Sam's Emacs Config
                            (require 'lsp-python-ms)
                            (lsp))))
 #+end_src
+*** Adding 'rjsx-mode' to allow for easy editing of '.jsx' files
+#+begin_src emacs-lisp
+  (use-package rjsx-mode
+    :ensure t)
+
+  (add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode))
+#+end_src
+*** Force 'display-line-numbers-mode' to be enabled when 'ruby mode' is enabled
+#+begin_src emacs-lisp
+(add-hook 'ruby-mode-hook #'display-line-numbers-mode)
+#+end_src
 *** Add 'enable-minor-mode' custom function from Luke Wesley-Holley
 #+begin_src emacs-lisp
   ;; Taken from here:
@@ -892,30 +898,6 @@ Sam's Emacs Config
     (if (buffer-file-name)
         (if (string-match (car my-pair) buffer-file-name)
       (funcall (cdr my-pair)))))
-#+end_src
-*** Add 'prettier-js' for '.jsx' and '.tsx' files
-#+begin_src emacs-lisp
-  ;; NOTE: You need to install this with 'npm install -g prettier' on the local machine
-  ;; Taken from this example:
-  ;; https://gist.github.com/Lukewh/47b200f0af5a632205f0fbec48669647
-  (use-package prettier-js
-    :ensure t)
-
-  (add-hook 'web-mode-hook #'(lambda ()
-                               (enable-minor-mode
-                                '("\\.jsx?\\'" . prettier-js-mode))
-                               (enable-minor-mode
-                                '("\\.tsx?\\'" . prettier-js-mode))))
-#+end_src
-*** More 'web-mode' based hooks
-#+begin_src emacs-lisp
-  ;; Taken from here:
-  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
-  (eval-after-load 'web-mode
-    '(progn
-       (add-hook 'web-mode-hook #'add-node-modules-path)
-       (add-hook 'web-mode-hook #'prettier-js-mode)))
-
 #+end_src
 *** Add 'json-mode' for '.json' files
 #+begin_src emacs-lisp
