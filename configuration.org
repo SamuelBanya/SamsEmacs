@@ -853,6 +853,7 @@ Sam's Emacs Config
     :hook (
            (web-mode . lsp-deferred)
            (ruby-mode . lsp-deferred)
+           (python-mode . lsp-deferred)
            (lsp-mode . lsp-enable-which-key-integration)
            )
     )
