@@ -198,7 +198,7 @@ Sam's Emacs Config
 * Work Specific
 ** Org-Capture templates for Zendesk tickets and Intercom chats
 #+BEGIN_SRC emacs-lisp
-  (when (string= system-name "Samuels-MBP.tampabay.rr.com")
+  (when (string= system-name "Samuels-MBP")
     (setq org-capture-templates
 	  ;; Using backtick to allow for 'format-time-string' to be escaped:
 	  `(("a" "OPEN Ticket Capture Template" entry
