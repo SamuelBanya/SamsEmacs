@@ -1165,11 +1165,3 @@ Sam's Emacs Config
 (prefer-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 #+end_src
-** Bug Fixes
-*** Add fake 'eldoc-documentation-default' function that does nothing to shut up the 'Messages' buffer from repeating the same error
-#+begin_src emacs-lisp
-  ;; NOTE:
-  ;; I am creating this function to shut up the related error for some bugged out eldoc package
-  ;; that is included in Emacs by default and is some bug that was never fixed in Emacs 27.1:
-  (defun eldoc-documentation-default())
-#+end_src
