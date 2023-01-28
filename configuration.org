@@ -823,8 +823,6 @@ Sam's Emacs Config
   (setq lsp-idle-delay 0.2)
   ;; Adding this to force lsp to auto-guess the root directory of the project:
   (setq lsp-auto-guess-root t)
-  ;; Force the docs to NOT appear in the modeline:
-  (setq lsp-eldoc-hook nil)
   ;; Force lsp mode to not log everything for speed purposes:
   (setq lsp-log-io nil)
   (setq lsp-ui-sideline-show-hover t)
