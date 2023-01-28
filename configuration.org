@@ -7,57 +7,6 @@ Sam's Emacs Config
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
 #+end_src
 * Personal Specific
-** Add Gnus for personal email
-#+begin_src emacs-lisp
-  (when (member (system-name) '("notestation" "fossastation"))
-    (setq
-     user-full-name "Samuel Banya"
-     user-mail-address "sbanya@fastmail.com"
-     send-mail-function 'smtpmail-send-it
-     smtpmail-smtp-server "smtp.fastmail.com"
-     smtpmail-stream-type 'starttls
-     smtpmail-smtp-service 587
-     gnus-select-method
-     '(nnimap "fastmail"
-	      (nnimap-user "sbanya@fastmail.com")
-	      (nnimap-address "imap.fastmail.com")
-	      (nnimap-server-port 993)
-	      (nnimap-stream ssl)
-	      (nnmail-expiry-wait immediate))))
-#+end_src
-** Add 'elfeed-org' for a nicer org file for RSS feeds for 'elfeed' RSS feed reader
-#+BEGIN_SRC emacs-lisp
-  (when (member (system-name) '("notestation" "fossastation"))
-      (use-package elfeed-org
-	:ensure t
-	:config
-	(elfeed-org)
-	(setq rmh-elfeed-org-files (list "~/.emacs.d/rss_feeds/elfeed.org"))))
-#+END_SRC
-** Add 'elfeed' for 'notestation' laptop for personal RSS usage, and custom functions to make 'elfeed' easier to use
-#+BEGIN_SRC emacs-lisp
-  ;; Taken From Mike Zamansky's Config:
-  ;; https://github.com/zamansky/dot-emacs/blob/main/config.org
-  (defun elfeed-load-db-and-open ()
-    "Wrapper to load the elfeed database from the harddisk before opening elfeed"
-    (interactive)
-    (elfeed-db-load)
-    (elfeed)
-    (elfeed-search-update--force))
-
-  (defun elfeed-save-db-and-bury ()
-    "Wrapper to save the elfeed database to harddisk before killing elfeed buffer"
-    (interactive)
-    (elfeed-db-save)
-    (quit-window))
-
-  (when (member (system-name) '("notestation" "fossastation"))
-      (use-package elfeed
-	:ensure t
-	:bind (:map elfeed-search-mode-map
-		    ("q" . elfeed-save-db-and-bury)
-		    ("Q" . elfeed-save-db-and-bury))))
-#+END_SRC
 ** Add Org Capture templates for personal use ('Things To Do (NOW)', YouTube videos I found, etc)
 #+begin_src emacs-lisp
   (when (member (system-name) '("notestation" "fossastation"))
@@ -319,10 +268,6 @@ Sam's Emacs Config
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "<s-return>") 'vterm)
 #+END_SRC
-** Use 'C-x w' to use 'ranger.el'
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x w") 'ranger)
-#+END_SRC
 ** Add '<f12>' keybinding for 'toggle-frame-fullscreen' function for Macbook workaround
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "<f12>") 'toggle-frame-fullscreen)
@@ -349,11 +294,6 @@ Sam's Emacs Config
     ("q" nil))
 
   (global-set-key (kbd "C-=") 'hydra-rotate/body)
-#+END_SRC
-** Start 'org-tree-slide-mode' with 'f7' key and 'org-tree-slide-skip-done-toggle' with 'S-f7' key combo
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "<f7>") 'org-tree-slide-mode)
-  (global-set-key (kbd "S-<f7>") 'org-tree-slide-skip-done-toggle)
 #+END_SRC
 ** Use 'get-youtube-video-name' to grab YouTube video name from YouTube link provided by user and place into buffer, set to '<f6>'
 #+BEGIN_SRC emacs-lisp
@@ -1064,28 +1004,6 @@ Sam's Emacs Config
 
   (global-set-key (kbd "C-|") 'kill-all-dired-buffers)
 #+end_src
-*** Enable 'ranger.el' for occassional use
-#+begin_src emacs-lisp
-  (use-package ranger
-    :ensure t)
-#+end_src
-*** Force 'ranger.el' to show hidden files by default
-#+begin_src emacs-lisp
-  (setq ranger-show-hidden t)
-#+end_src
-*** Force 'ranger.el' to stop allowing 'Deer' mode from 'dired'
-#+begin_src emacs-lisp
-(remove-hook 'dired-mode-hook 'ranger-set-dired-key)
-#+end_src
-*** Force 'ranger-refresh' function to be called each time 'mkdir' function is called
-#+begin_src emacs-lisp
-  ;; According to this GitHub section, it's actually mkdir that is called when + is hit in Ranger.el:
-  ;; https://github.com/ralesi/ranger.el/blob/master/ranger.el#L509
-  (advice-add #'mkdir :after
-              (lambda (&rest _)
-                (when (eq major-mode 'dired-mode)
-                  (ranger-refresh))))
-#+end_src
 *** Enable 'treemacs' for a tree layout file explorer
 #+begin_src emacs-lisp
   (use-package treemacs
@@ -1119,11 +1037,6 @@ Sam's Emacs Config
         (select-window current-window))))
 
   (global-set-key (kbd "C-c t") 'launch-treemacs)
-#+end_src
-*** Enable 'dirvish' to add a nicer variant of 'dired' to use as a file manager
-#+begin_src emacs-lisp
-  (use-package dirvish
-    :ensure t)
 #+end_src
 ** eww
 *** Make 'eww' the default browser for Emacs
@@ -1252,47 +1165,11 @@ Sam's Emacs Config
 (prefer-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 #+end_src
-** Presenting Slides
-*** Add 'org-tree-slide' for easy-to-make Org mode based presentations
-#+BEGIN_SRC emacs-lisp
-  (defun begin-scale-text-and-show-images ()
-    (require 'face-remap)
-    (hide-mode-line-mode 1)
-    (org-display-inline-images)
-    (setq text-scale-mode-amount 2)
-    ;; Enable 'text-scale-mode', disable 'beacon-mode', and disable 'blink-cursor-mode' while presenting
-    (text-scale-mode 1)
-    (beacon-mode 0)
-    (blink-cursor-mode 0))
-
-  (defun end-scale-text-and-show-images ()
-    (hide-mode-line-mode 0)
-    ;; Presentation is finished: Disable 'text-scale-mode', re-enable 'beacon-mode', and re-enable 'blink-cursor-mode'
-    (text-scale-mode 0)
-    (beacon-mode 1)
-    (blink-cursor-mode 1))
-
-  (use-package org-tree-slide
-    :ensure t
-    :hook ((org-tree-slide-play . begin-scale-text-and-show-images)
-    (org-tree-slide-stop . end-scale-text-and-show-images))
-    :custom
-    (org-image-actual-width nil))
-#+END_SRC
-*** Add 'hide-mode-line' package for hiding Emacs modeline during presentations
-#+BEGIN_SRC emacs-lisp
-  (use-package hide-mode-line
-    :ensure t)
-#+END_SRC
-** YouTube
-*** Add 'ytdl', a package for using 'youtube-dl' within Emacs to easily download YouTube videos
+** Bug Fixes
+*** Add fake 'eldoc-documentation-default' function that does nothing to shut up the 'Messages' buffer from repeating the same error
 #+begin_src emacs-lisp
   ;; NOTE:
-  ;; 2 related functions to keep in mind:
-  ;; 1. 'ytdl-download': Used for downloading videos directly from YouTube
-  ;; 2. 'ytdl-download-playlist': Used for downloading YouTube playlists
-  ;; Reference link:
-  ;; https://www.reddit.com/r/emacs/comments/hxbmda/ytdl_an_emacs_interface_for_youtubedl/
-  (use-package ytdl
-    :ensure t)
+  ;; I am creating this function to shut up the related error for some bugged out eldoc package
+  ;; that is included in Emacs by default and is some bug that was never fixed in Emacs 27.1:
+  (defun eldoc-documentation-default())
 #+end_src
