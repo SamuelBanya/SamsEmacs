@@ -1038,6 +1038,13 @@ Sam's Emacs Config
 
   (global-set-key (kbd "C-c t") 'launch-treemacs)
 #+end_src
+*** Nuke lingering issue with 'Deer' mode still trying to launch itself from Dired mode
+#+begin_src emacs-lisp
+  ;; For some reason, even after Ranger was nuked, using 'C-p' while using Dired Mode results
+  ;; in an annoying 'Wrong type argument: commandp, deer-from-dired' error in Messages:
+  (remove-hook 'dired-mode-hook 'ranger-set-dired-key)
+
+#+end_src
 ** eww
 *** Make 'eww' the default browser for Emacs
 #+BEGIN_SRC emacs-lisp
