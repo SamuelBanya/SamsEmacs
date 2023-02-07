@@ -73,7 +73,7 @@ Sam's Emacs Config
     _c_: connect to musimatic.xyz as root user
     _d_: connect to sambanya.com as sam user
     _e_: connect to sambanya.com as root user
-    _f_: connect to fedoraserver as sam user
+    _f_: connect to homebase as sam user
     _q_: quit
     "
       ("a" ssh-into-musimatic-sam)
@@ -81,7 +81,7 @@ Sam's Emacs Config
       ("c" ssh-into-musimatic-root)
       ("d" ssh-into-sambanya-sam)
       ("e" ssh-into-sambanya-root)
-      ("f" ssh-into-fedoraserver-sam)
+      ("f" ssh-into-homebase-sam)
       ("q" nil))
 
     (global-set-key (kbd "M-n") 'hydra-connect/body))
