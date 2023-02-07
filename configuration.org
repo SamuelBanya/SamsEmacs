@@ -59,9 +59,9 @@ Sam's Emacs Config
       (interactive)
       (find-file "/ssh:root@sambanya.com:/var/www/sambanya"))
 
-    (defun ssh-into-fedoraserver-sam ()
+    (defun ssh-into-homebase-sam ()
       (interactive)
-      (find-file "/ssh:sam@fedoraserver:/media/REDHDD"))
+      (find-file "/ssh:sam@homebase:/media/REDHDD"))
 
     (defhydra hydra-connect (:color pink
 				    :hint nil)
