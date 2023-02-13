@@ -965,9 +965,14 @@ Sam's Emacs Config
 #+end_src
 *** Enable 'ivy' everywhere
 #+begin_src emacs-lisp
-;; Taken from the 'swiper' Docs page:
-;; https://oremacs.com/swiper/
-(ivy-mode 1)
+  ;; Taken from the 'swiper' Docs page:
+  ;; https://oremacs.com/swiper/
+  ;; Previous Section:
+  ;; (ivy-mode 1)
+  ;; NOTE:
+  ;; Modifying this so that it doesn't autocomplete in ERC based IRC buffers:
+  (add-hook 'erc-chat-mode-hook
+            (lambda ()  (ivy-mode 1)))
 #+end_src
 ** File Manager
 *** Nuke 'dired' mode's ability to open so many buffers
@@ -994,6 +999,19 @@ Sam's Emacs Config
       ;; (lambda () (interactive)
         ;; (find-alternate-file ".."))))
 #+END_SRC
+*** Make 'dired' less verbose aka use 'dired-hide-details-mode'
+#+begin_src emacs-lisp
+  ;; NOTE:
+  ;; Idea Taken From 'Emacs Rocks Episode 16: Dired' But Implemented A Little Differently:
+  (add-hook 'dired-mode-hook
+            'dired-hide-details-mode)
+#+end_src
+*** Allow 'dired' to move files between panes just like 'Midnight Commander'
+#+begin_src emacs-lisp
+  ;; NOTE:
+  ;; From 'Emacs Rocks Episode 16: Dired':
+  (setq dired-dwim-target t)
+#+end_src
 *** Add 'kill-all-dired-buffers' function to kill all dired-mode buffers that are currently open
 #+begin_src emacs-lisp
   (defun kill-all-dired-buffers ()
