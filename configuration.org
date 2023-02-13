@@ -979,18 +979,20 @@ Sam's Emacs Config
   ;; https://stackoverflow.com/questions/1839313/how-do-i-stop-emacs-dired-mode-from-opening-so-many-buffers
 
   ;; Make a wrapper function to force dired-mode to load first:
-  (with-eval-after-load 'dired
+  ;; NOTE:
+  ;; Commenting out for now since I wanted to play with dual pane Dired options
+  ;; (with-eval-after-load 'dired
     ;; Disable annoying warning to utilize 'dired-find-alternate-file' function:
-    (put 'dired-find-alternate-file 'disabled nil)
+    ;; (put 'dired-find-alternate-file 'disabled nil)
 
     ;; Nuke 'dired' mode's ability to unnecessarily create so many buffers with the sane 'ENTER' key press:
-    (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+    ;; (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
 
     ;; Do the same action, but for the '^' key as well since the same issue of creating too many buffers exists
     ;; for the '^' key by default
-    (define-key dired-mode-map (kbd "^")
-      (lambda () (interactive)
-	(find-alternate-file ".."))))
+    ;; (define-key dired-mode-map (kbd "^")
+      ;; (lambda () (interactive)
+        ;; (find-alternate-file ".."))))
 #+END_SRC
 *** Add 'kill-all-dired-buffers' function to kill all dired-mode buffers that are currently open
 #+begin_src emacs-lisp
