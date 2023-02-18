@@ -1192,3 +1192,10 @@ Sam's Emacs Config
 (prefer-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 #+end_src
+*** Force Emacs to always follow symlinks by default
+#+begin_src emacs-lisp
+  ;; NOTE:
+  ;; Taken from this StackOverflow post:
+  ;; https://stackoverflow.com/questions/15390178/emacs-and-symbolic-links
+  (setq vc-follow-symlinks t)
+#+end_src
