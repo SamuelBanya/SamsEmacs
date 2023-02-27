@@ -332,21 +332,35 @@ Sam's Emacs Config
    #+END_SRC
 * Useful Packages And QOL Changes To Make Emacs Better
 ** UI
-*** Add 'xresources-theme' from MELPA to allow Emacs to use '~/.Xresources' as the Emacs theme
-#+begin_src emacs-lisp
-(use-package xresources-theme
-:ensure t)
-#+end_src
 *** Add 'gruvbox' themes from MELPA
 #+begin_src emacs-lisp
   ;; (use-package gruvbox-theme
   ;;  :ensure t)
 #+end_src
-*** Add 'base16-theme' from MELPA
-#+begin_src emacs-lisp
-  ;; (use-package base16-theme
-    ;; :ensure t)
-#+end_src
+*** Color Theme
+   Load color theme, and do 'org-restart' to make sure the theme loads correctly:
+   #+BEGIN_SRC emacs-lisp
+     ;; (load-theme 'wordperfect-plus-emacs)
+     ;; (load-theme 'kojak-emacs)
+     ;; (load-theme 'super-nintendo-emacs)
+     ;; (load-theme 'morrowind-emacs)
+     ;; (load-theme 'kirby-emacs)
+     (load-theme 'gruvbox-dark-hard)
+     ;; (load-theme 'base16-bespin t)
+     (org-mode-restart)
+   #+END_SRC
+*** Highlight Current Line In GUI Version Of Emacs
+   #+BEGIN_SRC emacs-lisp
+   (when window-system (add-hook 'prog-mode-hook (lambda() (set-face-background 'highlight "#222") (hl-line-mode 1))))
+   (when window-system (add-hook 'text-mode-hook (lambda() (set-face-background 'highlight "#222") (hl-line-mode 1))))
+   #+END_SRC
+*** Disable Default Tool Bar, Menu Bar, And Scroll Bar
+   #+BEGIN_SRC emacs-lisp
+   ;; Disable default GUI based UI to allow more focus on the editor itself:
+   (tool-bar-mode -1)
+   (menu-bar-mode -1)
+   (scroll-bar-mode -1)
+   #+END_SRC
 *** Dashboard
    #+BEGIN_SRC emacs-lisp
      (use-package dashboard
@@ -370,30 +384,6 @@ Sam's Emacs Config
    :ensure t
    :init
    (beacon-mode 1))
-   #+END_SRC
-*** Disable Default Tool Bar, Menu Bar, And Scroll Bar
-   #+BEGIN_SRC emacs-lisp
-   ;; Disable default terrible GUI based UI to allow more focus on the editor itself:
-   (tool-bar-mode -1)
-   (menu-bar-mode -1)
-   (scroll-bar-mode -1)
-   #+END_SRC
-*** Color Theme
-   Load color theme, and do 'org-restart' to make sure the theme loads correctly:
-   #+BEGIN_SRC emacs-lisp
-     ;; (load-theme 'wordperfect-plus-emacs)
-     ;; (load-theme 'kojak-emacs)
-     ;; (load-theme 'super-nintendo-emacs)
-     (load-theme 'morrowind-emacs)
-     ;; (load-theme 'kirby-emacs)
-     ;; (load-theme 'gruvbox-dark-hard)
-     ;; (load-theme 'base16-bespin t)
-     (org-mode-restart)
-   #+END_SRC
-*** Highlight Current Line In GUI Version Of Emacs
-   #+BEGIN_SRC emacs-lisp
-   (when window-system (add-hook 'prog-mode-hook (lambda() (set-face-background 'highlight "#222") (hl-line-mode 1))))
-   (when window-system (add-hook 'text-mode-hook (lambda() (set-face-background 'highlight "#222") (hl-line-mode 1))))
    #+END_SRC
 *** Enable 'scroll-conservatively' to allow for sane scroll defaults at the bottom of a buffer instead of default jumping behavior
    #+BEGIN_SRC emacs-lisp
@@ -419,20 +409,6 @@ Sam's Emacs Config
        ("M-s" . avy-goto-word-0)
        ("M-l" . avy-goto-line))
    #+END_SRC
-*** Switch-Window
-   #+BEGIN_SRC emacs-lisp
-     (use-package switch-window
-       :ensure t
-       :config
-       (setq switch-window-input-style 'minibuffer)
-       (setq switch-window-increase 4)
-       (setq switch-window-threshold 2)
-       (setq switch-window-shortcut-style 'qwerty)
-       (setq switch-window-querty-shortcuts
-	     '("a" "s" "d" "f" "h" "j" "k" "l"))
-       :bind
-       ([remap other-window] . switch-window))
-   #+END_SRC
 *** 'popup-kill-ring' to interactively obtain kill ring paste buffer
 #+BEGIN_SRC emacs-lisp
   (use-package popup-kill-ring
@@ -456,23 +432,6 @@ Sam's Emacs Config
   (use-package expand-region
     :ensure t
     :bind ("C-q" . er/expand-region))
-#+END_SRC
-*** Add 'rotate' to rotate windows, 'tmux' style in Emacs
-#+BEGIN_SRC emacs-lisp
-  (use-package rotate
-    :ensure t)
-#+END_SRC
-*** Add 'multiple-cursors' to edit text insanely fast
-#+BEGIN_SRC emacs-lisp
-  ;; Note: When I get better at using this, do more crazier keybindings with the 'Command overview' section:
-  ;; https://github.com/magnars/multiple-cursors.el
-  (use-package multiple-cursors
-    :ensure t
-    :bind
-    ("C-c C-0" . mc/edit-lines)
-    ("C->" . mc/mark-next-line-like-this)
-    ("C-<" . mc/mark-previous-line-like-this)
-    ("C-c C-<" . mc/mark-all-like-this))
 #+END_SRC
 *** Add 'goto-line-preview' to replace default 'goto-line' Emacs function
 #+BEGIN_SRC emacs-lisp
@@ -521,26 +480,6 @@ Sam's Emacs Config
    #+BEGIN_SRC emacs-lisp
      (global-subword-mode 1)
    #+END_SRC
-*** Kill-all-buffers function
-   #+BEGIN_SRC emacs-lisp
-     (defun kill-all-buffers()
-       (interactive)
-       (mapc 'kill-buffer (buffer-list)))
-
-     (global-set-key (kbd "C-M-s-k") 'kill-all-buffers)
-   #+END_SRC
-*** Copy-whole-line function
-   #+BEGIN_SRC emacs-lisp
-     (defun copy-whole-line ()
-       (interactive)
-       (save-excursion
-	 (kill-new
-	  (buffer-substring
-	   (point-at-bol)
-	   (point-at-eol)))))
-
-     (global-set-key (kbd "C-c w l") 'copy-whole-line)
-   #+END_SRC
 *** Always kill current buffer function
    #+BEGIN_SRC emacs-lisp
      (defun kill-current-buffer()
@@ -549,32 +488,12 @@ Sam's Emacs Config
 
      (global-set-key (kbd "C-x k") 'kill-current-buffer)
    #+END_SRC
-*** Sudo Edit
-   #+BEGIN_SRC emacs-lisp
-     (use-package sudo-edit
-       :ensure t
-       :bind ("s-e" . sudo-edit))
-   #+END_SRC
 *** Enable Hungry-Delete to delete white-space character regions more easily
    #+BEGIN_SRC emacs-lisp
      (use-package hungry-delete
        :ensure t
        :config (global-hungry-delete-mode))
    #+END_SRC
-*** Kill-Whole-Word Function: Vim-like idea of killing an individual word
-   #+BEGIN_SRC emacs-lisp
-     (defun kill-whole-word()
-       (interactive)
-       (backward-word)
-       (kill-word 1))
-
-     (global-set-key (kbd "C-c w w") 'kill-whole-word)
-   #+END_SRC
-*** Add 'eyebrowse' to have 'tmux' style window management
-#+begin_src emacs-lisp
-  (use-package eyebrowse
-    :ensure t)
-#+end_src
 *** Add visual wordwrap in every text mode
 #+begin_src emacs-lisp
 ;; From this post:
@@ -589,6 +508,13 @@ Sam's Emacs Config
     (highlight-indent-guides-method 'character)
     (highlight-indent-guides-character ?\|))
 #+end_src
+*** Add 'vertico' for Helm-style autocompletion in mini-buffer
+#+begin_src emacs-lisp
+  (use-package vertico
+    :ensure t
+    :init
+    (vertico-mode))
+#+end_src
 ** Terminal
 *** Add 'vterm' to enable only decent Emacs terminal
 #+begin_src emacs-lisp
@@ -600,125 +526,10 @@ Sam's Emacs Config
   (add-hook 'vterm-mode-hook 'rename-uniquely)
 #+end_src
 
-*** Add 'popper' to popup terminal buffers quickly with 'M-`' keybinding to toggle the latest, 'M-~' keybinding to cycle, and 'C-x M-`' to toggle the type
-#+begin_src emacs-lisp
-  ;; Borrowed from Gavin Freeborn's config:
-  ;; https://github.com/Gavinok/emacs.d/blob/main/init.el
-
-  ;; Also init section was borrowed from docs:
-  ;; https://github.com/karthink/popper
-  (use-package popper
-    :ensure t
-    :bind (("M-`" . popper-toggle-latest)
-           ("M-~" . popper-cycle)
-           ("C-x M-`" . popper-toggle-type))
-    :init
-    (setq popper-reference-buffers
-          '("^\\*eshell.*\\*$" eshell-mode ;eshell as a popup
-            "^\\*shell.*\\*$"  shell-mode  ;shell as a popup
-            "^\\*term.*\\*$"   term-mode   ;term as a popup
-            ))
-    (popper-mode +1))
-#+end_src
 ** Programming
 *** Add 'magit' for making dealing with Git repositories easier
 #+begin_src emacs-lisp
   (use-package magit
-    :ensure t)
-#+end_src
-*** Add 'emmet-mode' to make HTML editing easier
-#+BEGIN_SRC emacs-lisp
-  (use-package emmet-mode
-    :ensure t
-    :hook ((mhtml-mode css-mode scss-mode rjsx-mode sgml-mode web-mode) . emmet-mode))
-#+END_SRC
-*** Add 'rainbow-delimiters' to easily view delimiters in code
-#+BEGIN_SRC emacs-lisp
-  (use-package rainbow-delimiters
-    :ensure t
-    :hook (prog-mode . rainbow-delimiters-mode))
-#+END_SRC
-*** Add 'counsel' to specifically use the 'counsel-grep-or-swiper' for searching through large log files
-#+BEGIN_SRC emacs-lisp
-  (use-package counsel
-    :ensure t
-    :bind ("C-s" . counsel-grep-or-swiper))
-#+END_SRC
-*** Add 'csv-mode' to easily work with '.csv' files
-#+BEGIN_SRC emacs-lisp
-  (use-package csv-mode
-    :ensure t
-    :mode (".tsv" ".csv" ".tabular" ".vcf"))
-#+END_SRC
-*** Add 'logview' mode for syntax highlighting, filtering, etc for log files
-#+BEGIN_SRC emacs-lisp
-  (use-package logview
-    :ensure t)
-#+END_SRC
-*** Add 'js2-mode' for improved JavaScript editing mode
-#+begin_src emacs-lisp
-  (use-package js2-mode
-    :ensure t
-    :custom
-    (js-indent-level 2)
-    (js2-basic-offset 2)
-    :init
-    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
-#+end_src
-*** Add 'ruby-mode' for Ruby projects
-#+begin_src emacs-lisp
-  (use-package ruby-mode
-    :ensure t)
-#+end_src
-*** Add 'rjsx-mode' to handle '.jsx' files
-#+begin_src emacs-lisp
-  (use-package rjsx-mode
-    :ensure t)
-#+end_src
-*** Add 'typescript-mode' to handle '.tsx' files
-#+begin_src emacs-lisp
-  (use-package typescript-mode
-    :ensure t)
-#+end_src
-*** Add 'web-mode' hooks
-#+begin_src emacs-lisp
-  ;; Taken from here:
-  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
-  (setq-default tab-width 2)
-  (setq indent-tabs-mode nil)
-  (defun sam/webmode-hook ()
-          "Webmode hooks."
-          (setq web-mode-enable-comment-annotation t)
-          (setq web-mode-markup-indent-offset 2)
-          (setq web-mode-code-indent-offset 2)
-          (setq web-mode-css-indent-offset 2)
-          (setq web-mode-attr-indent-offset 0)
-          (setq web-mode-enable-auto-indentation t)
-          (setq web-mode-enable-auto-closing t)
-          (setq web-mode-enable-auto-pairing t)
-          (setq web-mode-enable-css-colorization t)
-  )
-#+end_src
-*** Add 'web-mode' for HTML, JS, and TS based files (.html, .js, .jsx, .ts, .tsx, .html)
-#+begin_src emacs-lisp
-    (use-package web-mode
-      :ensure t
-      :mode (("\\.js\\'" . web-mode)
-             ("\\.jsx\\'" .  web-mode)
-             ("\\.ts\\'" . web-mode)
-             ("\\.tsx\\'" . web-mode)
-             ("\\.html\\'" . web-mode))
-      :commands web-mode
-      :hook (web-mode . sam/webmode-hook))
-#+end_src
-*** Add 'htmlize' for HTML editing
-#+begin_src emacs-lisp
-  (use-package htmlize
-    :ensure t)
-#+end_src
-*** Add 'csharp-mode' to handle C# files
-#+begin_src emacs-lisp
-  (use-package csharp-mode
     :ensure t)
 #+end_src
 *** Add 'company' for auto-completion for programming projects
@@ -738,6 +549,47 @@ Sam's Emacs Config
     (setq lsp-completion-provider :capf)
     :hook
     (prog-mode . company-mode))
+#+end_src
+*** Add 'lsp-mode' for intellisense for many programming languages (python, ruby, java, C++)
+#+begin_src emacs-lisp
+  (defun ef/lsp-mode-setup ()
+    ;; Taken from this 'System Crafters' video:
+    ;; https://www.youtube.com/watch?v=E-NAM9U5JYE
+    ;; This allows breadcrumb segments to appear in projects
+    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+    (lsp-headerline-breadcrumb-mode))
+
+  (use-package lsp-mode
+    :ensure t
+    :commands (lsp lsp-deferred)
+    :hook (
+           (web-mode . lsp-deferred)
+           (ruby-mode . lsp-deferred)
+           (python-mode . lsp-deferred)
+           (lsp-mode . lsp-enable-which-key-integration)
+           )
+    )
+#+end_src
+*** Add 'lsp-ui' to adjust UI portion of LSP mode's features
+#+begin_src emacs-lisp
+  (use-package lsp-ui
+    :ensure t
+    :commands lsp-ui-mode)
+#+end_src
+*** Add 'lsp-python-ms' for Python projects
+#+begin_src emacs-lisp
+  ;; Taken from here:
+  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
+  (use-package lsp-python-ms
+    :ensure t
+    :init (setq lsp-python-ms-auto-install-server t)
+    :hook (python-mode . (lambda ()
+                           (require 'lsp-python-ms)
+                           (lsp))))
+#+end_src
+*** Force 'display-line-numbers-mode' to be enabled when LSP mode is enabled
+#+begin_src emacs-lisp
+  (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
 #+end_src
 *** Add 'aggressive-indent' for better indentation
 #+begin_src emacs-lisp
@@ -776,46 +628,59 @@ Sam's Emacs Config
   ;; https://emacs-lsp.github.io/lsp-mode/page/faq/#how-do-i-disable-automatic-installation
   (setq lsp-enable-suggest-server-download nil)
 #+end_src
-*** Add 'lsp-mode' for intellisense for many programming languages (python, ruby, java, C++)
-#+begin_src emacs-lisp
-  (defun ef/lsp-mode-setup ()
-    ;; Taken from this 'System Crafters' video:
-    ;; https://www.youtube.com/watch?v=E-NAM9U5JYE
-    ;; This allows breadcrumb segments to appear in projects
-    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-    (lsp-headerline-breadcrumb-mode))
-
-  (use-package lsp-mode
+*** Add 'counsel' to specifically use the 'counsel-grep-or-swiper' for searching through large log files
+#+BEGIN_SRC emacs-lisp
+  (use-package counsel
     :ensure t
-    :commands (lsp lsp-deferred)
-    :hook (
-           (web-mode . lsp-deferred)
-           (ruby-mode . lsp-deferred)
-           (python-mode . lsp-deferred)
-           (lsp-mode . lsp-enable-which-key-integration)
-           )
-    )
-#+end_src
-*** Force 'display-line-numbers-mode' to be enabled when LSP mode is enabled
-#+begin_src emacs-lisp
-  (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
-#+end_src
-*** Add 'lsp-ui' to adjust UI portion of LSP mode's features
-#+begin_src emacs-lisp
-  (use-package lsp-ui
+    :bind ("C-s" . counsel-grep-or-swiper))
+#+END_SRC
+*** Add 'rainbow-delimiters' to easily view delimiters in code
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-delimiters
     :ensure t
-    :commands lsp-ui-mode)
-#+end_src
-*** Add 'lsp-python-ms' for Python projects
+    :hook (prog-mode . rainbow-delimiters-mode))
+#+END_SRC
+*** Add 'web-mode' hooks
 #+begin_src emacs-lisp
   ;; Taken from here:
   ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
-  (use-package lsp-python-ms
+  (setq-default tab-width 2)
+  (setq indent-tabs-mode nil)
+  (defun sam/webmode-hook ()
+          "Webmode hooks."
+          (setq web-mode-enable-comment-annotation t)
+          (setq web-mode-markup-indent-offset 2)
+          (setq web-mode-code-indent-offset 2)
+          (setq web-mode-css-indent-offset 2)
+          (setq web-mode-attr-indent-offset 0)
+          (setq web-mode-enable-auto-indentation t)
+          (setq web-mode-enable-auto-closing t)
+          (setq web-mode-enable-auto-pairing t)
+          (setq web-mode-enable-css-colorization t)
+  )
+#+end_src
+*** Add 'web-mode' for HTML, JS, and TS based files (.html, .js, .jsx, .ts, .tsx, .html)
+#+begin_src emacs-lisp
+    (use-package web-mode
+      :ensure t
+      :mode (("\\.js\\'" . web-mode)
+             ("\\.jsx\\'" .  web-mode)
+             ("\\.ts\\'" . web-mode)
+             ("\\.tsx\\'" . web-mode)
+             ("\\.html\\'" . web-mode))
+      :commands web-mode
+      :hook (web-mode . sam/webmode-hook))
+#+end_src
+*** Add 'emmet-mode' to make HTML editing easier
+#+BEGIN_SRC emacs-lisp
+  (use-package emmet-mode
     :ensure t
-    :init (setq lsp-python-ms-auto-install-server t)
-    :hook (python-mode . (lambda ()
-                           (require 'lsp-python-ms)
-                           (lsp))))
+    :hook ((mhtml-mode css-mode scss-mode rjsx-mode sgml-mode web-mode) . emmet-mode))
+#+END_SRC
+*** Add 'typescript-mode' to handle '.tsx' files
+#+begin_src emacs-lisp
+  (use-package typescript-mode
+    :ensure t)
 #+end_src
 *** Adding 'rjsx-mode' to allow for easy editing of '.jsx' files
 #+begin_src emacs-lisp
@@ -823,6 +688,54 @@ Sam's Emacs Config
     :ensure t)
 
   (add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode))
+#+end_src
+*** Add 'htmlize' for HTML editing
+#+begin_src emacs-lisp
+  (use-package htmlize
+    :ensure t)
+#+end_src
+*** Add 'csv-mode' to easily work with '.csv' files
+#+BEGIN_SRC emacs-lisp
+  (use-package csv-mode
+    :ensure t
+    :mode (".tsv" ".csv" ".tabular" ".vcf"))
+#+END_SRC
+*** Add 'js2-mode' for improved JavaScript editing mode
+#+begin_src emacs-lisp
+  (use-package js2-mode
+    :ensure t
+    :custom
+    (js-indent-level 2)
+    (js2-basic-offset 2)
+    :init
+    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+#+end_src
+*** Add 'ruby-mode' for Ruby projects
+#+begin_src emacs-lisp
+  (use-package ruby-mode
+    :ensure t)
+#+end_src
+*** Add 'rjsx-mode' to handle '.jsx' files
+#+begin_src emacs-lisp
+  (use-package rjsx-mode
+    :ensure t)
+#+end_src
+*** Add 'yaml-mode' for support for '.yaml' files
+#+begin_src emacs-lisp
+  (use-package yaml-mode
+    :mode "\\.ya?ml\\'"
+    :hook (yaml-mode . flycheck-mode))
+#+end_src
+*** Add 'json-mode' for '.json' files
+#+begin_src emacs-lisp
+  (use-package json-mode
+    :ensure t)
+#+end_src
+*** Add 'css-mode' for working with '.css' stylesheets
+#+begin_src emacs-lisp
+  (use-package css-mode
+    :custom
+    (css-indent-offset 2))
 #+end_src
 *** Force 'display-line-numbers-mode' to be enabled when 'ruby mode' is enabled
 #+begin_src emacs-lisp
@@ -837,17 +750,6 @@ Sam's Emacs Config
     (if (buffer-file-name)
         (if (string-match (car my-pair) buffer-file-name)
       (funcall (cdr my-pair)))))
-#+end_src
-*** Add 'json-mode' for '.json' files
-#+begin_src emacs-lisp
-  (use-package json-mode
-    :ensure t)
-#+end_src
-*** Add 'yaml-mode' for support for '.yaml' files
-#+begin_src emacs-lisp
-  (use-package yaml-mode
-    :mode "\\.ya?ml\\'"
-    :hook (yaml-mode . flycheck-mode))
 #+end_src
 *** Add 'flycheck' for programming syntax checking on-the-fly
 #+BEGIN_SRC emacs-lisp
@@ -866,13 +768,6 @@ Sam's Emacs Config
     (diminish 'subword-mode)
     (diminish 'rainbow-mode))
 #+END_SRC
-*** Rainbow-Delimiters
-   #+BEGIN_SRC emacs-lisp
-     (use-package rainbow-delimiters
-       :ensure t
-       :init
-       (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
-   #+END_SRC
 *** 'yasnippet' to utilize snippet templates with 'M-x yas-describe-tables' (Note: Make sure your created snippets match mode's name, ex: '~/.emacs.d/snippets/python-mode')
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
@@ -932,21 +827,7 @@ Sam's Emacs Config
     (setq-default indent-tabs-mode nil)
     )
 #+end_src
-*** Add 'css-mode' for working with '.css' stylesheets
-#+begin_src emacs-lisp
-  (use-package css-mode
-    :custom
-    (css-indent-offset 2))
-#+end_src
 ** Keybinding Packages
-*** Add 'discover-my-major' to discover keybindings in a given major or minor mode with 'C-h M-a' and 'C-h M-o'
-#+BEGIN_SRC emacs-lisp
-  (use-package discover-my-major
-    :ensure t)
-
-  (global-set-key (kbd "C-h M-a") 'discover-my-major)
-  (global-set-key (kbd "C-h M-o") 'discover-my-mode)
-#+END_SRC
 *** Add 'free-keys' to determine the free keybindings present currently available in Emacs
 #+begin_src emacs-lisp
   (use-package free-keys
@@ -975,30 +856,6 @@ Sam's Emacs Config
             (lambda ()  (ivy-mode 1)))
 #+end_src
 ** File Manager
-*** Nuke 'dired' mode's ability to open so many buffers
-#+BEGIN_SRC emacs-lisp
-  ;; Taken From Xah Lee's Site:
-  ;; http://ergoemacs.org/emacs/emacs_dired_tips.html
-
-  ;; Also taken from this SO post:
-  ;; https://stackoverflow.com/questions/1839313/how-do-i-stop-emacs-dired-mode-from-opening-so-many-buffers
-
-  ;; Make a wrapper function to force dired-mode to load first:
-  ;; NOTE:
-  ;; Commenting out for now since I wanted to play with dual pane Dired options
-  ;; (with-eval-after-load 'dired
-    ;; Disable annoying warning to utilize 'dired-find-alternate-file' function:
-    ;; (put 'dired-find-alternate-file 'disabled nil)
-
-    ;; Nuke 'dired' mode's ability to unnecessarily create so many buffers with the sane 'ENTER' key press:
-    ;; (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
-
-    ;; Do the same action, but for the '^' key as well since the same issue of creating too many buffers exists
-    ;; for the '^' key by default
-    ;; (define-key dired-mode-map (kbd "^")
-      ;; (lambda () (interactive)
-        ;; (find-alternate-file ".."))))
-#+END_SRC
 *** Make 'dired' less verbose aka use 'dired-hide-details-mode'
 #+begin_src emacs-lisp
   ;; NOTE:
@@ -1011,18 +868,6 @@ Sam's Emacs Config
   ;; NOTE:
   ;; From 'Emacs Rocks Episode 16: Dired':
   (setq dired-dwim-target t)
-#+end_src
-*** Add 'kill-all-dired-buffers' function to kill all dired-mode buffers that are currently open
-#+begin_src emacs-lisp
-  (defun kill-all-dired-buffers ()
-    "Kills all dired-mode buffers that are currently open."
-    (interactive)
-    (let* ((buffers (seq-filter (lambda (x) (equal (buffer-local-value 'major-mode x) 'dired-mode)) (buffer-list)))
-           (count (length buffers)))
-      (mapc (lambda (x) (kill-buffer x)) buffers)
-      (message "Killed %s dired buffer%s." count (if (= count 1) "" "s"))))
-
-  (global-set-key (kbd "C-|") 'kill-all-dired-buffers)
 #+end_src
 *** Enable 'treemacs' for a tree layout file explorer
 #+begin_src emacs-lisp
@@ -1057,13 +902,6 @@ Sam's Emacs Config
         (select-window current-window))))
 
   (global-set-key (kbd "C-c t") 'launch-treemacs)
-#+end_src
-*** Nuke lingering issue with 'Deer' mode still trying to launch itself from Dired mode
-#+begin_src emacs-lisp
-  ;; For some reason, even after Ranger was nuked, using 'C-p' while using Dired Mode results
-  ;; in an annoying 'Wrong type argument: commandp, deer-from-dired' error in Messages:
-  (remove-hook 'dired-mode-hook 'ranger-set-dired-key)
-
 #+end_src
 ** eww
 *** Make 'eww' the default browser for Emacs
