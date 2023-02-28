@@ -334,8 +334,8 @@ Sam's Emacs Config
 ** UI
 *** Add 'gruvbox' themes from MELPA
 #+begin_src emacs-lisp
-  ;; (use-package gruvbox-theme
-  ;;  :ensure t)
+  (use-package gruvbox-theme
+    :ensure t)
 #+end_src
 *** Color Theme
    Load color theme, and do 'org-restart' to make sure the theme loads correctly:
