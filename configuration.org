@@ -1037,3 +1037,13 @@ Sam's Emacs Config
   ;; https://stackoverflow.com/questions/15390178/emacs-and-symbolic-links
   (setq vc-follow-symlinks t)
 #+end_src
+*** Force Emacs to copy to Windows based clipboard via 'clip.exe' workaround for WSL2
+#+begin_src emacs-lisp
+;; Taken from here:
+;; https://emacsredux.com/blog/2021/12/19/using-emacs-on-windows-11-with-wsl2/
+(defun copy-selected-text (start end)
+  (interactive "r")
+    (if (use-region-p)
+        (let ((text (buffer-substring-no-properties start end)))
+            (shell-command (concat "echo '" text "' | clip.exe")))))
+#+end_src
