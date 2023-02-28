@@ -1037,13 +1037,18 @@ Sam's Emacs Config
   ;; https://stackoverflow.com/questions/15390178/emacs-and-symbolic-links
   (setq vc-follow-symlinks t)
 #+end_src
-*** Force Emacs to copy to Windows based clipboard via 'clip.exe' workaround for WSL2
+*** Force Emacs to copy to Windows based clipboard via 'wl-copy' workaround for WSL2
 #+begin_src emacs-lisp
-;; Taken from here:
-;; https://emacsredux.com/blog/2021/12/19/using-emacs-on-windows-11-with-wsl2/
-(defun copy-selected-text (start end)
-  (interactive "r")
-    (if (use-region-p)
-        (let ((text (buffer-substring-no-properties start end)))
-            (shell-command (concat "echo '" text "' | clip.exe")))))
+  ;; Taken from here:
+  ;; https://github.com/microsoft/wslg/issues/15
+  (when (and (getenv "WAYLAND_DISPLAY") (not (equal (getenv "GDK_BACKEND") "x11")))
+    (setq
+     interprogram-cut-function
+     (lambda (text)
+       ;; strangest thing: gui-select-text leads to gui-set-selection 'CLIPBOARD
+       ;; text -- if I eval that with some string, it mostly lands on the wayland
+       ;; clipboard, but not when it's invoked from this context.
+       ;; (gui-set-selection 'CLIPBOARD text)
+       ;; without the charset=utf-8 in type, emacs / wl-copy will crash when you paste emojis into a windows app
+       (start-process "wl-copy" nil "wl-copy" "--trim-newline" "--type" "text/plain;charset=utf-8"  text))))
 #+end_src
