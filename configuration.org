@@ -460,6 +460,20 @@ Sam's Emacs Config
    #+BEGIN_SRC emacs-lisp
    (defalias 'yes-or-no-p 'y-or-n-p)
    #+END_SRC
+*** Add 'switch-window' to use 'C-o' plus Vim style keys to quickly switch buffers to the desired on-screen buffer
+   #+BEGIN_SRC emacs-lisp
+     (use-package switch-window
+       :ensure t
+       :config
+       (setq switch-window-input-style 'minibuffer)
+       (setq switch-window-increase 4)
+       (setq switch-window-threshold 2)
+       (setq switch-window-shortcut-style 'qwerty)
+       (setq switch-window-querty-shortcuts
+       '("a" "s" "d" "f" "h" "j" "k" "l"))
+       :bind
+       ([remap other-window] . switch-window))
+   #+END_SRC
 *** Window Splitting Functions (Horizontal And Vertical)
 #+BEGIN_SRC emacs-lisp
 (defun split-and-follow-horizontally ()
