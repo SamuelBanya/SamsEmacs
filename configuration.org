@@ -343,9 +343,9 @@ Sam's Emacs Config
      ;; (load-theme 'wordperfect-plus-emacs)
      ;; (load-theme 'kojak-emacs)
      ;; (load-theme 'super-nintendo-emacs)
-     ;; (load-theme 'morrowind-emacs)
+     (load-theme 'morrowind)
      ;; (load-theme 'kirby-emacs)
-     (load-theme 'gruvbox-dark-hard)
+     ;; (load-theme 'gruvbox-dark-hard)
      ;; (load-theme 'base16-bespin t)
      (org-mode-restart)
    #+END_SRC
@@ -827,9 +827,15 @@ Sam's Emacs Config
      (add-function :before-until electric-pair-inhibit-predicate
 		   (lambda (c) (eq c ?<)))
 #+END_SRC
+*** Add 'aggressive-indent' to automatically indent code
+#+begin_src emacs-lisp
+  (use-package aggressive-indent
+    :ensure t)
+#+end_src
 *** Add 'electric-indent-mode' to auto-indent
 #+begin_src emacs-lisp
-(electric-indent-mode t)
+;; Disabling to allow for 'aggressive-indent' instead:
+;; (electric-indent-mode t)
 #+end_src
 *** Enable 'show-paren-mode' to highlight matching parentheses
 #+begin_src emacs-lisp
@@ -934,10 +940,19 @@ Sam's Emacs Config
 #+END_SRC
 *** Nuke 'electric-indent-local-mode' via an Org Mode hook function so that lines aren't auto-indented after list items
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'org-mode-hook
-	    (lambda ()
-	      (electric-indent-local-mode -1)))
+  ;; NOTE:
+  ;; Commenting out to try out 'aggressive-indent' instead:
+  ;; (add-hook 'org-mode-hook
+  ;;           (lambda ()
+  ;;            (electric-indent-local-mode -1)))
 #+END_SRC
+*** Don't allow 'aggressive-indent' to affect Org Mode:
+#+begin_src emacs-lisp
+  ;; Turn on 'aggressive-indent' mode globally:
+  (global-aggressive-indent-mode 1)
+  ;; Add an exclusion list of modes you don't want 'aggressive-indent' to occur on:
+  (add-to-list 'aggressive-indent-excluded-modes 'org-mode)
+#+end_src
 *** Nuke 'org-adapt-indentation' variable setting value introduced in Emacs 27.2 so lines aren't auto-indented after headlines
 #+BEGIN_SRC emacs-lisp
 (setq org-adapt-indentation nil)
@@ -994,6 +1009,13 @@ Sam's Emacs Config
   (use-package ox-hugo
     :ensure t
     :after ox)
+#+end_src
+*** Add 'org-kanban' to allow for easy kanban boards for projects
+#+begin_src emacs-lisp
+  ;; From here:
+  ;; https://melpa.org/#/org-kanban
+  (use-package org-kanban
+    :ensure t)
 #+end_src
 ** ediff
 *** Force 'ediff' to open up vertically in new windows NOT frames
