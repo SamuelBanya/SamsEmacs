@@ -656,100 +656,66 @@ Sam's Emacs Config
 #+END_SRC
 *** Add 'web-mode' hooks
 #+begin_src emacs-lisp
-  ;; Taken from here:
-  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
-  (setq-default tab-width 2)
-  (setq indent-tabs-mode nil)
-  (defun sam/webmode-hook ()
-          "Webmode hooks."
-          (setq web-mode-enable-comment-annotation t)
-          (setq web-mode-markup-indent-offset 2)
-          (setq web-mode-code-indent-offset 2)
-          (setq web-mode-css-indent-offset 2)
-          (setq web-mode-attr-indent-offset 0)
-          (setq web-mode-enable-auto-indentation t)
-          (setq web-mode-enable-auto-closing t)
-          (setq web-mode-enable-auto-pairing t)
-          (setq web-mode-enable-css-colorization t)
-  )
+	;; Taken from here:
+	;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
+	(setq-default tab-width 2)
+	(setq indent-tabs-mode nil)
+	(defun sam/webmode-hook ()
+		"Webmode hooks."
+		(setq web-mode-enable-comment-annotation t)
+		(setq web-mode-markup-indent-offset 2)
+		(setq web-mode-code-indent-offset 2)
+		(setq web-mode-css-indent-offset 2)
+		(setq web-mode-attr-indent-offset 0)
+		(setq web-mode-enable-auto-indentation t)
+		(setq web-mode-enable-auto-closing t)
+		(setq web-mode-enable-auto-pairing t)
+		(setq web-mode-enable-css-colorization t))
+#+end_src
+*** Set default indent level via 'js-indent-level' variable to 2 spaces for later parts of config
+#+begin_src emacs-lisp
+  (setq-default js-indent-level 2)
 #+end_src
 *** Add 'web-mode' for HTML, JS, and TS based files (.html, .js, .jsx, .ts, .tsx, .html)
 #+begin_src emacs-lisp
-    (use-package web-mode
-      :ensure t
-      :mode (("\\.js\\'" . web-mode)
-             ("\\.jsx\\'" .  web-mode)
-             ("\\.ts\\'" . web-mode)
-             ("\\.tsx\\'" . web-mode)
-             ("\\.html\\'" . web-mode))
-      :commands web-mode
-      :hook (web-mode . sam/webmode-hook))
+  (use-package web-mode
+    :ensure t
+    :mode (("\\.js\\'" . web-mode)
+           ("\\.jsx\\'" .  web-mode)
+           ("\\.ts\\'" . web-mode)
+           ("\\.tsx\\'" . web-mode)
+           ("\\.html\\'" . web-mode)
+           ;; Taken from here:
+           ;; https://gist.github.com/asummers/b8304b8ea78fc331b8177ff35d002046
+           ("\\.android\\.js$" . web-mode)
+           ("\\.react\\.js$" . web-mode))
+    :config
+    ;; Taken from here:
+    ;; https://gist.github.com/asummers/b8304b8ea78fc331b8177ff35d002046
+    (add-to-list 'magic-mode-alist '("^import React" . web-mode))
+    (add-to-list 'magic-mode-alist '("React.Component" . web-mode))
+    (add-to-list 'magic-mode-alist '("from 'react';$" . web-mode))
+    :commands web-mode
+    :hook (web-mode . sam/webmode-hook))
+
+  ;; Taken from here:
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (setq web-mode-markup-indent-offset (symbol-value 'js-indent-level))
+              (setq web-mode-attr-indent-offset (symbol-value 'js-indent-level))
+              (setq web-mode-css-indent-offset (symbol-value 'js-indent-level))
+              (setq web-mode-code-indent-offset (symbol-value 'js-indent-level))))
 #+end_src
 *** Add 'emmet-mode' to make HTML editing easier
 #+BEGIN_SRC emacs-lisp
   (use-package emmet-mode
     :ensure t
-    :hook ((mhtml-mode css-mode scss-mode rjsx-mode sgml-mode web-mode) . emmet-mode))
+    :hook ((web-mode) . emmet-mode))
 #+END_SRC
-*** Add 'typescript-mode' to handle '.tsx' files
-#+begin_src emacs-lisp
-  (use-package typescript-mode
-    :ensure t)
-#+end_src
-*** Adding 'rjsx-mode' to allow for easy editing of '.jsx' files
-#+begin_src emacs-lisp
-  (use-package rjsx-mode
-    :ensure t)
-
-  (add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode))
-#+end_src
-*** Add 'htmlize' for HTML editing
-#+begin_src emacs-lisp
-  (use-package htmlize
-    :ensure t)
-#+end_src
-*** Add 'csv-mode' to easily work with '.csv' files
-#+BEGIN_SRC emacs-lisp
-  (use-package csv-mode
-    :ensure t
-    :mode (".tsv" ".csv" ".tabular" ".vcf"))
-#+END_SRC
-*** Add 'js2-mode' for improved JavaScript editing mode
-#+begin_src emacs-lisp
-  (use-package js2-mode
-    :ensure t
-    :custom
-    (js-indent-level 2)
-    (js2-basic-offset 2)
-    :init
-    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
-#+end_src
 *** Add 'ruby-mode' for Ruby projects
 #+begin_src emacs-lisp
   (use-package ruby-mode
     :ensure t)
-#+end_src
-*** Add 'rjsx-mode' to handle '.jsx' files
-#+begin_src emacs-lisp
-  (use-package rjsx-mode
-    :ensure t)
-#+end_src
-*** Add 'yaml-mode' for support for '.yaml' files
-#+begin_src emacs-lisp
-  (use-package yaml-mode
-    :mode "\\.ya?ml\\'"
-    :hook (yaml-mode . flycheck-mode))
-#+end_src
-*** Add 'json-mode' for '.json' files
-#+begin_src emacs-lisp
-  (use-package json-mode
-    :ensure t)
-#+end_src
-*** Add 'css-mode' for working with '.css' stylesheets
-#+begin_src emacs-lisp
-  (use-package css-mode
-    :custom
-    (css-indent-offset 2))
 #+end_src
 *** Force 'display-line-numbers-mode' to be enabled when 'ruby mode' is enabled
 #+begin_src emacs-lisp
@@ -831,11 +797,6 @@ Sam's Emacs Config
 #+begin_src emacs-lisp
   (use-package aggressive-indent
     :ensure t)
-#+end_src
-*** Add 'electric-indent-mode' to auto-indent
-#+begin_src emacs-lisp
-;; Disabling to allow for 'aggressive-indent' instead:
-;; (electric-indent-mode t)
 #+end_src
 *** Enable 'show-paren-mode' to highlight matching parentheses
 #+begin_src emacs-lisp
@@ -937,14 +898,6 @@ Sam's Emacs Config
       (funcall 'org-capture)))
 
   (global-set-key (kbd "C-c c") 'my-org-capture)
-#+END_SRC
-*** Nuke 'electric-indent-local-mode' via an Org Mode hook function so that lines aren't auto-indented after list items
-#+BEGIN_SRC emacs-lisp
-  ;; NOTE:
-  ;; Commenting out to try out 'aggressive-indent' instead:
-  ;; (add-hook 'org-mode-hook
-  ;;           (lambda ()
-  ;;            (electric-indent-local-mode -1)))
 #+END_SRC
 *** Don't allow 'aggressive-indent' to affect Org Mode:
 #+begin_src emacs-lisp
