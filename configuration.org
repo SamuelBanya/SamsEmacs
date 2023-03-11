@@ -970,6 +970,13 @@ Sam's Emacs Config
   (use-package org-kanban
     :ensure t)
 #+end_src
+*** Nuke Org Mode's use of 'electric-indent' mode which annoyingly indents list items by default
+#+begin_src emacs-lisp
+;; Taken from here:
+;; https://www.philnewton.net/blog/electric-indent-with-org-mode/
+(add-hook 'org-mode-hook
+	  (lambda () (electric-indent-local-mode -1)))
+#+end_src
 ** ediff
 *** Force 'ediff' to open up vertically in new windows NOT frames
 #+BEGIN_SRC emacs-lisp
