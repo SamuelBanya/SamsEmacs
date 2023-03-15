@@ -640,21 +640,31 @@ Sam's Emacs Config
 #+END_SRC
 *** Add 'web-mode' hooks
 #+begin_src emacs-lisp
-	;; Taken from here:
-	;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
-	(setq-default tab-width 2)
-	(setq indent-tabs-mode nil)
-	(defun sam/webmode-hook ()
-		"Webmode hooks."
-		(setq web-mode-enable-comment-annotation t)
-		(setq web-mode-markup-indent-offset 2)
-		(setq web-mode-code-indent-offset 2)
-		(setq web-mode-css-indent-offset 2)
-		(setq web-mode-attr-indent-offset 0)
-		(setq web-mode-enable-auto-indentation t)
-		(setq web-mode-enable-auto-closing t)
-		(setq web-mode-enable-auto-pairing t)
-		(setq web-mode-enable-css-colorization t))
+  ;; Taken from here:
+  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
+  (setq-default tab-width 2)
+  (setq indent-tabs-mode nil)
+  (defun sam/webmode-hook ()
+    "Webmode hooks."
+    (setq web-mode-enable-comment-annotation t)
+    (setq web-mode-markup-indent-offset 2)
+    (setq web-mode-code-indent-offset 2)
+    (setq web-mode-css-indent-offset 2)
+    (setq web-mode-attr-indent-offset 0)
+    (setq web-mode-enable-auto-indentation t)
+    (setq web-mode-enable-auto-closing t)
+    (setq web-mode-enable-auto-pairing t)
+    (setq web-mode-enable-css-colorization t))
+  ;; Revision to force anything ending in '.js' to just use 'jsx-mode' within 'web-mode'
+  ;; so that React projects actually indent properly without a hassle:
+  ;; Taken from here:
+  ;; https://emacs.stackexchange.com/questions/20016/no-html-jsx-indentation-in-jsx-mode/20055#20055
+  (add-hook 'web-mode-hook
+            (lambda ()
+              ;; short circuit js mode and just do everything in jsx-mode
+              (if (equal web-mode-content-type "javascript")
+                  (web-mode-set-content-type "jsx")
+                (message "now set to: %s" web-mode-content-type))))
 #+end_src
 *** Set default indent level via 'js-indent-level' variable to 2 spaces for later parts of config
 #+begin_src emacs-lisp
