@@ -638,39 +638,21 @@ Sam's Emacs Config
     :ensure t
     :hook (prog-mode . rainbow-delimiters-mode))
 #+END_SRC
-*** Add 'web-mode' hooks
-#+begin_src emacs-lisp
-  ;; Taken from here:
-  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
-  (setq-default tab-width 2)
-  (setq indent-tabs-mode nil)
-  (defun sam/webmode-hook ()
-    "Webmode hooks."
-    (setq web-mode-enable-comment-annotation t)
-    (setq web-mode-markup-indent-offset 2)
-    (setq web-mode-code-indent-offset 2)
-    (setq web-mode-css-indent-offset 2)
-    (setq web-mode-attr-indent-offset 0)
-    (setq web-mode-enable-auto-indentation t)
-    (setq web-mode-enable-auto-closing t)
-    (setq web-mode-enable-auto-pairing t)
-    (setq web-mode-enable-css-colorization t))
-  ;; Revision to force anything ending in '.js' to just use 'jsx-mode' within 'web-mode'
-  ;; so that React projects actually indent properly without a hassle:
-  ;; Taken from here:
-  ;; https://emacs.stackexchange.com/questions/20016/no-html-jsx-indentation-in-jsx-mode/20055#20055
-  (add-hook 'web-mode-hook
-            (lambda ()
-              ;; short circuit js mode and just do everything in jsx-mode
-              (if (equal web-mode-content-type "javascript")
-                  (web-mode-set-content-type "jsx")
-                (message "now set to: %s" web-mode-content-type))))
-#+end_src
 *** Set default indent level via 'js-indent-level' variable to 2 spaces for later parts of config
 #+begin_src emacs-lisp
   (setq-default js-indent-level 2)
 #+end_src
-*** Add 'web-mode' for HTML, JS, and TS based files (.html, .js, .jsx, .ts, .tsx, .html)
+*** Force 'tab-width' to be 2 spaces
+#+begin_src emacs-lisp
+  (setq-default tab-width 2)
+#+end_src
+*** Indent with spaces, not tabs, by nuking 'indent-tabs-mode'
+#+begin_src emacs-lisp
+  (progn
+    (setq-default indent-tabs-mode nil)
+    )
+#+end_src
+*** Add 'web-mode' and related hooks for HTML, JS, and TS based files (.html, .js, .jsx, .ts, .tsx, .html)
 #+begin_src emacs-lisp
   (use-package web-mode
     :ensure t
@@ -693,12 +675,29 @@ Sam's Emacs Config
     :hook (web-mode . sam/webmode-hook))
 
   ;; Taken from here:
+  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
   (add-hook 'web-mode-hook
             (lambda ()
               (setq web-mode-markup-indent-offset (symbol-value 'js-indent-level))
               (setq web-mode-attr-indent-offset (symbol-value 'js-indent-level))
               (setq web-mode-css-indent-offset (symbol-value 'js-indent-level))
-              (setq web-mode-code-indent-offset (symbol-value 'js-indent-level))))
+              (setq web-mode-code-indent-offset (symbol-value 'js-indent-level))
+              (setq web-mode-enable-comment-annotation t)
+              (setq web-mode-markup-indent-offset 2)
+              (setq web-mode-code-indent-offset 2)
+              (setq web-mode-css-indent-offset 2)
+              (setq web-mode-attr-indent-offset 0)
+              (setq web-mode-enable-auto-indentation t)
+              (setq web-mode-enable-auto-closing t)
+              (setq web-mode-enable-auto-pairing t)
+              (setq web-mode-enable-css-colorization t)
+              ;; Revision to force anything ending in '.js' to just use 'jsx-mode' within 'web-mode'
+              ;; so that React projects actually indent properly without a hassle:
+              ;; Taken from here:
+              ;; https://emacs.stackexchange.com/questions/20016/no-html-jsx-indentation-in-jsx-mode/20055#20055
+              (if (equal web-mode-content-type "javascript")
+                  (web-mode-set-content-type "jsx")
+                (message "now set to: %s" web-mode-content-type))))
 #+end_src
 *** Add 'emmet-mode' to make HTML editing easier
 #+BEGIN_SRC emacs-lisp
@@ -787,20 +786,9 @@ Sam's Emacs Config
      (add-function :before-until electric-pair-inhibit-predicate
 		   (lambda (c) (eq c ?<)))
 #+END_SRC
-*** Add 'aggressive-indent' to automatically indent code
-#+begin_src emacs-lisp
-  (use-package aggressive-indent
-    :ensure t)
-#+end_src
 *** Enable 'show-paren-mode' to highlight matching parentheses
 #+begin_src emacs-lisp
 (show-paren-mode 1)
-#+end_src
-*** Indent with spaces, not tabs, by nuking 'indent-tabs-mode'
-#+begin_src emacs-lisp
-  (progn
-    (setq-default indent-tabs-mode nil)
-    )
 #+end_src
 ** Keybinding Packages
 *** Add 'free-keys' to determine the free keybindings present currently available in Emacs
@@ -893,13 +881,6 @@ Sam's Emacs Config
 
   (global-set-key (kbd "C-c c") 'my-org-capture)
 #+END_SRC
-*** Don't allow 'aggressive-indent' to affect Org Mode:
-#+begin_src emacs-lisp
-  ;; Turn on 'aggressive-indent' mode globally:
-  (global-aggressive-indent-mode 1)
-  ;; Add an exclusion list of modes you don't want 'aggressive-indent' to occur on:
-  (add-to-list 'aggressive-indent-excluded-modes 'org-mode)
-#+end_src
 *** Nuke 'org-adapt-indentation' variable setting value introduced in Emacs 27.2 so lines aren't auto-indented after headlines
 #+BEGIN_SRC emacs-lisp
 (setq org-adapt-indentation nil)
