@@ -605,22 +605,6 @@ Sam's Emacs Config
 #+begin_src emacs-lisp
   (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
 #+end_src
-*** Add 'aggressive-indent' for better indentation
-#+begin_src emacs-lisp
-  (use-package aggressive-indent
-    :ensure t)
-
-  ;; Adding modes to enable 'aggressive-indent' mode via hooks:
-  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
-  (add-hook 'python-mode-hook #'aggressive-indent-mode)
-  (add-hook 'css-mode-hook #'aggressive-indent-mode)
-  (add-hook 'web-mode-hook #'aggressive-indent-mode)
-  (add-hook 'rjsx-mode-hook #'aggressive-indent-mode)
-  (add-hook 'js2-mode-hook #'aggressive-indent-mode)
-  (add-hook 'ruby-mode-hook #'aggressive-indent-mode)
-  (add-hook 'python-mode-hook #'aggressive-indent-mode)
-
-#+end_src
 *** Combined 'lsp' and 'lsp-ui' tweaks
 #+begin_src emacs-lisp
   (setq lsp-keymap-prefix "C-c l")
