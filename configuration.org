@@ -490,27 +490,6 @@ Sam's Emacs Config
   (other-window 1))
 (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
 #+END_SRC
-*** Add 'eyebrowse-mode' to allow for 'tmux' style window management
-#+begin_src emacs-lisp
-  ;; Taken from here:
-  ;; https://github.com/emacsmirror/eyebrowse
-  ;; https://depp.brause.cc/eyebrowse/
-  (use-package eyebrowse
-    :ensure t)
-
-  ;; Turning 'eyebrowse' mode automatically when Emacs starts up:
-  (setq eyebrowse-mode t)
-
-#+end_src
-*** Add 'eyebrowse-restore' to restore 'eyebrowse' based window configs
-#+begin_src emacs-lisp
-  ;; Taken from here:
-  ;; https://github.com/FrostyX/eyebrowse-restore
-  (use-package eyebrowse-restore
-    :ensure t
-    :config
-    (eyebrowse-restore-mode))
-#+end_src
 *** Enable Subword-Mode so that you can go forward and backward between camel-case words
    #+BEGIN_SRC emacs-lisp
      (global-subword-mode 1)
