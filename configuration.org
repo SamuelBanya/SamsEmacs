@@ -832,40 +832,6 @@ Sam's Emacs Config
   ;; From 'Emacs Rocks Episode 16: Dired':
   (setq dired-dwim-target t)
 #+end_src
-*** Enable 'treemacs' for a tree layout file explorer
-#+begin_src emacs-lisp
-  (use-package treemacs
-    :ensure t
-    :custom
-    (treemacs-no-png-images nil)
-    (treemacs-width 35))
-#+end_src
-*** Enable 'treemacs-magit' to inform treemacs about staging of files and commits happening in 'magit'
-#+begin_src emacs-lisp
-  (use-package treemacs-magit
-    :ensure t)
-#+end_src
-*** Enable 'lsp-treemacs' for a more IDE-looking setup via 'lsp-treemacs-symbols' and 'lsp-treemacs-errors-list'
-#+begin_src emacs-lisp
-  (use-package lsp-treemacs
-    :ensure t
-    :config
-    (lsp-treemacs-sync-mode 1))
-#+end_src
-*** Use custom function, 'launch-treemacs-and-errors' to call 'treemacs' and 'lsp-treemacs-errors-list'
-#+begin_src emacs-lisp
-  (defun launch-treemacs ()
-    (interactive)
-    (let ((current-window (selected-window))
-          (error-window (get-buffer-window "*LSP Error List*"))
-          (treemacs-window (equal (treemacs-current-visibility) 'visible)))
-      (if (and error-window treemacs-window)
-          (progn (treemacs) (delete-window error-window))
-        (treemacs)
-        (select-window current-window))))
-
-  (global-set-key (kbd "C-c t") 'launch-treemacs)
-#+end_src
 ** eww
 *** Make 'eww' the default browser for Emacs
 #+BEGIN_SRC emacs-lisp
