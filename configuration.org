@@ -540,6 +540,14 @@ Sam's Emacs Config
   (add-hook 'vterm-mode-hook 'rename-uniquely)
 #+end_src
 
+*** Add 'multi-vterm' to add 'tmux' style management of 'vterm' terminals
+#+begin_src emacs-lisp
+  (use-package multi-vterm
+    :ensure t
+    :bind (("C-` v" . 'multi-vterm)
+           ("C-` n" . 'multi-vterm-prev)
+           ("C-` p" . 'multi-vterm-next)))
+#+end_src
 ** Programming
 *** Add 'magit' for making dealing with Git repositories easier
 #+begin_src emacs-lisp
