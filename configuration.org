@@ -840,6 +840,10 @@ Sam's Emacs Config
   ;; From 'Emacs Rocks Episode 16: Dired':
   (setq dired-dwim-target t)
 #+end_src
+*** Make 'dired' sort by directories first
+#+begin_src emacs-lisp
+(setq dired-listing-switches "-al --group-directories-first")
+#+end_src
 ** eww
 *** Make 'eww' the default browser for Emacs
 #+BEGIN_SRC emacs-lisp
