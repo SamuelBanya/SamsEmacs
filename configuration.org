@@ -39,18 +39,6 @@ Sam's Emacs Config
 #+begin_src emacs-lisp
   (when (member (system-name) '("notestation" "fossastation" "Samuels-MBP.tampabay.rr.com"))
     ;; Create separate connection based functions to later call within the 'hydra-connect' hydra:
-    (defun ssh-into-musimatic-sam ()
-      (interactive)
-      (find-file "/ssh:sam@musimatic.xyz:/var/www/musimatic"))
-
-    (defun ssh-into-musimatic-git ()
-      (interactive)
-      (find-file "/ssh:git@musimatic.xyz:/var/www/musimatic"))
-
-    (defun ssh-into-musimatic-root ()
-      (interactive)
-      (find-file "/ssh:root@musimatic.xyz:/var/www/musimatic"))
-
     (defun ssh-into-sambanya-sam ()
       (interactive)
       (find-file "/ssh:sam@sambanya.com:/var/www/sambanya"))
@@ -68,20 +56,14 @@ Sam's Emacs Config
       "
     ^Connect^
     ^^^^^^^^^^-----------------------------
-    _a_: connect to musimatic.xyz as sam user
-    _b_: connect to musimatic.xyz as git user
-    _c_: connect to musimatic.xyz as root user
-    _d_: connect to sambanya.com as sam user
-    _e_: connect to sambanya.com as root user
-    _f_: connect to homebase as sam user
+    _a_: connect to sambanya.com as sam user
+    _b_: connect to sambanya.com as root user
+    _c_: connect to homebase as sam user
     _q_: quit
     "
-      ("a" ssh-into-musimatic-sam)
-      ("b" ssh-into-musimatic-git)
-      ("c" ssh-into-musimatic-root)
-      ("d" ssh-into-sambanya-sam)
-      ("e" ssh-into-sambanya-root)
-      ("f" ssh-into-homebase-sam)
+      ("a" ssh-into-sambanya-sam)
+      ("b" ssh-into-sambanya-root)
+      ("c" ssh-into-homebase-sam)
       ("q" nil))
 
     (global-set-key (kbd "M-n") 'hydra-connect/body))
