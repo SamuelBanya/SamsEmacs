@@ -531,6 +531,65 @@ Sam's Emacs Config
            ("C-` p" . 'multi-vterm-next)))
 #+end_src
 ** Programming
+*** Add 'lsp-mode' for intellisense for many programming languages (python, ruby, java, C++)
+#+begin_src emacs-lisp
+  (defun ef/lsp-mode-setup ()
+    ;; Taken from this 'System Crafters' video:
+    ;; https://www.youtube.com/watch?v=E-NAM9U5JYE
+    ;; This allows breadcrumb segments to appear in projects
+    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+    (lsp-headerline-breadcrumb-mode))
+
+  (use-package lsp-mode
+    :ensure t
+    :commands (lsp lsp-deferred)
+    :hook (
+           (web-mode . lsp-deferred)
+           (ruby-mode . lsp-deferred)
+           (python-mode . lsp-deferred)
+           (lsp-mode . lsp-enable-which-key-integration)
+           )
+    )
+#+end_src
+*** Add 'lsp-ui' to adjust UI portion of LSP mode's features
+#+begin_src emacs-lisp
+  (use-package lsp-ui
+    :ensure t
+    :commands lsp-ui-mode)
+#+end_src
+*** Add 'lsp-python-ms' for Python projects
+#+begin_src emacs-lisp
+  ;; Taken from here:
+  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
+  (use-package lsp-python-ms
+    :ensure t
+    :init (setq lsp-python-ms-auto-install-server t)
+    :hook (python-mode . (lambda ()
+                           (require 'lsp-python-ms)
+                           (lsp))))
+#+end_src
+*** Force 'display-line-numbers-mode' to be enabled when LSP mode is enabled
+#+begin_src emacs-lisp
+  (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
+#+end_src
+*** Combined 'lsp' and 'lsp-ui' tweaks
+#+begin_src emacs-lisp
+  (setq lsp-keymap-prefix "C-c l")
+  (setq lsp-enable-which-key-integration t)
+  ;; Set 'lsp-idle-delay' to 0.2 seconds for quick autocompletion
+  (setq lsp-idle-delay 0.2)
+  ;; Adding this to force lsp to auto-guess the root directory of the project:
+  (setq lsp-auto-guess-root t)
+  ;; Force lsp mode to not log everything for speed purposes:
+  (setq lsp-log-io nil)
+  (setq lsp-ui-sideline-show-hover t)
+  (setq lsp-ui-sideline-show-code-actions t)
+  ;; Force 'lsp' mode to use 'flymake' as its diagnostics provider:
+  (setq lsp-diagnostics-provider :flymake)
+  ;; Enable 'lsp-ui-doc' setting:
+  (setq lsp-ui-doc-enable t)
+#+end_src
+
 *** Add 'magit' for making dealing with Git repositories easier
 #+begin_src emacs-lisp
   (use-package magit
@@ -538,20 +597,21 @@ Sam's Emacs Config
 #+end_src
 *** Add 'company' for auto-completion for programming projects
 #+begin_src emacs-lisp
-  (use-package company
-    :ensure t
-    :config
-    (global-company-mode t)
-    (setq company-idle-delay 0.0)
-    (setq company-minimum-prefix-length 1)
-    ;; Force Company Mode to NOT be enabled in Org Mode since its way too annoying for note taking:
-    (setq company-global-modes '(not org-mode))
-    (define-key company-active-map (kbd "M-n") nil)
-    (define-key company-active-map (kbd "M-p") nil)
-    (define-key company-active-map (kbd "C-n") #'company-select-next)
-    (define-key company-active-map (kbd "C-p") #'company-select-previous)
-    :hook
-    (prog-mode . company-mode))
+    (use-package company
+      :ensure t
+      :config
+      (global-company-mode t)
+      (setq company-idle-delay 0.0)
+      (setq company-minimum-prefix-length 1)
+      ;; Force Company Mode to NOT be enabled in Org Mode since its way too annoying for note taking:
+      (setq company-global-modes '(not org-mode))
+      (define-key company-active-map (kbd "M-n") nil)
+      (define-key company-active-map (kbd "M-p") nil)
+      (define-key company-active-map (kbd "C-n") #'company-select-next)
+      (define-key company-active-map (kbd "C-p") #'company-select-previous)
+      (setq lsp-completion-provider :capf)
+      :hook
+      (prog-mode . company-mode))
 #+end_src
 *** Add 'counsel' to specifically use the 'counsel-grep-or-swiper' for searching through large log files
 #+BEGIN_SRC emacs-lisp
