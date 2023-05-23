@@ -6,6 +6,17 @@ Sam's Emacs Config
 (setq gc-cons-threshold 100000000)
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
 #+end_src
+* Work Specific
+** 
+#+begin_src emacs-lisp
+;; From this related post since 'ls' based options for Dired don't work in MacOS natively:
+;; https://github.com/d12frosted/homebrew-emacs-plus/issues/383
+;; Aka, install 'coreutils' via brew, and then use the following:
+(when (member (system-name) '("macbook-osm-sbanya"))
+  (setq insert-directory-program "gls" dired-use-ls-dired t)
+)
+  
+#end_src
 * Personal Specific
 ** Add Org Capture templates for personal use ('Things To Do (NOW)', YouTube videos I found, etc)
 #+begin_src emacs-lisp
