@@ -16,7 +16,7 @@ Sam's Emacs Config
   (setq insert-directory-program "gls" dired-use-ls-dired t)
 )
   
-#end_src
+#+end_src
 * Personal Specific
 ** Add Org Capture templates for personal use ('Things To Do (NOW)', YouTube videos I found, etc)
 #+begin_src emacs-lisp
