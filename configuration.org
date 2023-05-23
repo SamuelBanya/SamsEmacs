@@ -12,7 +12,7 @@ Sam's Emacs Config
 ;; From this related post since 'ls' based options for Dired don't work in MacOS natively:
 ;; https://github.com/d12frosted/homebrew-emacs-plus/issues/383
 ;; Aka, install 'coreutils' via brew, and then use the following:
-(when (member (system-name) '("macbook-osm-sbanya")
+(when (member (system-name) '("macbook-osm-sbanya"))
   (setq insert-directory-program "gls" dired-use-ls-dired t)
 )
   
