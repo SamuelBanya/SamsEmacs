@@ -14,7 +14,7 @@ Sam's Emacs Config
 ;; Aka, install 'coreutils' via brew, and then use the following:
 (when (eq system-type 'darwin)
   (setq insert-directory-program "/opt/homebrew/bin/gls"))
-  
+
 #+end_src
 * Personal Specific
 ** Add Org Capture templates for personal use ('Things To Do (NOW)', YouTube videos I found, etc)
@@ -181,62 +181,64 @@ Sam's Emacs Config
 * Keybinding Changes
 ** Add related hydra to remind me of all the super custom specific keybindings I have ever made
 #+begin_src emacs-lisp
-  ;; (defhydra hydra-remindkeys (:color pink
-  ;; 			       :hint nil)
-  ;;   "
-  ;; ^Keybindings^
-  ;; ^^^^^^^^^^-----------------------------
-  ;; _C-M-z_: Enable 'evil' and 'evil-collection' for Vim keybindings
-  ;; _S-Return_: launch 'vterm'
-  ;; _C-x w_: launch 'ranger.el'
-  ;; _f12_: toggle full screen for Macbook workaround
-  ;; _C-=_: rotate buffers
-  ;; _f7 and S-f7_: start 'org-tree-slide-mode' for Org Mode based presentations, and stop them
-  ;; _f6_: insert YouTube video link, and return the YouTube video name into pasted buffer
-  ;; _C-x b_: enable iBuffer to check available buffers
-  ;; _f2_: enable zoom-based Hydra to zoom in and out of available Emacs buffer
-  ;; _C-c a_: enable 'Org-Agenda' to view agenda of tasks
-  ;; _C-!_: enable color-theme based Hydra to change color themes on the fly
-  ;; _M-s_: jump to a specific word in a buffer with the 'avy-goto-word-0' function
-  ;; _M-l_: jump to a specific line in a buffer with the 'avy-goto-line' function
-  ;; _M-y_: view the copy and paste clipboard via 'popup-kill-ring' package
-  ;; _C-s_: search in a buffer with Counsel or Swiper via the 'counsel-grep-or-swiper' function
-  ;; _C-c q_: first mark a section of a buffer, and then enable this to see where the highlighted section appears next to edit all instances simultaneously
-  ;; _C-q_: enables 'expand-region' to expand a given region of text
-  ;; _C-c C-0_: enables multiple cursors with 'mc/edit-lines' function
-  ;; _C->_: while 'mc/edit-lines' is enabled, go to the next line
-  ;; _C-<_: while 'mc/edit-lines' is enabled, go to the previousline
-  ;; _C-c C-<_: while 'mc/edit-lines' is enabled, mark all of the lines that are like this
-  ;; _C-M-s-k_: kill all buffers with 'kill-all-buffers' function, useful for end-of-day buffer cleanup
-  ;; _C-c w l_: copy the entire line of text with 'copy-whole-line' function
-  ;; _C-x k_: kill the current buffer with the 'kill-current-buffer' function
-  ;; _s-e_: edit the buffer as the 'sudo' user with the 'sudo-edit' function
-  ;; _C-c w w_: kill an entire word with the 'kill-whole-word' function
-  ;; _C-$_: enable desktop based hydra to save, clear, or revert the current desktop of Emacs buffers via the 'hydra-desktop' hydra
-  ;; _C-c l_: enable lsp-mode for programming based auto-completion
-  ;; _<s tab_: enable source code based yasnippet template for Org Mode
-  ;; _<b tab_: enable bash code based yasnippet template for Org Mode
-  ;; _C-h M-a_: show the major mode keybindings with the 'discover-my-major' function
-  ;; _C-h M-o_: show the minor mode keybindings with the 'discover-my-mode' function
-  ;; _M-x free-keys_: show the available keybindings to use for later use in my Emacs config
-  ;; _C-c e_: edit Emacs config at any time
-  ;; _C-c r_: reload Emacs config at any time
-  ;; _C-c C-p C-b_: add the entire current buffer to an online webpaste, specifically at dpaste.org
-  ;; _C-c C-p C-r_: add the selected region to an online webpaste, specifically at dpaste.org
-  ;; _C-c C-p C-p_: add the selected region or buffer to an online webpaste, specifically at dpaste.org
-  ;; _C-c s_: search for a specific issue on Stack Exchange aka StackOverflow
-  ;; _M-x ytdl_: download YouTube videos directly from Emacs
-  ;; _C-c m_: enable Org-Menu to discover keybindings in Org Mode
-  ;; _C-c t_: enable treemacs and lsp-treemacs-errors-list
-  ;; _M-`_: enable popper-toggle-latest to toggle latest popper buffer
-  ;; _M-~_: enable popper-cycle to cycle through popper buffers
-  ;; _C-x M-`_: enable popper-toggle-latest to toggle the type of popper buffer
-  ;; _C-|_: call kill-all-dired-buffers function to kill all open dired buffers
+;; NOTE: I still haven't even made a related hydra
+;; Though this should really just call a function that opens up an org table with all of this info
+;; (defhydra hydra-remindkeys (:color pink
+;; 			       :hint nil)
+;;   "
+;; ^Keybindings^
+;; ^^^^^^^^^^-----------------------------
+;; _C-M-z_: Enable 'evil' and 'evil-collection' for Vim keybindings
+;; _S-Return_: launch 'vterm'
+;; _C-x w_: launch 'ranger.el'
+;; _f12_: toggle full screen for Macbook workaround
+;; _C-=_: rotate buffers
+;; _f7 and S-f7_: start 'org-tree-slide-mode' for Org Mode based presentations, and stop them
+;; _f6_: insert YouTube video link, and return the YouTube video name into pasted buffer
+;; _C-x b_: enable iBuffer to check available buffers
+;; _f2_: enable zoom-based Hydra to zoom in and out of available Emacs buffer
+;; _C-c a_: enable 'Org-Agenda' to view agenda of tasks
+;; _C-!_: enable color-theme based Hydra to change color themes on the fly
+;; _M-s_: jump to a specific word in a buffer with the 'avy-goto-word-0' function
+;; _M-l_: jump to a specific line in a buffer with the 'avy-goto-line' function
+;; _M-y_: view the copy and paste clipboard via 'popup-kill-ring' package
+;; _C-s_: search in a buffer with Counsel or Swiper via the 'counsel-grep-or-swiper' function
+;; _C-c q_: first mark a section of a buffer, and then enable this to see where the highlighted section appears next to edit all instances simultaneously
+;; _C-q_: enables 'expand-region' to expand a given region of text
+;; _C-c C-0_: enables multiple cursors with 'mc/edit-lines' function
+;; _C->_: while 'mc/edit-lines' is enabled, go to the next line
+;; _C-<_: while 'mc/edit-lines' is enabled, go to the previousline
+;; _C-c C-<_: while 'mc/edit-lines' is enabled, mark all of the lines that are like this
+;; _C-M-s-k_: kill all buffers with 'kill-all-buffers' function, useful for end-of-day buffer cleanup
+;; _C-c w l_: copy the entire line of text with 'copy-whole-line' function
+;; _C-x k_: kill the current buffer with the 'kill-current-buffer' function
+;; _s-e_: edit the buffer as the 'sudo' user with the 'sudo-edit' function
+;; _C-c w w_: kill an entire word with the 'kill-whole-word' function
+;; _C-$_: enable desktop based hydra to save, clear, or revert the current desktop of Emacs buffers via the 'hydra-desktop' hydra
+;; _C-c l_: enable lsp-mode for programming based auto-completion
+;; _<s tab_: enable source code based yasnippet template for Org Mode
+;; _<b tab_: enable bash code based yasnippet template for Org Mode
+;; _C-h M-a_: show the major mode keybindings with the 'discover-my-major' function
+;; _C-h M-o_: show the minor mode keybindings with the 'discover-my-mode' function
+;; _M-x free-keys_: show the available keybindings to use for later use in my Emacs config
+;; _C-c e_: edit Emacs config at any time
+;; _C-c r_: reload Emacs config at any time
+;; _C-c C-p C-b_: add the entire current buffer to an online webpaste, specifically at dpaste.org
+;; _C-c C-p C-r_: add the selected region to an online webpaste, specifically at dpaste.org
+;; _C-c C-p C-p_: add the selected region or buffer to an online webpaste, specifically at dpaste.org
+;; _C-c s_: search for a specific issue on Stack Exchange aka StackOverflow
+;; _M-x ytdl_: download YouTube videos directly from Emacs
+;; _C-c m_: enable Org-Menu to discover keybindings in Org Mode
+;; _C-c t_: enable treemacs and lsp-treemacs-errors-list
+;; _M-`_: enable popper-toggle-latest to toggle latest popper buffer
+;; _M-~_: enable popper-cycle to cycle through popper buffers
+;; _C-x M-`_: enable popper-toggle-latest to toggle the type of popper buffer
+;; _C-|_: call kill-all-dired-buffers function to kill all open dired buffers
 
-  ;; "
-  ;;   ("q" nil))
+;; "
+;;   ("q" nil))
 
-  ;; (global-set-key (kbd "C-=") 'hydra-rotate/body)
+;; (global-set-key (kbd "C-=") 'hydra-rotate/body)
 #+end_src
 ** Add 'evil' and 'evil-collection' to switch to Vim keybindings for programming occassionally with 'C-M-z'
 #+BEGIN_SRC emacs-lisp
@@ -264,29 +266,7 @@ Sam's Emacs Config
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "<f12>") 'toggle-frame-fullscreen)
 #+END_SRC
-** Hydra for rotating buffers with 'C-='
-#+BEGIN_SRC emacs-lisp
-  (defhydra hydra-rotate (:color pink
-				 :hint nil)
-    "
-  ^Rotate Buffers^
-  ^^^^^^^^^^-----------------------------
-  _h_: rotate even horizontal
-  _v_: rotate even vertical
-  _o_: rotate main horizontal
-  _e_: rotate main vertical
-  _t_: rotate tiled
-  _q_: quit
-  "
-    ("h" rotate:even-horizontal)
-    ("v" rotate:even-vertical)
-    ("o" rotate:main-horizontal)
-    ("e" rotate:main-vertical)
-    ("t" rotate:tiled)
-    ("q" nil))
 
-  (global-set-key (kbd "C-=") 'hydra-rotate/body)
-#+END_SRC
 ** Use 'get-youtube-video-name' to grab YouTube video name from YouTube link provided by user and place into buffer, set to '<f6>'
 #+BEGIN_SRC emacs-lisp
   (defun get-youtube-video-name ()
@@ -303,14 +283,28 @@ Sam's Emacs Config
    #+BEGIN_SRC emacs-lisp
      (global-set-key (kbd "C-x b") 'ibuffer)
    #+END_SRC
-** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
+q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
    #+BEGIN_SRC emacs-lisp
    (setq ibuffer-expert t)
    #+END_SRC
-** Switch Buffers Using 'ivy-switch-buffer' With 'C-x C-b'
+** Install 'Counsel' Which Installs 'Ivy' That Allows You To Switch Buffers Using 'ivy-switch-buffer' With 'C-x C-b'
 #+begin_src emacs-lisp
-    (global-set-key (kbd "C-x C-b") 'ivy-switch-buffer)
+(use-package counsel
+    :ensure t)
+
+(global-set-key (kbd "C-x C-b") 'ivy-switch-buffer)
+
+;; Enable 'ivy' everywhere
+  ;; Taken from the 'swiper' Docs page:
+  ;; https://oremacs.com/swiper/
+  ;; Previous Section:
+  ;; (ivy-mode 1)
+  ;; NOTE:
+  ;; Modifying this so that it doesn't autocomplete in ERC based IRC buffers:
+  (add-hook 'erc-chat-mode-hook
+            (lambda ()  (ivy-mode 1)))
 #+end_src
+
 ** Hydra for zooming in and out of buffers with 'f2'
    #+BEGIN_SRC emacs-lisp
    (defhydra hydra-zoom (global-map "<f2>")
@@ -541,87 +535,95 @@ Sam's Emacs Config
            ("C-` p" . 'multi-vterm-next)))
 #+end_src
 ** Programming
-*** Add 'lsp-mode' for intellisense for many programming languages (python, ruby, java, C++)
+*** Modern Web Dev Setup
 #+begin_src emacs-lisp
-  (defun ef/lsp-mode-setup ()
-    ;; Taken from this 'System Crafters' video:
-    ;; https://www.youtube.com/watch?v=E-NAM9U5JYE
-    ;; This allows breadcrumb segments to appear in projects
-    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-    (lsp-headerline-breadcrumb-mode))
+  ;; Taken from here because I hate configuring LSP:
+  ;; https://gist.github.com/fuzunspm/c5b78b662cd8cd45368b9a55361ce3ef
+  (use-package flycheck
+    :ensure t
+    :config
+    (add-hook 'typescript-mode-hook 'flycheck-mode))
 
-  (use-package lsp-mode
-    :ensure t
-    :commands (lsp lsp-deferred)
-    :hook (
-           (web-mode . lsp-deferred)
-           (ruby-mode . lsp-deferred)
-           (python-mode . lsp-deferred)
-           (lsp-mode . lsp-enable-which-key-integration)
-           )
-    )
-#+end_src
-*** Add 'lsp-ui' to adjust UI portion of LSP mode's features
-#+begin_src emacs-lisp
-  (use-package lsp-ui
-    :ensure t
-    :commands lsp-ui-mode)
-#+end_src
-*** Add 'lsp-python-ms' for Python projects
-#+begin_src emacs-lisp
-  ;; Taken from here:
-  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
-  (use-package lsp-python-ms
-    :ensure t
-    :init (setq lsp-python-ms-auto-install-server t)
-    :hook (python-mode . (lambda ()
-                           (require 'lsp-python-ms)
-                           (lsp))))
-#+end_src
-*** Force 'display-line-numbers-mode' to be enabled when LSP mode is enabled
-#+begin_src emacs-lisp
-  (add-hook 'lsp-mode-hook #'display-line-numbers-mode)
-#+end_src
-*** Combined 'lsp' and 'lsp-ui' tweaks
-#+begin_src emacs-lisp
-  (setq lsp-keymap-prefix "C-c l")
-  (setq lsp-enable-which-key-integration t)
-  ;; Set 'lsp-idle-delay' to 0.2 seconds for quick autocompletion
-  (setq lsp-idle-delay 0.2)
-  ;; Adding this to force lsp to auto-guess the root directory of the project:
-  (setq lsp-auto-guess-root t)
-  ;; Force lsp mode to not log everything for speed purposes:
-  (setq lsp-log-io nil)
-  (setq lsp-ui-sideline-show-hover t)
-  (setq lsp-ui-sideline-show-code-actions t)
-  ;; Force 'lsp' mode to use 'flymake' as its diagnostics provider:
-  (setq lsp-diagnostics-provider :flymake)
-  ;; Enable 'lsp-ui-doc' setting:
-  (setq lsp-ui-doc-enable t)
-#+end_src
+  (defun setup-tide-mode ()
+    (interactive)
+    (tide-setup)
+    (flycheck-mode +1)
+    (setq flycheck-check-syntax-automatically '(save mode-enabled))
+    (eldoc-mode +1)
+    (tide-hl-identifier-mode +1)
+    (company-mode +1))
 
+  (use-package company
+    :ensure t
+    :config
+    (setq company-show-numbers t)
+    (setq company-tooltip-align-annotations t)
+    (setq company-tooltip-flip-when-above t)
+    ;; Setting idle-delay to 0.0 to get Company Mode to show up faster:
+    ;; Force Company Mode to NOT be enabled in Org Mode since its way too annoying for note taking:
+    (setq company-global-modes '(not org-mode))
+    ;; Force Company mode keys to be 'C-n' and 'C-p':
+    (define-key company-active-map (kbd "M-n") nil)
+    (define-key company-active-map (kbd "M-p") nil)
+    (define-key company-active-map (kbd "C-n") #'company-select-next)
+    (define-key company-active-map (kbd "C-p") #'company-select-previous)
+    (setq company-idle-delay 0.0)
+    (global-company-mode))
+
+  (use-package company-quickhelp
+    :ensure t
+    :init
+    (company-quickhelp-mode 1)
+    (use-package pos-tip
+      :ensure t))
+
+  (use-package web-mode
+    :ensure t
+    :mode (("\\.html?\\'" . web-mode)
+           ("\\.tsx\\'" . web-mode)
+           ("\\.jsx\\'" . web-mode))
+    :config
+    (setq web-mode-markup-indent-offset 2
+          web-mode-css-indent-offset 2
+          web-mode-code-indent-offset 2
+          web-mode-block-padding 2
+          web-mode-comment-style 2
+
+          web-mode-enable-css-colorization t
+          web-mode-enable-auto-pairing t
+          web-mode-enable-comment-keywords t
+          web-mode-enable-current-element-highlight t
+          )
+    (add-hook 'web-mode-hook
+              (lambda ()
+                (when (string-equal "tsx" (file-name-extension buffer-file-name))
+      (setup-tide-mode))))
+    (flycheck-add-mode 'typescript-tslint 'web-mode))
+
+  (use-package typescript-mode
+    :ensure t
+    :config
+    (setq typescript-indent-level 2)
+    (add-hook 'typescript-mode #'subword-mode))
+
+  (use-package tide
+    :init
+    :ensure t
+    :after (typescript-mode company flycheck)
+    :hook ((typescript-mode . tide-setup)
+           (typescript-mode . tide-hl-identifier-mode)
+           (before-save . tide-format-before-save)))
+
+  (provide 'typescript)
+
+  ;; Taken from this GitHub Issues page in terms of specifying the 'node' directory when utilizing 'nvm' to maintain different versions of Node:
+  ;; https://github.com/ananthakumaran/tide/issues/438
+  (setq tide-node-executable "/home/sam/.nvm/versions/node/v18.0.0/bin/node")
+#+end_src
 *** Add 'magit' for making dealing with Git repositories easier
 #+begin_src emacs-lisp
   (use-package magit
     :ensure t)
-#+end_src
-*** Add 'company' for auto-completion for programming projects
-#+begin_src emacs-lisp
-    (use-package company
-      :ensure t
-      :config
-      (global-company-mode t)
-      (setq company-idle-delay 0.0)
-      (setq company-minimum-prefix-length 1)
-      ;; Force Company Mode to NOT be enabled in Org Mode since its way too annoying for note taking:
-      (setq company-global-modes '(not org-mode))
-      (define-key company-active-map (kbd "M-n") nil)
-      (define-key company-active-map (kbd "M-p") nil)
-      (define-key company-active-map (kbd "C-n") #'company-select-next)
-      (define-key company-active-map (kbd "C-p") #'company-select-previous)
-      (setq lsp-completion-provider :capf)
-      :hook
-      (prog-mode . company-mode))
 #+end_src
 *** Add 'counsel' to specifically use the 'counsel-grep-or-swiper' for searching through large log files
 #+BEGIN_SRC emacs-lisp
@@ -635,10 +637,6 @@ Sam's Emacs Config
     :ensure t
     :hook (prog-mode . rainbow-delimiters-mode))
 #+END_SRC
-*** Set default indent level via 'js-indent-level' variable to 2 spaces for later parts of config
-#+begin_src emacs-lisp
-  (setq-default js-indent-level 2)
-#+end_src
 *** Force 'tab-width' to be 2 spaces
 #+begin_src emacs-lisp
   (setq-default tab-width 2)
@@ -648,68 +646,6 @@ Sam's Emacs Config
   (progn
     (setq-default indent-tabs-mode nil)
     )
-#+end_src
-*** Add 'web-mode' and related hooks for HTML, JS, and TS based files (.html, .js, .jsx, .ts, .tsx, .html)
-#+begin_src emacs-lisp
-  (use-package web-mode
-    :ensure t
-    :mode (("\\.js\\'" . web-mode)
-           ("\\.jsx\\'" .  web-mode)
-           ("\\.ts\\'" . web-mode)
-           ("\\.tsx\\'" . web-mode)
-           ("\\.html\\'" . web-mode)
-           ;; Taken from here:
-           ;; https://gist.github.com/asummers/b8304b8ea78fc331b8177ff35d002046
-           ("\\.android\\.js$" . web-mode)
-           ("\\.react\\.js$" . web-mode))
-    :config
-    ;; Taken from here:
-    ;; https://gist.github.com/asummers/b8304b8ea78fc331b8177ff35d002046
-    (add-to-list 'magic-mode-alist '("^import React" . web-mode))
-    (add-to-list 'magic-mode-alist '("React.Component" . web-mode))
-    (add-to-list 'magic-mode-alist '("from 'react';$" . web-mode))
-    :commands web-mode
-    :hook (web-mode . sam/webmode-hook))
-
-  ;; Taken from here:
-  ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
-  (add-hook 'web-mode-hook
-            (lambda ()
-              (setq web-mode-markup-indent-offset (symbol-value 'js-indent-level))
-              (setq web-mode-attr-indent-offset (symbol-value 'js-indent-level))
-              (setq web-mode-css-indent-offset (symbol-value 'js-indent-level))
-              (setq web-mode-code-indent-offset (symbol-value 'js-indent-level))
-              (setq web-mode-enable-comment-annotation t)
-              (setq web-mode-markup-indent-offset 2)
-              (setq web-mode-code-indent-offset 2)
-              (setq web-mode-css-indent-offset 2)
-              (setq web-mode-attr-indent-offset 0)
-              (setq web-mode-enable-auto-indentation t)
-              (setq web-mode-enable-auto-closing t)
-              (setq web-mode-enable-auto-pairing t)
-              (setq web-mode-enable-css-colorization t)
-              ;; Revision to force anything ending in '.js' to just use 'jsx-mode' within 'web-mode'
-              ;; so that React projects actually indent properly without a hassle:
-              ;; Taken from here:
-              ;; https://emacs.stackexchange.com/questions/20016/no-html-jsx-indentation-in-jsx-mode/20055#20055
-              (if (equal web-mode-content-type "javascript")
-                  (web-mode-set-content-type "jsx")
-                (message "now set to: %s" web-mode-content-type))))
-#+end_src
-*** Add 'emmet-mode' to make HTML editing easier
-#+BEGIN_SRC emacs-lisp
-  (use-package emmet-mode
-    :ensure t
-    :hook ((web-mode) . emmet-mode))
-#+END_SRC
-*** Add 'ruby-mode' for Ruby projects
-#+begin_src emacs-lisp
-  (use-package ruby-mode
-    :ensure t)
-#+end_src
-*** Force 'display-line-numbers-mode' to be enabled when 'ruby mode' is enabled
-#+begin_src emacs-lisp
-(add-hook 'ruby-mode-hook #'display-line-numbers-mode)
 #+end_src
 *** Add 'enable-minor-mode' custom function from Luke Wesley-Holley
 #+begin_src emacs-lisp
@@ -721,12 +657,6 @@ Sam's Emacs Config
         (if (string-match (car my-pair) buffer-file-name)
       (funcall (cdr my-pair)))))
 #+end_src
-*** Add 'flycheck' for programming syntax checking on-the-fly
-#+BEGIN_SRC emacs-lisp
-  (use-package flycheck
-    :ensure t
-    :hook (prog-mode . flycheck-mode))
-#+END_SRC
 *** Use 'Diminish' to hide amazing minor modes which are not necessary to be reminded of all the time
 #+BEGIN_SRC emacs-lisp
   (use-package diminish
@@ -797,23 +727,6 @@ Sam's Emacs Config
 #+begin_src emacs-lisp
   (use-package hydra
     :ensure t)
-#+end_src
-** Counsel Related Packages
-*** Install 'counsel' to get access to 'ivy' component
-#+begin_src emacs-lisp
-  (use-package counsel
-    :ensure t)
-#+end_src
-*** Enable 'ivy' everywhere
-#+begin_src emacs-lisp
-  ;; Taken from the 'swiper' Docs page:
-  ;; https://oremacs.com/swiper/
-  ;; Previous Section:
-  ;; (ivy-mode 1)
-  ;; NOTE:
-  ;; Modifying this so that it doesn't autocomplete in ERC based IRC buffers:
-  (add-hook 'erc-chat-mode-hook
-            (lambda ()  (ivy-mode 1)))
 #+end_src
 ** File Manager
 *** Make 'dired' less verbose aka use 'dired-hide-details-mode'
