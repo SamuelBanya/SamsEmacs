@@ -581,6 +581,7 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
     :ensure t
     :mode (("\\.html?\\'" . web-mode)
            ("\\.tsx\\'" . web-mode)
+           ("\\.css\\'" . web-mode)
            ("\\.jsx\\'" . web-mode))
     :config
     (setq web-mode-markup-indent-offset 2
