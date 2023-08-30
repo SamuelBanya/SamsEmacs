@@ -747,6 +747,12 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
 #+begin_src emacs-lisp
 (setq dired-listing-switches "-al --group-directories-first")
 #+end_src
+*** Force 'dired' to automatically update instantly when files change to prevent having to hit 'g' all the time
+#+begin_src emacs-lisp
+;; Taken from here:
+;; https://superuser.com/questions/566393/how-to-configure-dired-to-update-instantly-when-files-folders-change
+(add-hook 'dired-mode-hook 'auto-revert-mode)
+#+end_src
 ** eww
 *** Make 'eww' the default browser for Emacs
 #+BEGIN_SRC emacs-lisp
