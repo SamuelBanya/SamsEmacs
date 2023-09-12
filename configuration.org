@@ -502,7 +502,7 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
 #+begin_src emacs-lisp
   (use-package helm-swoop
   :ensure t
-    :bind ("C-s" . helm-swoop))
+    :bind ("C-s" . helm-swoop-without-pre-input))
 #+end_src
 ** Terminal
 *** Add 'vterm' to enable only decent Emacs terminal
