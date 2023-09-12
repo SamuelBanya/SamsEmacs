@@ -289,20 +289,14 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
    #+END_SRC
 ** Install 'Counsel' Which Installs 'Ivy' That Allows You To Switch Buffers Using 'ivy-switch-buffer' With 'C-x C-b'
 #+begin_src emacs-lisp
-(use-package counsel
-    :ensure t)
+  (use-package counsel
+      :ensure t)
 
-(global-set-key (kbd "C-x C-b") 'ivy-switch-buffer)
+  (global-set-key (kbd "C-x C-b") 'ivy-switch-buffer)
 
-;; Enable 'ivy' everywhere
-  ;; Taken from the 'swiper' Docs page:
-  ;; https://oremacs.com/swiper/
-  ;; Previous Section:
-  ;; (ivy-mode 1)
-  ;; NOTE:
-  ;; Modifying this so that it doesn't autocomplete in ERC based IRC buffers:
-  (add-hook 'erc-chat-mode-hook
-            (lambda ()  (ivy-mode 1)))
+    ;; Modifying this so that it doesn't autocomplete in ERC based IRC buffers:
+    (add-hook 'erc-chat-mode-hook
+              (lambda ()  (ivy-mode 1)))
 #+end_src
 
 ** Hydra for zooming in and out of buffers with 'f2'
@@ -334,11 +328,6 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
      ;; (load-theme 'gruvbox-dark-hard)
      ;; (load-theme 'base16-bespin t)
      (org-mode-restart)
-   #+END_SRC
-*** Highlight Current Line In GUI Version Of Emacs
-   #+BEGIN_SRC emacs-lisp
-   (when window-system (add-hook 'prog-mode-hook (lambda() (set-face-background 'highlight "#222") (hl-line-mode 1))))
-   (when window-system (add-hook 'text-mode-hook (lambda() (set-face-background 'highlight "#222") (hl-line-mode 1))))
    #+END_SRC
 *** Disable Default Tool Bar, Menu Bar, And Scroll Bar
    #+BEGIN_SRC emacs-lisp
@@ -400,12 +389,6 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
   (use-package popup-kill-ring
     :ensure t
     :bind("M-y" . popup-kill-ring))
-#+END_SRC
-*** Swiper
-#+BEGIN_SRC emacs-lisp
-  (use-package swiper
-    :ensure t)
-    ;; :bind ("C-s" . swiper))
 #+END_SRC
 *** 'mark-multiple' to mark multiple sections of the buffer
 #+BEGIN_SRC emacs-lisp
@@ -514,6 +497,12 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
     :ensure t
     :init
     (vertico-mode))
+#+end_src
+*** Adding 'helm-swoop' to replace Swiper since Swiper's highlighted buffer face colors are jenk
+#+begin_src emacs-lisp
+  (use-package helm-swoop
+  :ensure t
+    :bind ("C-s" . helm-swoop))
 #+end_src
 ** Terminal
 *** Add 'vterm' to enable only decent Emacs terminal
@@ -626,12 +615,6 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
   (use-package magit
     :ensure t)
 #+end_src
-*** Add 'counsel' to specifically use the 'counsel-grep-or-swiper' for searching through large log files
-#+BEGIN_SRC emacs-lisp
-  (use-package counsel
-    :ensure t
-    :bind ("C-s" . counsel-grep-or-swiper))
-#+END_SRC
 *** Add 'rainbow-delimiters' to easily view delimiters in code
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
@@ -714,10 +697,6 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
      (add-function :before-until electric-pair-inhibit-predicate
 		   (lambda (c) (eq c ?<)))
 #+END_SRC
-*** Enable 'show-paren-mode' to highlight matching parentheses
-#+begin_src emacs-lisp
-(show-paren-mode 1)
-#+end_src
 ** Keybinding Packages
 *** Add 'free-keys' to determine the free keybindings present currently available in Emacs
 #+begin_src emacs-lisp
