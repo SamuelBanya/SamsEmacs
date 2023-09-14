@@ -498,11 +498,11 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
     :init
     (vertico-mode))
 #+end_src
-*** Adding 'helm-swoop' to replace Swiper since Swiper's highlighted buffer face colors are jenk
+*** Adding 'helm' just so that I can use 'helm-occur' to replace 'helm-swoop' (since it doesn't expand buffers like Org Mode buffers) and 'Swiper' (which does not have configurable search colors for my theme)
 #+begin_src emacs-lisp
-  (use-package helm-swoop
-  :ensure t
-    :bind ("C-s" . helm-swoop-without-pre-input))
+  (use-package helm
+    :ensure t
+    :bind ("C-s" . helm-occur))
 #+end_src
 ** Terminal
 *** Add 'vterm' to enable only decent Emacs terminal
@@ -610,6 +610,9 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
   ;; Taken from this GitHub Issues page in terms of specifying the 'node' directory when utilizing 'nvm' to maintain different versions of Node:
   ;; https://github.com/ananthakumaran/tide/issues/438
   (setq tide-node-executable "/home/sam/.nvm/versions/node/v18.0.0/bin/node")
+
+  ;; Add keybinding for 'tide-fix' to be Super + '.' (period) to be like VS Code's quick fix options:
+  (global-set-key (kbd "C-.") 'tide-fix)
 
   ;; Adding 'aggressive-indent' to simulate indentation from most modern IDEs:
   (use-package aggressive-indent
