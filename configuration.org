@@ -611,7 +611,7 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
   ;; https://github.com/ananthakumaran/tide/issues/438
   (setq tide-node-executable "/home/sam/.nvm/versions/node/v18.0.0/bin/node")
 
-  ;; Add keybinding for 'tide-fix' to be Super + '.' (period) to be like VS Code's quick fix options:
+  ;; Add keybinding for 'tide-fix' to be 'Ctrl' + '.' (period) to be like VS Code's quick fix options:
   (global-set-key (kbd "C-.") 'tide-fix)
 
   ;; Adding 'aggressive-indent' to simulate indentation from most modern IDEs:
