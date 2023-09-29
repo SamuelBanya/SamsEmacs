@@ -6,16 +6,6 @@ Sam's Emacs Config
 (setq gc-cons-threshold 100000000)
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
 #+end_src
-* Work Specific
-** Adding M1 Mac specific change to use 'gls' instead of 'ls' for dired sorting options:
-#+begin_src emacs-lisp
-;; From this related post since 'ls' based options for Dired don't work in MacOS natively:
-;; https://github.com/d12frosted/homebrew-emacs-plus/issues/383
-;; Aka, install 'coreutils' via brew, and then use the following:
-(when (eq system-type 'darwin)
-  (setq insert-directory-program "/opt/homebrew/bin/gls"))
-
-#+end_src
 * Personal Specific
 ** Add Org Capture templates for personal use ('Things To Do (NOW)', YouTube videos I found, etc)
 #+begin_src emacs-lisp
@@ -47,7 +37,7 @@ Sam's Emacs Config
 #+end_src
 ** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", "fedoraserver")
 #+begin_src emacs-lisp
-  (when (member (system-name) '("notestation" "fossastation" "Samuels-MBP.tampabay.rr.com"))
+  (when (member (system-name) '("devstation" "notestation" "fossastation" "Samuels-MBP.tampabay.rr.com"))
     ;; Create separate connection based functions to later call within the 'hydra-connect' hydra:
     (defun ssh-into-sambanya-sam ()
       (interactive)
@@ -137,6 +127,15 @@ Sam's Emacs Config
                                     ("fossastation" 125))))
 #+end_src
 * Work Specific
+** Adding M1 Mac specific change to use 'gls' instead of 'ls' for dired sorting options:
+#+begin_src emacs-lisp
+;; From this related post since 'ls' based options for Dired don't work in MacOS natively:
+;; https://github.com/d12frosted/homebrew-emacs-plus/issues/383
+;; Aka, install 'coreutils' via brew, and then use the following:
+(when (eq system-type 'darwin)
+  (setq insert-directory-program "/opt/homebrew/bin/gls"))
+
+#+end_src
 ** Org-Capture templates for Zendesk tickets and Intercom chats
 #+BEGIN_SRC emacs-lisp
   (when (string= system-name "Samuels-MBP")
@@ -173,143 +172,11 @@ Sam's Emacs Config
 #+END_SRC
 ** Add font specific changes for work Macbook to make it larger because default Mac font size sucks
 #+begin_src emacs-lisp
-  (when (string= system-name "Samuels-MBP.tampabay.rr.com")
+  (when (string= system-name "macboook-osm-sbanya")
     (set-face-attribute 'default nil
                         :height (pcase (system-name)
-                                  ("Samuels-MBP.tampabay.rr.com" 140))))
+                                  ("macboook-osm-sbanya" 140))))
 #+end_src
-* Keybinding Changes
-** Add related hydra to remind me of all the super custom specific keybindings I have ever made
-#+begin_src emacs-lisp
-;; NOTE: I still haven't even made a related hydra
-;; Though this should really just call a function that opens up an org table with all of this info
-;; (defhydra hydra-remindkeys (:color pink
-;; 			       :hint nil)
-;;   "
-;; ^Keybindings^
-;; ^^^^^^^^^^-----------------------------
-;; _C-M-z_: Enable 'evil' and 'evil-collection' for Vim keybindings
-;; _S-Return_: launch 'vterm'
-;; _C-x w_: launch 'ranger.el'
-;; _f12_: toggle full screen for Macbook workaround
-;; _C-=_: rotate buffers
-;; _f7 and S-f7_: start 'org-tree-slide-mode' for Org Mode based presentations, and stop them
-;; _f6_: insert YouTube video link, and return the YouTube video name into pasted buffer
-;; _C-x b_: enable iBuffer to check available buffers
-;; _f2_: enable zoom-based Hydra to zoom in and out of available Emacs buffer
-;; _C-c a_: enable 'Org-Agenda' to view agenda of tasks
-;; _C-!_: enable color-theme based Hydra to change color themes on the fly
-;; _M-s_: jump to a specific word in a buffer with the 'avy-goto-word-0' function
-;; _M-l_: jump to a specific line in a buffer with the 'avy-goto-line' function
-;; _M-y_: view the copy and paste clipboard via 'popup-kill-ring' package
-;; _C-s_: search in a buffer with Counsel or Swiper via the 'counsel-grep-or-swiper' function
-;; _C-c q_: first mark a section of a buffer, and then enable this to see where the highlighted section appears next to edit all instances simultaneously
-;; _C-q_: enables 'expand-region' to expand a given region of text
-;; _C-c C-0_: enables multiple cursors with 'mc/edit-lines' function
-;; _C->_: while 'mc/edit-lines' is enabled, go to the next line
-;; _C-<_: while 'mc/edit-lines' is enabled, go to the previousline
-;; _C-c C-<_: while 'mc/edit-lines' is enabled, mark all of the lines that are like this
-;; _C-M-s-k_: kill all buffers with 'kill-all-buffers' function, useful for end-of-day buffer cleanup
-;; _C-c w l_: copy the entire line of text with 'copy-whole-line' function
-;; _C-x k_: kill the current buffer with the 'kill-current-buffer' function
-;; _s-e_: edit the buffer as the 'sudo' user with the 'sudo-edit' function
-;; _C-c w w_: kill an entire word with the 'kill-whole-word' function
-;; _C-$_: enable desktop based hydra to save, clear, or revert the current desktop of Emacs buffers via the 'hydra-desktop' hydra
-;; _C-c l_: enable lsp-mode for programming based auto-completion
-;; _<s tab_: enable source code based yasnippet template for Org Mode
-;; _<b tab_: enable bash code based yasnippet template for Org Mode
-;; _C-h M-a_: show the major mode keybindings with the 'discover-my-major' function
-;; _C-h M-o_: show the minor mode keybindings with the 'discover-my-mode' function
-;; _M-x free-keys_: show the available keybindings to use for later use in my Emacs config
-;; _C-c e_: edit Emacs config at any time
-;; _C-c r_: reload Emacs config at any time
-;; _C-c C-p C-b_: add the entire current buffer to an online webpaste, specifically at dpaste.org
-;; _C-c C-p C-r_: add the selected region to an online webpaste, specifically at dpaste.org
-;; _C-c C-p C-p_: add the selected region or buffer to an online webpaste, specifically at dpaste.org
-;; _C-c s_: search for a specific issue on Stack Exchange aka StackOverflow
-;; _M-x ytdl_: download YouTube videos directly from Emacs
-;; _C-c m_: enable Org-Menu to discover keybindings in Org Mode
-;; _C-c t_: enable treemacs and lsp-treemacs-errors-list
-;; _M-`_: enable popper-toggle-latest to toggle latest popper buffer
-;; _M-~_: enable popper-cycle to cycle through popper buffers
-;; _C-x M-`_: enable popper-toggle-latest to toggle the type of popper buffer
-;; _C-|_: call kill-all-dired-buffers function to kill all open dired buffers
-
-;; "
-;;   ("q" nil))
-
-;; (global-set-key (kbd "C-=") 'hydra-rotate/body)
-#+end_src
-** Add 'evil' and 'evil-collection' to switch to Vim keybindings for programming occassionally with 'C-M-z'
-#+BEGIN_SRC emacs-lisp
-  (use-package evil
-    :ensure t
-    :init
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil)
-    ;; Allow Vim style page-up and page-down functionality with 'C-u' and 'C-d':
-    (setq evil-want-C-u-scroll t))
-
-  (use-package evil-collection
-    :after evil
-    :ensure t
-    :config
-    (evil-collection-init))
-
-  (global-set-key (kbd "C-M-z") 'evil-mode)
-#+END_SRC
-** Super+Return to launch 'vterm'
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "<s-return>") 'vterm)
-#+END_SRC
-** Add '<f12>' keybinding for 'toggle-frame-fullscreen' function for Macbook workaround
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "<f12>") 'toggle-frame-fullscreen)
-#+END_SRC
-
-** Use 'get-youtube-video-name' to grab YouTube video name from YouTube link provided by user and place into buffer, set to '<f6>'
-#+BEGIN_SRC emacs-lisp
-  (defun get-youtube-video-name ()
-    "Grab the video title of a YouTube video using youtube-dl, and place it into an Emacs buffer."
-    (interactive)
-    (insert
-    (shell-command-to-string
-     (concat "youtube-dl --get-filename -o '%(title)s' $1"
-		  (shell-quote-argument
-		   (read-string "Enter your YouTube link here: "))))))
-  (global-set-key (kbd "<f6>") 'get-youtube-video-name)
-#+END_SRC
-** iBuffer Via 'C-x b'
-   #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "C-x b") 'ibuffer)
-   #+END_SRC
-q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
-   #+BEGIN_SRC emacs-lisp
-   (setq ibuffer-expert t)
-   #+END_SRC
-** Install 'Counsel' Which Installs 'Ivy' That Allows You To Switch Buffers Using 'ivy-switch-buffer' With 'C-x C-b'
-#+begin_src emacs-lisp
-  (use-package counsel
-      :ensure t)
-
-  (global-set-key (kbd "C-x C-b") 'ivy-switch-buffer)
-
-    ;; Modifying this so that it doesn't autocomplete in ERC based IRC buffers:
-    (add-hook 'erc-chat-mode-hook
-              (lambda ()  (ivy-mode 1)))
-#+end_src
-
-** Hydra for zooming in and out of buffers with 'f2'
-   #+BEGIN_SRC emacs-lisp
-   (defhydra hydra-zoom (global-map "<f2>")
-   "zoom"
-   ("g" text-scale-increase "in")
-   ("l" text-scale-decrease "out"))
-   #+END_SRC
-** 'C-c a' for Org-Agenda Keybinding
-   #+BEGIN_SRC emacs-lisp
-   (global-set-key "\C-ca" 'org-agenda)
-   #+END_SRC
 * Useful Packages And QOL Changes To Make Emacs Better
 ** UI
 *** Add 'gruvbox' themes from MELPA
@@ -318,17 +185,20 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
     :ensure t)
 #+end_src
 *** Color Theme
-   Load color theme, and do 'org-restart' to make sure the theme loads correctly:
-   #+BEGIN_SRC emacs-lisp
-     ;; (load-theme 'wordperfect-plus-emacs)
-     ;; (load-theme 'kojak-emacs)
-     ;; (load-theme 'super-nintendo-emacs)
-     (load-theme 'morrowind)
-     ;; (load-theme 'kirby-emacs)
-     ;; (load-theme 'gruvbox-dark-hard)
-     ;; (load-theme 'base16-bespin t)
-     (org-mode-restart)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  ;; Load color theme, and do 'org-restart' to make sure the theme loads correctly:
+  ;; (load-theme 'wordperfect-plus-emacs)
+  ;; (load-theme 'kojak-emacs)
+  ;; (load-theme 'super-nintendo-emacs)
+  (load-theme 'morrowind)
+  ;; (load-theme 'kirby-emacs)
+  ;; (load-theme 'gruvbox-dark-hard)
+  ;; (load-theme 'base16-bespin t)
+  ;; (add-hook 'org-mode-hook (lambda () (load-theme 'morrowind t)))
+
+  (org-mode-restart)
+
+#+END_SRC
 *** Disable Default Tool Bar, Menu Bar, And Scroll Bar
    #+BEGIN_SRC emacs-lisp
    ;; Disable default GUI based UI to allow more focus on the editor itself:
@@ -525,102 +395,92 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
 #+end_src
 ** Programming
 *** Modern Web Dev Setup
-#+begin_src emacs-lisp
-  ;; Taken from here because I hate configuring LSP:
-  ;; https://gist.github.com/fuzunspm/c5b78b662cd8cd45368b9a55361ce3ef
-  (use-package flycheck
-    :ensure t
-    :config
-    (add-hook 'typescript-mode-hook 'flycheck-mode))
+#+BEGIN_SRC emacs-lisp
+    (use-package company
+      :ensure t
+      :config
+      (setq company-show-numbers t)
+      (setq company-tooltip-align-annotations t)
+      (setq company-tooltip-flip-when-above t)
+      ;; Set a smaller idle delay for faster auto-completion
+      (setq company-idle-delay 0.1) ; Adjust this value as needed
+      ;; Force Company Mode to NOT be enabled in Org Mode since it's way too annoying for note-taking:
+      (setq company-global-modes '(not org-mode))
+      ;; Force Company mode keys to be 'C-n' and 'C-p':
+      (define-key company-active-map (kbd "M-n") nil)
+      (define-key company-active-map (kbd "M-p") nil)
+      (define-key company-active-map (kbd "C-n") #'company-select-next)
+      (define-key company-active-map (kbd "C-p") #'company-select-previous)
+      (global-company-mode))
 
-  (defun setup-tide-mode ()
-    (interactive)
-    (tide-setup)
-    (flycheck-mode +1)
-    (setq flycheck-check-syntax-automatically '(save mode-enabled))
-    (eldoc-mode +1)
-    (tide-hl-identifier-mode +1)
-    (company-mode +1))
+    (use-package company-quickhelp
+      :ensure t
+      :init
+      (company-quickhelp-mode 1)
+      (use-package pos-tip
+        :ensure t))
 
-  (use-package company
-    :ensure t
-    :config
-    (setq company-show-numbers t)
-    (setq company-tooltip-align-annotations t)
-    (setq company-tooltip-flip-when-above t)
-    ;; Setting idle-delay to 0.0 to get Company Mode to show up faster:
-    ;; Force Company Mode to NOT be enabled in Org Mode since its way too annoying for note taking:
-    (setq company-global-modes '(not org-mode))
-    ;; Force Company mode keys to be 'C-n' and 'C-p':
-    (define-key company-active-map (kbd "M-n") nil)
-    (define-key company-active-map (kbd "M-p") nil)
-    (define-key company-active-map (kbd "C-n") #'company-select-next)
-    (define-key company-active-map (kbd "C-p") #'company-select-previous)
-    (setq company-idle-delay 0.0)
-    (global-company-mode))
+    (use-package flycheck
+      :ensure t
+      :config
+      (add-hook 'typescript-mode-hook 'flycheck-mode))
 
-  (use-package company-quickhelp
-    :ensure t
-    :init
-    (company-quickhelp-mode 1)
-    (use-package pos-tip
-      :ensure t))
+    (use-package web-mode
+      :ensure t
+      :mode (("\\.html?\\'" . web-mode)
+             ("\\.tsx\\'" . typescript-mode)
+             ("\\.css\\'" . web-mode)
+             ("\\.jsx\\'" . web-mode)
+             ("\\.js\\'" . web-mode))
+      :config
+      (setq web-mode-markup-indent-offset 2
+            web-mode-css-indent-offset 2
+            web-mode-code-indent-offset 2
+            web-mode-block-padding 2
+            web-mode-comment-style 2
 
-  (use-package web-mode
-    :ensure t
-    :mode (("\\.html?\\'" . web-mode)
-           ("\\.tsx\\'" . web-mode)
-           ("\\.css\\'" . web-mode)
-           ("\\.jsx\\'" . web-mode)
-           ("\\.js\\'" . web-mode))
-    :config
-    (setq web-mode-markup-indent-offset 2
-          web-mode-css-indent-offset 2
-          web-mode-code-indent-offset 2
-          web-mode-block-padding 2
-          web-mode-comment-style 2
+            web-mode-enable-css-colorization t
+            web-mode-enable-auto-pairing t
+            web-mode-enable-comment-keywords t
+            web-mode-enable-current-element-highlight t)
+      (flycheck-add-mode 'typescript-tslint 'web-mode))
 
-          web-mode-enable-css-colorization t
-          web-mode-enable-auto-pairing t
-          web-mode-enable-comment-keywords t
-          web-mode-enable-current-element-highlight t
-          )
-    (add-hook 'web-mode-hook
-              (lambda ()
-                (when (string-equal "tsx" (file-name-extension buffer-file-name))
-      (setup-tide-mode))))
-    (flycheck-add-mode 'typescript-tslint 'web-mode))
+    (use-package typescript-mode
+      :ensure t
+      :config
+      (setq typescript-indent-level 2)
+      (add-hook 'typescript-mode-hook #'subword-mode))
 
-  (use-package typescript-mode
-    :ensure t
-    :config
-    (setq typescript-indent-level 2)
-    (add-hook 'typescript-mode #'subword-mode))
+    (use-package projectile
+      :ensure t
+      :init
+      (projectile-mode +1)
+      :config
+      (setq projectile-switch-project-action #'projectile-dired))
 
-  (use-package tide
-    :init
-    :ensure t
-    :after (typescript-mode company flycheck)
-    :hook ((typescript-mode . tide-setup)
-           (typescript-mode . tide-hl-identifier-mode)
-           (before-save . tide-format-before-save)))
+    (use-package helm
+      :ensure t
+      :config
+      (helm-mode 1))
 
-  (provide 'typescript)
+    (use-package helm-swoop
+      :ensure t)
 
-  ;; Taken from this GitHub Issues page in terms of specifying the 'node' directory when utilizing 'nvm' to maintain different versions of Node:
-  ;; https://github.com/ananthakumaran/tide/issues/438
-  (setq tide-node-executable "/home/sam/.nvm/versions/node/v18.0.0/bin/node")
+    ;; Use Helm Swoop for fuzzy finding in Dired
+    (with-eval-after-load 'dired
+      (define-key dired-mode-map (kbd "C-s") 'helm-swoop))
 
-  ;; Add keybinding for 'tide-fix' to be 'Ctrl' + '.' (period) to be like VS Code's quick fix options:
-  (global-set-key (kbd "C-.") 'tide-fix)
+    ;; Configure Dired
+    (setq dired-listing-switches "-alh") ; Use human-readable sizes in dired
+    (setq dired-recursive-copies 'always) ; Copy directories recursively
+    (setq dired-recursive-deletes 'always) ; Delete directories recursively
+    (setq dired-dwim-target t) ; Suggest a target for copy/move operations
+    (setq delete-by-moving-to-trash t) ; Move files to trash when deleting
 
-  ;; Adding 'aggressive-indent' to simulate indentation from most modern IDEs:
-  (use-package aggressive-indent
-    :ensure t)
+    ;; Set a keybinding to open the file manager (Dired)
+    (global-set-key (kbd "C-x C-d") 'projectile-dired)
+#+END_SRC
 
-  (add-hook 'typescript-mode-hook #'aggressive-indent-mode)
-  (add-hook 'web-mode-hook #'aggressive-indent-mode)
-#+end_src
 *** Add 'magit' for making dealing with Git repositories easier
 #+begin_src emacs-lisp
   (use-package magit
@@ -708,6 +568,123 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
      (add-function :before-until electric-pair-inhibit-predicate
 		   (lambda (c) (eq c ?<)))
 #+END_SRC
+** Keybinding Changes
+*** Add custom Org table that shows all keybindings with 'C-c k'
+#+begin_src emacs-lisp
+  (defun show-keybinding-table ()
+    "Display the keybinding table in an Org Mode buffer."
+    (interactive)
+    (let ((table (concat
+                  "|---------------+-----------------------------------------------------------------------------------------------------|\n"
+                  "| Keybindings   | Description                                                                                         |\n"
+                  "|---------------+-----------------------------------------------------------------------------------------------------|\n"
+                  "| C-M-z         | Enable 'evil' and 'evil-collection' for Vim keybindings                                            |\n"
+                  "| S-Return      | Launch 'vterm'                                                                                     |\n"
+                  "| C-x w         | Launch 'ranger.el'                                                                                 |\n"
+                  "| f12           | Toggle full screen for Macbook workaround                                                             |\n"
+                  "| C-x b         | Enable iBuffer to check available buffers                                                           |\n"
+                  "| f2            | Enable zoom-based Hydra to zoom in and out of available Emacs buffer                               |\n"
+                  "| C-c a         | Enable 'Org-Agenda' to view agenda of tasks                                                          |\n"
+                  "| M-s           | Jump to a specific word in a buffer with the 'avy-goto-word-0' function                             |\n"
+                  "| M-l           | Jump to a specific line in a buffer with the 'avy-goto-line' function                               |\n"
+                  "| M-y           | View the copy and paste clipboard via 'popup-kill-ring' package                                      |\n"
+                  "| C-s           | Search in a buffer with 'helm-swoop'                                                                 |\n"
+                  "| C-c q         | First mark a section of a buffer, and then enable this to see where the highlighted section appears next to edit all instances simultaneously |\n"
+                  "| <s tab        | Enable source code based yasnippet template for Org Mode                                             |\n"
+                  "| <b tab        | Enable bash code based yasnippet template for Org Mode                                               |\n"
+                  "| M-x free-keys | Show the available keybindings to use for later use in my Emacs config                               |\n"
+                  "| C-c e         | Edit Emacs config at any time                                                                       |\n"
+                  "| C-c r         | Reload Emacs config at any time                                                                     |\n"
+                  "| C-<up>        | Scroll up                                                                                            |\n"
+                  "| C-<down>      | Scroll down                                                                                          |\n"
+                  "| M-<up>        | Scroll other window up                                                                               |\n"
+                  "| M-<down>      | Scroll other window down                                                                             |\n"
+                  "| M-<left>      | Scroll other window left                                                                             |\n"
+                  "| M-<right>     | Scroll other window right                                                                            |\n"
+                  "| C-<left>      | Scroll left                                                                                          |\n"
+                  "| C-<right>     | Scroll right                                                                                         |\n"
+                  "| --            | --                                                                                                   |\n"
+                  "| C-c k         | Show this table                                                                                     |\n"
+                  "|---------------+-----------------------------------------------------------------------------------------------------|\n")))
+      (with-current-buffer (get-buffer-create "*Keybindings*")
+        (erase-buffer)
+        (org-mode)
+        (insert table)
+        (org-table-align)
+        (switch-to-buffer (current-buffer)))))
+
+  (global-set-key (kbd "C-c k") #'show-keybinding-table)
+#+end_src
+*** Add 'evil' and 'evil-collection' to switch to Vim keybindings for programming occassionally with 'C-M-z'
+#+BEGIN_SRC emacs-lisp
+  (use-package evil
+    :ensure t
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    ;; Allow Vim style page-up and page-down functionality with 'C-u' and 'C-d':
+    (setq evil-want-C-u-scroll t))
+
+  (use-package evil-collection
+    :after evil
+    :ensure t
+    :config
+    (evil-collection-init))
+
+  (global-set-key (kbd "C-M-z") 'evil-mode)
+#+END_SRC
+*** Super+Return to launch 'vterm'
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "<s-return>") 'vterm)
+#+END_SRC
+*** Add '<f12>' keybinding for 'toggle-frame-fullscreen' function for Macbook workaround
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "<f12>") 'toggle-frame-fullscreen)
+#+END_SRC
+
+*** Use 'get-youtube-video-name' to grab YouTube video name from YouTube link provided by user and place into buffer, set to '<f6>'
+#+BEGIN_SRC emacs-lisp
+  (defun get-youtube-video-name ()
+    "Grab the video title of a YouTube video using youtube-dl, and place it into an Emacs buffer."
+    (interactive)
+    (insert
+    (shell-command-to-string
+     (concat "youtube-dl --get-filename -o '%(title)s' $1"
+		  (shell-quote-argument
+		   (read-string "Enter your YouTube link here: "))))))
+  (global-set-key (kbd "<f6>") 'get-youtube-video-name)
+#+END_SRC
+*** iBuffer Via 'C-x b'
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "C-x b") 'ibuffer)
+   #+END_SRC
+q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
+   #+BEGIN_SRC emacs-lisp
+   (setq ibuffer-expert t)
+   #+END_SRC
+*** Install 'Counsel' Which Installs 'Ivy' That Allows You To Switch Buffers Using 'ivy-switch-buffer' With 'C-x C-b'
+#+begin_src emacs-lisp
+  (use-package counsel
+      :ensure t)
+
+  (global-set-key (kbd "C-x C-b") 'ivy-switch-buffer)
+
+    ;; Modifying this so that it doesn't autocomplete in ERC based IRC buffers:
+    (add-hook 'erc-chat-mode-hook
+              (lambda ()  (ivy-mode 1)))
+#+end_src
+
+*** Hydra for zooming in and out of buffers with 'f2'
+   #+BEGIN_SRC emacs-lisp
+   (defhydra hydra-zoom (global-map "<f2>")
+   "zoom"
+   ("g" text-scale-increase "in")
+   ("l" text-scale-decrease "out"))
+   #+END_SRC
+*** 'C-c a' for Org-Agenda Keybinding
+   #+BEGIN_SRC emacs-lisp
+   (global-set-key "\C-ca" 'org-agenda)
+   #+END_SRC
 ** Keybinding Packages
 *** Add 'free-keys' to determine the free keybindings present currently available in Emacs
 #+begin_src emacs-lisp
