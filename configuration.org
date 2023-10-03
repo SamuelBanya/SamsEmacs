@@ -254,24 +254,6 @@ Sam's Emacs Config
        ("M-s" . avy-goto-word-0)
        ("M-l" . avy-goto-line))
    #+END_SRC
-*** 'popup-kill-ring' to interactively obtain kill ring paste buffer
-#+BEGIN_SRC emacs-lisp
-  (use-package popup-kill-ring
-    :ensure t
-    :bind("M-y" . popup-kill-ring))
-#+END_SRC
-*** 'mark-multiple' to mark multiple sections of the buffer
-#+BEGIN_SRC emacs-lisp
-  (use-package mark-multiple
-    :ensure t
-    :bind ("C-c q" . 'mark-next-like-this))
-#+END_SRC
-*** 'expand-region' to expand the current highlighted region, useful in conjunction with 'mark-multiple'
-#+BEGIN_SRC emacs-lisp
-  (use-package expand-region
-    :ensure t
-    :bind ("C-q" . er/expand-region))
-#+END_SRC
 *** Add 'goto-line-preview' to replace default 'goto-line' Emacs function
 #+BEGIN_SRC emacs-lisp
   (use-package goto-line-preview
@@ -333,14 +315,6 @@ Sam's Emacs Config
    #+BEGIN_SRC emacs-lisp
      (global-subword-mode 1)
    #+END_SRC
-*** Always kill current buffer function
-   #+BEGIN_SRC emacs-lisp
-     (defun kill-current-buffer()
-       (interactive)
-       (kill-buffer (current-buffer)))
-
-     (global-set-key (kbd "C-x k") 'kill-current-buffer)
-   #+END_SRC
 *** Enable Hungry-Delete to delete white-space character regions more easily
    #+BEGIN_SRC emacs-lisp
      (use-package hungry-delete
@@ -352,14 +326,6 @@ Sam's Emacs Config
 ;; From this post:
 ;; https://www.reddit.com/r/emacs/comments/43vfl1/enable_wordwrap_in_orgmode/czl98d4/
 (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
-#+end_src
-*** Add 'highlight-indent-guides' to visually observe indents in a buffer
-#+begin_src emacs-lisp
-  (use-package highlight-indent-guides
-    :ensure t
-    :custom
-    (highlight-indent-guides-method 'character)
-    (highlight-indent-guides-character ?\|))
 #+end_src
 *** Add 'vertico' for Helm-style autocompletion in mini-buffer
 #+begin_src emacs-lisp
@@ -373,6 +339,10 @@ Sam's Emacs Config
   (use-package helm
     :ensure t
     :bind ("C-s" . helm-occur))
+
+  ;; Use Helm Swoop for fuzzy finding in Dired
+  (with-eval-after-load 'dired
+    (define-key dired-mode-map (kbd "C-s") 'helm-swoop))
 #+end_src
 ** Terminal
 *** Add 'vterm' to enable only decent Emacs terminal
@@ -394,93 +364,6 @@ Sam's Emacs Config
            ("C-` p" . 'multi-vterm-next)))
 #+end_src
 ** Programming
-*** Modern Web Dev Setup
-#+BEGIN_SRC emacs-lisp
-    (use-package company
-      :ensure t
-      :config
-      (setq company-show-numbers t)
-      (setq company-tooltip-align-annotations t)
-      (setq company-tooltip-flip-when-above t)
-      ;; Set a smaller idle delay for faster auto-completion
-      (setq company-idle-delay 0.1) ; Adjust this value as needed
-      ;; Force Company Mode to NOT be enabled in Org Mode since it's way too annoying for note-taking:
-      (setq company-global-modes '(not org-mode))
-      ;; Force Company mode keys to be 'C-n' and 'C-p':
-      (define-key company-active-map (kbd "M-n") nil)
-      (define-key company-active-map (kbd "M-p") nil)
-      (define-key company-active-map (kbd "C-n") #'company-select-next)
-      (define-key company-active-map (kbd "C-p") #'company-select-previous)
-      (global-company-mode))
-
-    (use-package company-quickhelp
-      :ensure t
-      :init
-      (company-quickhelp-mode 1)
-      (use-package pos-tip
-        :ensure t))
-
-    (use-package flycheck
-      :ensure t
-      :config
-      (add-hook 'typescript-mode-hook 'flycheck-mode))
-
-    (use-package web-mode
-      :ensure t
-      :mode (("\\.html?\\'" . web-mode)
-             ("\\.tsx\\'" . typescript-mode)
-             ("\\.css\\'" . web-mode)
-             ("\\.jsx\\'" . web-mode)
-             ("\\.js\\'" . web-mode))
-      :config
-      (setq web-mode-markup-indent-offset 2
-            web-mode-css-indent-offset 2
-            web-mode-code-indent-offset 2
-            web-mode-block-padding 2
-            web-mode-comment-style 2
-
-            web-mode-enable-css-colorization t
-            web-mode-enable-auto-pairing t
-            web-mode-enable-comment-keywords t
-            web-mode-enable-current-element-highlight t)
-      (flycheck-add-mode 'typescript-tslint 'web-mode))
-
-    (use-package typescript-mode
-      :ensure t
-      :config
-      (setq typescript-indent-level 2)
-      (add-hook 'typescript-mode-hook #'subword-mode))
-
-    (use-package projectile
-      :ensure t
-      :init
-      (projectile-mode +1)
-      :config
-      (setq projectile-switch-project-action #'projectile-dired))
-
-    (use-package helm
-      :ensure t
-      :config
-      (helm-mode 1))
-
-    (use-package helm-swoop
-      :ensure t)
-
-    ;; Use Helm Swoop for fuzzy finding in Dired
-    (with-eval-after-load 'dired
-      (define-key dired-mode-map (kbd "C-s") 'helm-swoop))
-
-    ;; Configure Dired
-    (setq dired-listing-switches "-alh") ; Use human-readable sizes in dired
-    (setq dired-recursive-copies 'always) ; Copy directories recursively
-    (setq dired-recursive-deletes 'always) ; Delete directories recursively
-    (setq dired-dwim-target t) ; Suggest a target for copy/move operations
-    (setq delete-by-moving-to-trash t) ; Move files to trash when deleting
-
-    ;; Set a keybinding to open the file manager (Dired)
-    (global-set-key (kbd "C-x C-d") 'projectile-dired)
-#+END_SRC
-
 *** Add 'magit' for making dealing with Git repositories easier
 #+begin_src emacs-lisp
   (use-package magit
@@ -813,10 +696,6 @@ q** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
 (setq ediff-split-window-function 'split-window-vertically) ; Split the ediff results vertically
 #+END_SRC
 ** Performance Tweaks
-*** Add garbage collection to make Emacs snappier
-#+begin_src emacs-lisp
-(add-hook 'focus-out-hook #'garbage-collect)
-#+end_src
 *** Use 'no-littering' package to keep '~/.emacs.d' clean
 #+begin_src emacs-lisp
   (use-package no-littering
