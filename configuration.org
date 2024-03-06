@@ -369,9 +369,6 @@ Sam's Emacs Config
     ;; NOTE:
     ;; Install the related LSP servers with this terminal command:
     ;; 'npm install -g typescript typescript-language-server'
-    (use-package tsx-mode
-      :ensure t)
-
     (use-package lsp-mode
       :ensure t
       :commands lsp
