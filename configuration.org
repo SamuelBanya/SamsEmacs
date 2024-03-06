@@ -366,13 +366,13 @@ Sam's Emacs Config
 ** Programming
 *** Add web development packages for Nextjs and other Typescript based projects
 #+begin_src emacs-lisp
-    ;; NOTE:
-    ;; Install the related LSP servers with this terminal command:
-    ;; 'npm install -g typescript typescript-language-server'
-    (use-package lsp-mode
-      :ensure t
-      :commands lsp
-      :hook ((typescript-mode . lsp)))
+  ;; NOTE:
+  ;; Install the related LSP servers with this terminal command:
+  ;; 'npm install -g typescript typescript-language-server'
+  (use-package lsp-mode
+    :ensure t
+    :commands lsp
+    :hook (prog-mode . lsp))
 #+end_src
 *** Add 'magit' for making dealing with Git repositories easier
 #+begin_src emacs-lisp
