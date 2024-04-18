@@ -364,36 +364,6 @@ Sam's Emacs Config
            ("C-` p" . 'multi-vterm-next)))
 #+end_src
 ** Programming
-*** Add web development packages for Nextjs and other Typescript based projects
-#+begin_src emacs-lisp
-  ;; NOTE:
-  ;; Install the related LSP servers with this terminal command:
-  ;; 'npm install -g typescript typescript-language-server'
-
-  (use-package typescript-mode
-    :ensure t
-    :config
-    (setq typescript-indent-level 2))
-
-  (use-package lsp-mode
-    :ensure t
-    :commands lsp
-    :hook (prog-mode . lsp))
-
-  ;; Force Emacs to recognize Typescript files with 'typescript-mode':
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
-
-  (use-package web-mode
-    :ensure t
-    :mode ("\\.jsx?\\'" . web-mode)
-    :config
-    (setq web-mode-content-types-alist
-          '(("jsx" . "\\.jsx?\\'")))
-    (setq web-mode-markup-indent-offset 2)
-    (setq web-mode-code-indent-offset 2)
-    (setq web-mode-enable-auto-closing t)
-    (setq web-mode-enable-auto-pairing t))
-#+end_src
 *** Add 'magit' for making dealing with Git repositories easier
 #+begin_src emacs-lisp
   (use-package magit
