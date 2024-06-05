@@ -336,13 +336,14 @@ Sam's Emacs Config
 #+end_src
 *** Adding 'helm' just so that I can use 'helm-occur' to replace 'helm-swoop' (since it doesn't expand buffers like Org Mode buffers) and 'Swiper' (which does not have configurable search colors for my theme)
 #+begin_src emacs-lisp
-  (use-package helm
-    :ensure t
-    :bind ("C-s" . helm-occur))
-
+;; Ensure helm-swoop is installed and configured
+(use-package helm-swoop
+  :ensure t
+  :bind (("C-s" . helm-swoop))
+  :config
   ;; Use Helm Swoop for fuzzy finding in Dired
   (with-eval-after-load 'dired
-    (define-key dired-mode-map (kbd "C-s") 'helm-swoop))
+    (define-key dired-mode-map (kbd "C-s") 'helm-swoop)))
 #+end_src
 ** Terminal
 *** Add 'vterm' to enable only decent Emacs terminal
@@ -364,6 +365,31 @@ Sam's Emacs Config
            ("C-` p" . 'multi-vterm-next)))
 #+end_src
 ** Programming
+*** Add Typescript support
+#+begin_src emacs-lisp
+(use-package eglot
+:ensure t
+:config
+(electric-pair-mode)
+:hook
+(typescript-ts-mode . eglot-ensure)
+(tsx-ts-mode . eglot-ensure)
+(c-mode . eglot-ensure))
+
+(use-package typescript-ts-mode
+:ensure t
+:after eglot
+:config
+(setq typescript-ts-mode-indent-offset 4))
+
+(use-package treesit-auto
+:ensure t
+:custom
+(treesit-auto-install 'prompt)
+:config
+(treesit-auto-add-to-auto-mode-alist 'all)
+(global-treesit-auto-mode))
+#+end_src
 *** Add 'magit' for making dealing with Git repositories easier
 #+begin_src emacs-lisp
   (use-package magit
