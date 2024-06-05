@@ -365,31 +365,6 @@ Sam's Emacs Config
            ("C-` p" . 'multi-vterm-next)))
 #+end_src
 ** Programming
-*** Add Typescript support
-#+begin_src emacs-lisp
-(use-package eglot
-:ensure t
-:config
-(electric-pair-mode)
-:hook
-(typescript-ts-mode . eglot-ensure)
-(tsx-ts-mode . eglot-ensure)
-(c-mode . eglot-ensure))
-
-(use-package typescript-ts-mode
-:ensure t
-:after eglot
-:config
-(setq typescript-ts-mode-indent-offset 4))
-
-(use-package treesit-auto
-:ensure t
-:custom
-(treesit-auto-install 'prompt)
-:config
-(treesit-auto-add-to-auto-mode-alist 'all)
-(global-treesit-auto-mode))
-#+end_src
 *** Add 'magit' for making dealing with Git repositories easier
 #+begin_src emacs-lisp
   (use-package magit
