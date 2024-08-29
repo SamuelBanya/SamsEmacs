@@ -133,7 +133,9 @@ Sam's Emacs Config
 ;; https://github.com/d12frosted/homebrew-emacs-plus/issues/383
 ;; Aka, install 'coreutils' via brew, and then use the following:
 (when (eq system-type 'darwin)
-  (setq insert-directory-program "/opt/homebrew/bin/gls"))
+  (if (string-match "arm64" system-configuration)
+      (setq insert-directory-program "/opt/homebrew/bin/gls") ; M1/M2 Mac
+    (setq insert-directory-program "/usr/local/bin/gls"))) ; Intel Mac
 
 #+end_src
 ** Org-Capture templates for Zendesk tickets and Intercom chats
