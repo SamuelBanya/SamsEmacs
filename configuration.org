@@ -186,20 +186,56 @@ Sam's Emacs Config
   (use-package gruvbox-theme
     :ensure t)
 #+end_src
-*** Color Theme
+*** Color Theme (Include Doom Themes And Related Packages)
 #+BEGIN_SRC emacs-lisp
   ;; Load color theme, and do 'org-restart' to make sure the theme loads correctly:
   ;; (load-theme 'wordperfect-plus-emacs)
   ;; (load-theme 'kojak-emacs)
   ;; (load-theme 'super-nintendo-emacs)
-  (load-theme 'morrowind)
+  ;; (load-theme 'morrowind)
   ;; (load-theme 'kirby-emacs)
   ;; (load-theme 'gruvbox-dark-hard)
   ;; (load-theme 'base16-bespin t)
   ;; (add-hook 'org-mode-hook (lambda () (load-theme 'morrowind t)))
+  ;; Enable Doom Emacs themes:
+  ;; Install and configure doom-themes as well as any other related packages:
+  (use-package doom-themes
+  :ensure t
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+  doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;; Load the doom-solarized-dark theme
+  (load-theme 'doom-solarized-dark-high-contrast t)
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme
+  (doom-themes-neotree-config))  ; all-the-icons fonts must be installed!
+  (use-package all-the-icons
+  :ensure t)
+
+  (use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
+
+  (use-package neotree
+  :ensure t
+  :bind (("M-n" . neotree-toggle)))
+
+  (use-package nerd-icons
+  :ensure t
+  )
+
+  ;; Themes list to try out later:
+  ;; https://melpa.org/#/doom-themes
+
+  ;; NOTE:
+  ;; In order to get the Doom Modeline to actually work with unicode charaters
+  ;; I had to download the 'NerdFontsSymbolsOnly.zip', extract it,
+  ;; and then install each of the .ttf files manually on MacOS:
+  ;; https://github.com/ryanoasis/nerd-fonts/releases
 
   (org-mode-restart)
-
 #+END_SRC
 *** Disable Default Tool Bar, Menu Bar, And Scroll Bar
    #+BEGIN_SRC emacs-lisp
