@@ -491,6 +491,13 @@ Sam's Emacs Config
 		   (lambda (c) (eq c ?<)))
 #+END_SRC
 ** Keybinding Changes
+*** Intel Macbook specific change to swap command and option keys
+#+BEGIN_SRC emacs-lisp
+(when (eq system-type 'darwin)
+  ;; Swap Command and Option keys
+  (setq mac-option-modifier 'super)  
+  (setq mac-command-modifier 'meta))
+#+END_SRC
 *** Add custom Org table that shows all keybindings with 'C-c k'
 #+begin_src emacs-lisp
   (defun show-keybinding-table ()
