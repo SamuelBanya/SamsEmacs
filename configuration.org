@@ -190,54 +190,61 @@ Sam's Emacs Config
 #+end_src
 *** Color Theme (Include Doom Themes And Related Packages)
 #+BEGIN_SRC emacs-lisp
-  ;; Load color theme, and do 'org-restart' to make sure the theme loads correctly:
-  ;; (load-theme 'wordperfect-plus-emacs)
-  ;; (load-theme 'kojak-emacs)
-  ;; (load-theme 'super-nintendo-emacs)
-  ;; (load-theme 'morrowind)
-  ;; (load-theme 'kirby-emacs)
-  ;; (load-theme 'gruvbox-dark-hard)
-  ;; (load-theme 'base16-bespin t)
-  ;; (add-hook 'org-mode-hook (lambda () (load-theme 'morrowind t)))
-  ;; Enable Doom Emacs themes:
-  ;; Install and configure doom-themes as well as any other related packages:
-  (use-package doom-themes
-  :ensure t
-  :config
-  ;; Global settings (defaults)
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-  doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  ;; Load the doom-solarized-dark theme
-  (load-theme 'doom-solarized-dark-high-contrast t)
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  ;; Enable custom neotree theme
-  (doom-themes-neotree-config))  ; all-the-icons fonts must be installed!
-  (use-package all-the-icons
-  :ensure t)
+    ;; Load color theme, and do 'org-restart' to make sure the theme loads correctly:
+    ;; (load-theme 'wordperfect-plus-emacs)
+    ;; (load-theme 'kojak-emacs)
+    ;; (load-theme 'super-nintendo-emacs)
+    ;; (load-theme 'morrowind)
+    ;; (load-theme 'kirby-emacs)
+    ;; (load-theme 'gruvbox-dark-hard)
+    ;; (load-theme 'base16-bespin t)
+    ;; (add-hook 'org-mode-hook (lambda () (load-theme 'morrowind t)))
+    ;; Enable Doom Emacs themes:
+    ;; Install and configure doom-themes as well as any other related packages:
+    (use-package doom-themes
+    :ensure t
+    :config
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+    doom-themes-enable-italic t) ; if nil, italics is universally disabled
+    ;; Load the doom-solarized-dark theme
+    (load-theme 'doom-solarized-dark-high-contrast t)
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+    ;; Enable custom neotree theme
+    (doom-themes-neotree-config))  ; all-the-icons fonts must be installed!
+    (use-package all-the-icons
+    :ensure t)
 
-  (use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode 1))
+    (use-package doom-modeline
+    :ensure t
+    :init (doom-modeline-mode 1))
 
-  (use-package neotree
-  :ensure t
-  :bind (("M-n" . neotree-toggle)))
+    (use-package neotree
+    :ensure t
+    :bind (("M-n" . neotree-toggle)))
 
-  (use-package nerd-icons
-  :ensure t
-  )
+    (use-package nerd-icons
+    :ensure t
+    )
 
-  ;; Themes list to try out later:
-  ;; https://melpa.org/#/doom-themes
+    (use-package all-the-icons
+    :ensure t
+    :init
+    ;; Install all-the-icons fonts if they are not already installed
+    (unless (member "all-the-icons" (font-family-list))
+      (all-the-icons-install-fonts t)))
 
-  ;; NOTE:
-  ;; In order to get the Doom Modeline to actually work with unicode charaters
-  ;; I had to download the 'NerdFontsSymbolsOnly.zip', extract it,
-  ;; and then install each of the .ttf files manually on MacOS:
-  ;; https://github.com/ryanoasis/nerd-fonts/releases
+    ;; Themes list to try out later:
+    ;; https://melpa.org/#/doom-themes
 
-  (org-mode-restart)
+    ;; NOTE:
+    ;; In order to get the Doom Modeline to actually work with unicode charaters
+    ;; I had to download the 'NerdFontsSymbolsOnly.zip', extract it,
+    ;; and then install each of the .ttf files manually on MacOS:
+    ;; https://github.com/ryanoasis/nerd-fonts/releases
+
+    (org-mode-restart)
 #+END_SRC
 *** Disable Default Tool Bar, Menu Bar, And Scroll Bar
    #+BEGIN_SRC emacs-lisp
@@ -252,7 +259,7 @@ Sam's Emacs Config
        :ensure t
        :config
        (dashboard-setup-startup-hook)
-       (setq dashboard-items '((recents . 10)))
+
        (setq dashboard-banner-logo-title "Hello! Welcome to Emacs, have a fun time!"))
    #+END_SRC
 *** Rainbow-Mode
@@ -494,43 +501,86 @@ Sam's Emacs Config
 #+END_SRC
 *** Enable LSP mode for the millionth-plus time
 #+BEGIN_SRC emacs-lisp
-(use-package typescript-mode
-  :mode ("\\.ts\\'" . typescript-mode)
-  :hook (typescript-mode . lsp)
+(use-package lsp-mode
+  :ensure t
+  :commands lsp
+  :hook ((typescript-mode js2-mode rjsx-mode) . (lambda ()
+                                                  (display-line-numbers-mode 1) ;; Enable line numbers
+                                                  (lsp)))
   :config
-  (setq typescript-indent-level 2))
+  (setq lsp-prefer-flymake nil))  ;; Use Flycheck instead of Flymake
+
+(use-package typescript-mode
+  :ensure t
+  :mode ("\\.tsx?\\'" . typescript-mode)  ;; This will handle both .ts and .tsx
+  :hook (typescript-mode . (lambda () (display-line-numbers-mode 1))) ;; Enable line numbers
+  :config
+  (setq typescript-indent-level 2)) ;; Set indentation level for TypeScript
 
 (use-package js2-mode
+  :ensure t
   :mode ("\\.jsx?\\'" . js2-mode)
-  :hook (js2-mode . lsp)
+  :hook (js2-mode . (lambda () (display-line-numbers-mode 1))) ;; Enable line numbers
   :config
-  (setq js2-basic-offset 2))
+  (setq js2-basic-offset 2)         ;; Set indentation level for JavaScript
+  (setq js-indent-level 2)           ;; Ensure proper indentation
+  (setq js-switch-indent-offset 2))   ;; Set switch indent level
+
+(use-package rjsx-mode
+  :ensure t
+  :mode ("\\.jsx?\\'" . rjsx-mode)  ;; Use rjsx-mode for better JSX support
+  :hook (rjsx-mode . (lambda () (display-line-numbers-mode 1))) ;; Enable line numbers
+  :config
+  (setq js-indent-level 2)           ;; Ensure proper indentation
+  (setq js-switch-indent-offset 2))   ;; Set switch indent level
 
 (use-package css-mode
+  :ensure t
   :mode ("\\.css\\'" . css-mode)
   :config
   (setq css-indent-offset 2))
 
-(use-package lsp-mode
-  :hook ((typescript-mode js2-mode) . lsp)
-  :commands lsp)
-
 (use-package lsp-ui
-  :after lsp-mode
+  :ensure t
+  :after lsp
   :commands lsp-ui-mode)
 
 (use-package company
+  :ensure t
   :after lsp
   :config
   (setq company-minimum-prefix-length 1
         company-idle-delay 0.0))
 
 (use-package flycheck
+  :ensure t
   :after lsp
   :config
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
   (global-flycheck-mode))
 
+(use-package prettier-js
+  :ensure t
+  :hook ((typescript-mode js2-mode rjsx-mode) . prettier-js-mode))  ;; Enable Prettier for all relevant modes
+
+(use-package highlight-indent-guides
+  :ensure t
+  :config
+  (setq highlight-indent-guides-method 'character)
+  (setq highlight-indent-guides-character ?\|)
+  (setq highlight-indent-guides-auto-odd-face-perc 0.2)
+  (setq highlight-indent-guides-auto-even-face-perc 0.2)
+  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))  ;; Enable for programming modes
+
+(use-package indent-guide
+  :ensure t
+  :config
+  (setq indent-guide-char ?\|)
+  (setq indent-guide-delay 0)
+  (add-hook 'prog-mode-hook 'indent-guide-mode))  ;; Enable for programming modes
+
+(use-package electric
+  :hook ((js2-mode rjsx-mode typescript-mode) . electric-layout-mode)) ;; Enable electric layout mode for better indentation handling
 #+END_SRC
 
 ** Keybinding Changes
