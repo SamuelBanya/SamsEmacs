@@ -133,10 +133,12 @@ Sam's Emacs Config
 ;; https://github.com/d12frosted/homebrew-emacs-plus/issues/383
 ;; Aka, install 'coreutils' via brew, and then use the following:
 (when (eq system-type 'darwin)
-  (if (string-match "arm64" system-configuration)
-      (setq insert-directory-program "/opt/homebrew/bin/gls") ; M1/M2 Mac
-    (setq insert-directory-program "/usr/local/bin/gls"))) ; Intel Mac
-
+  (setq insert-directory-program
+        (cond
+         ((string-match "arm64" (shell-command-to-string "uname -m"))
+          "/opt/homebrew/bin/gls")  ; For M1/M2 Macs
+         (t
+          "/usr/local/bin/gls"))))   ; For Intel Macs
 #+end_src
 ** Org-Capture templates for Zendesk tickets and Intercom chats
 #+BEGIN_SRC emacs-lisp
@@ -490,6 +492,47 @@ Sam's Emacs Config
      (add-function :before-until electric-pair-inhibit-predicate
 		   (lambda (c) (eq c ?<)))
 #+END_SRC
+*** Enable LSP mode for the millionth-plus time
+#+BEGIN_SRC emacs-lisp
+(use-package typescript-mode
+  :mode ("\\.ts\\'" . typescript-mode)
+  :hook (typescript-mode . lsp)
+  :config
+  (setq typescript-indent-level 2))
+
+(use-package js2-mode
+  :mode ("\\.jsx?\\'" . js2-mode)
+  :hook (js2-mode . lsp)
+  :config
+  (setq js2-basic-offset 2))
+
+(use-package css-mode
+  :mode ("\\.css\\'" . css-mode)
+  :config
+  (setq css-indent-offset 2))
+
+(use-package lsp-mode
+  :hook ((typescript-mode js2-mode) . lsp)
+  :commands lsp)
+
+(use-package lsp-ui
+  :after lsp-mode
+  :commands lsp-ui-mode)
+
+(use-package company
+  :after lsp
+  :config
+  (setq company-minimum-prefix-length 1
+        company-idle-delay 0.0))
+
+(use-package flycheck
+  :after lsp
+  :config
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (global-flycheck-mode))
+
+#+END_SRC
+
 ** Keybinding Changes
 *** Intel Macbook specific change to swap command and option keys
 #+BEGIN_SRC emacs-lisp
