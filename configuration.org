@@ -1,349 +1,225 @@
 Sam's Emacs Config
-* Garbage Collector Speed Trick
+* Performance Tweaks
 #+begin_src emacs-lisp
 ;; This is to set the garbage collector to speedup the entire Emacs config startup time
 ;; and must go at the beginning of the config itself:
 (setq gc-cons-threshold 100000000)
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
 #+end_src
-* Personal Specific
-** Add Org Capture templates for personal use ('Things To Do (NOW)', YouTube videos I found, etc)
+
 #+begin_src emacs-lisp
+  (use-package no-littering
+    :ensure t
+    :demand t)
+#+end_src
+* Font Changes
+#+begin_src emacs-lisp
+  ;; Add font specific changes for personal machines
   (when (member (system-name) '("notestation" "fossastation"))
-    (setq org-capture-templates
-	  ;; Things To Do (NOW):
-	  '(("n" "Things To Do (NOW) Capture Template" entry
-	     (file+headline "~/hub/notes_private/life.org" "Things To Do (NOW)")
-	     "** %^{Status} [#%^{Priority}] %^{Task Title} :%^{Tag}: \n*** Notes:\n%U: %^{Description}")
-	    ("l" "Things To Do (LATER) Capture Template" entry
-	     (file+headline "~/hub/notes_private/life.org" "Things To Do (LATER)")
-	     "** %^{Status} [#%^{Priority}] %^{Task Title} :%^{Tag}: \n*** Notes:\n%U: %^{Description}"))))
-	    ;; Latest attempt to add current week entry (Didn't work):
-	    ;; ("c" "Completed Task Capture Template" entry
-	     ;; (file+headline "~/hub/notes_private/life.org" , "* COMPLETED_TASKS: " , (format-time-string "%Y") , "** Week of "  (format-time-string "%m-%d-%Y"))
-	     ;; "** %^{Status} [#%^{Priority}] %^{Task Title} :%^{Tag}: \n*** Notes:\n%U: %^{Description}"))))
-  ;; 1. Determine how to somehow evaluate the following type of headline to place it in the correct 'COMPLETED_TASKS' headline
-  ;; Goal: 'COMPLETED_TASKS: (current year)'
-  ;; 2. Determine the current week headline
-  ;; Goal: '** Week of (current_date, ex: '11-02-2021')'
-  ;; 3. Prompt the user for the youtube link via the same exact '' function I use later in the Emacs config
-  ;; Goal: User gets prompted for the link, the link is returned with with the name of the video and the link
-  ;; in parentheses
-  ;; NOTE: The following is commmented out while I think about how to do this:
-  ;; (("y" "YouTube Video Capture Template" entry
-  ;; (file+headline "~/hub/notes_private/life.org" "Things To Do (LATER)")
-  ;;"** %^{Status} [#%^{Priority}] %^{Task Title} :%YouTube_Video: \n*** Notes:\n%U: %^{Description}"))
-
-#+end_src
-** Add Hydra to connect to different servers ("musimatic.xyz", "sambanya.com", "fedoraserver")
-#+begin_src emacs-lisp
-  (when (member (system-name) '("devstation" "notestation" "fossastation" "Samuels-MBP.tampabay.rr.com"))
-    ;; Create separate connection based functions to later call within the 'hydra-connect' hydra:
-    (defun ssh-into-sambanya-sam ()
-      (interactive)
-      (find-file "/ssh:sam@sambanya.com:/var/www/sambanya"))
-
-    (defun ssh-into-sambanya-root ()
-      (interactive)
-      (find-file "/ssh:root@sambanya.com:/var/www/sambanya"))
-
-    (defun ssh-into-homebase-sam ()
-      (interactive)
-      (find-file "/ssh:sam@homebase:/media/REDHDD"))
-
-    (defhydra hydra-connect (:color pink
-				    :hint nil)
-      "
-    ^Connect^
-    ^^^^^^^^^^-----------------------------
-    _a_: connect to sambanya.com as sam user
-    _b_: connect to sambanya.com as root user
-    _c_: connect to homebase as sam user
-    _q_: quit
-    "
-      ("a" ssh-into-sambanya-sam)
-      ("b" ssh-into-sambanya-root)
-      ("c" ssh-into-homebase-sam)
-      ("q" nil))
-
-    (global-set-key (kbd "M-n") 'hydra-connect/body))
-#+end_src
-** Set 'auth-sources' for IRC config for personal computer
-#+begin_src emacs-lisp
-  (when (member (system-name) '("notestation" "fossastation"))
-    (setq auth-sources '((:source "~/.authinfo" :host t :port t))))
-#+end_src
-** Add 'erc' for IRC communication
-#+begin_src emacs-lisp
-  (when (member (system-name) '("notestation" "fossastation"))
-    (use-package erc
-      ;; Parts borrowed from this post:
-      ;; https://www.reddit.com/r/emacs/comments/8ml6na/tip_how_to_make_erc_fun_to_use/
-      :ensure t
-      :config
-      (setq erc-track-exclude-types
-            '("JOIN" "KICK" "NICK" "PART" "QUIT" "MODE" "333" "353"))
-      (setq erc-autojoin-channels-alist '(("libera.chat" . ("#emacs"))))
-      (setq erc-autojoin-mode t)
-      (setq erc-button-buttonize-nicks nil)
-      (setq erc-common-server-suffixes
-            '(("libera.chat" . "LC")
-              ("oftc.net\\'" . "OFTC")))
-      (setq erc-join-buffer 'bury)
-      (setq erc-log-insert-log-on-open t)
-      (setq erc-log-write-after-insert t)
-      (setq erc-log-write-after-send t)
-      (setq erc-mode-line-format "%%b %a")
-      (setq erc-modules
-            '(autojoin button completion fill irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly ring services stamp track))
-      (setq erc-prompt-for-nickserv-password nil)
-      (setq erc-prompt-for-password nil)
-      (setq erc-scrolltobottom-mode t)
-      (setq erc-track-faces-priority-list
-            '(setq erc-error-face erc-current-nick-face erc-keyword-face erc-pal-face erc-nick-msg-face erc-direct-msg-face erc-dangerous-host-face erc-fool-face erc-input-face))
-      (setq erc-track-position-in-mode-line t)
-      (setq erc-track-priority-faces-only nil)
-      ;; Force ERC to not prompt for a password and to look for ~/.authinfo:
-      (setq erc-prompt-for-password nil)
-      (setq erc-prompt-for-nickserv-password nil))
-
-    (defun my-erc-libera ()
-      "Start ERC on Libera."
-      (interactive)
-      (erc-tls :server "irc.libera.chat" :port "6697" :nick "Shortstop"))
-
-    (defun my-erc-mode-hook ()
-      "Hook for erc-mode."
-      (setq-local scroll-conservatively 1000))
-
-    (add-hook 'erc-mode-hook 'my-erc-mode-hook))
-#+end_src
-** Add font specific changes for personal machines
-#+begin_src emacs-lisp
-    (when (member (system-name) '("notestation" "fossastation"))
-      (set-face-attribute 'default nil
-                          :height (pcase (system-name)
-                                    ("notestation" 125)
-                                    ("fossastation" 125))))
+    (set-face-attribute 'default nil
+                        :height (pcase (system-name)
+                                  ("notestation" 125)
+                                  ("fossastation" 125))))
 #+end_src
 * Work Specific
-** Adding M1 Mac specific change to use 'gls' instead of 'ls' for dired sorting options:
 #+begin_src emacs-lisp
-;; From this related post since 'ls' based options for Dired don't work in MacOS natively:
-;; https://github.com/d12frosted/homebrew-emacs-plus/issues/383
-;; Aka, install 'coreutils' via brew, and then use the following:
-(when (eq system-type 'darwin)
-  (setq insert-directory-program
-        (cond
-         ((string-match "arm64" (shell-command-to-string "uname -m"))
-          "/opt/homebrew/bin/gls")  ; For M1/M2 Macs
-         (t
-          "/usr/local/bin/gls"))))   ; For Intel Macs
+  ;; Adding M1 Mac specific change to use 'gls' instead of 'ls' for dired sorting options:
+  ;; From this related post since 'ls' based options for Dired don't work in MacOS natively:
+  ;; https://github.com/d12frosted/homebrew-emacs-plus/issues/383
+  ;; Aka, install 'coreutils' via brew, and then use the following:
+  (when (eq system-type 'darwin)
+    (setq insert-directory-program
+          (cond
+           ((string-match "arm64" (shell-command-to-string "uname -m"))
+            "/opt/homebrew/bin/gls")  ; For M1/M2 Macs
+           (t
+            "/usr/local/bin/gls"))))   ; For Intel Macs
 #+end_src
-** Org-Capture templates for Zendesk tickets and Intercom chats
-#+BEGIN_SRC emacs-lisp
-  (when (string= system-name "Samuels-MBP")
-    (setq org-capture-templates
-	  ;; Using backtick to allow for 'format-time-string' to be escaped:
-	  `(("a" "OPEN Ticket Capture Template" entry
-	     (file+headline "~/hub/worknotes_snyk/TodoList/TodoList(2022).org" "Open Tasks")
-	     "** OPEN [#%^{Severity}] Ticket #%^{Ticket Number} with %^{Client's First Name} from %^{Company Name} :%^{Snyk Product}: \n*** Link\n- https://snyk.zendesk.com/agent/tickets/%^{Ticket Number}\n*** Notes\n**** Initial Notes\n%U: %^{Current Status}\n*** Result")
-	    ("x" "PENDING Capture Template" entry
-	     (file+headline "~/hub/worknotes_snyk/TodoList/TodoList(2022).org" "Pending Tasks")
-	     "** PENDING [#%^{Severity}] Ticket #%^{Ticket Number} with %^{Client's First Name} from %^{Company Name} :%^{Snyk Product}: \n*** Link\n- https://snyk.zendesk.com/agent/tickets/%^{Ticket Number}\n*** Notes\n**** Initial Notes\n%U: %^{Current Status}\n*** Result")
-	    ("1" "DONE Ticket Capture Template" entry
-	     (file+headline "~/hub/worknotes_snyk/TodoList/TodoList(2022).org" (concat "COMPLETED: " (format-time-string "%b %Y")))
-	     "** DONE [#%^{Severity}] Ticket #%^{Ticket Number} with %^{Client's First Name} from %^{Company Name} :%^{Snyk Product}: \n*** Link\n- https://snyk.zendesk.com/agent/tickets/%^{Ticket Number}\n*** Notes\n**** Initial Notes\n%U: %^{Current Status}\n*** Result\n%^{Result}")
-	    ("i" "Intercom Chat Capture Template" entry
-	     (file+headline "~/hub/worknotes_snyk/TodoList/TodoList(2022).org" "Intercom Tasks")
-	     "** IN-PROGRESS Support Chat with %^{Client's First Name} from %^{Company Name} :Intercom_Chat: \n*** Notes\n**** Initial Notes\n%U: %^{Current Status}\n*** Result")
-	    ("m" "Meeting Capture Template" entry
-	     (file+headline "~/hub/worknotes_snyk/TodoList/TodoList(2022).org" , (format-time-string "%b %Y"))
-	     "** %^{Meeting Name} (%<%a %m-%d-%Y>)\n%U: %^{Current Status}" :clock-in t :clock-resume t))))
-	    ;; DRAFT: Placing in comments to figure out how to do this
-	    ;; ("c" "Convert Intercom Chat To Zendesk Ticket Capture Template" entry
-	    ;; (file+headline "~/hub/worknotes_snyk/TodoList/TodoList(2021).org" "Open Tasks")
-	    ;; TODO: Figure out how to find the headline of the current Intercom chat task in 'Intercom Tasks'
-	    ;; TODO: Then, figure out how to change 'Support Chat' to: 'Ticket #' instead
-	    ;; TODO: Prompt the user for the client's company name as this will be needed for Zendesk itself most likely
-	    ;; "** %^{Meeting Name} (%<%a %m-%d-%Y>)\n%U: %^{Current Status}" :clock-in t :clock-resume t)
 
-#+END_SRC
-** 'Option' MacOS Key + Return to launch 'vterm'
-#+BEGIN_SRC emacs-lisp
-  (when (string= system-name "Samuels-MBP.tampabay.rr.com")
-    (global-set-key (kbd "<A-return>") 'vterm))
-#+END_SRC
-** Add font specific changes for work Macbook to make it larger because default Mac font size sucks
 #+begin_src emacs-lisp
+  ;; Add font specific changes for work Macbook to make it larger because default Mac font size sucks
   (when (string= system-name "macboook-osm-sbanya")
     (set-face-attribute 'default nil
                         :height (pcase (system-name)
                                   ("macboook-osm-sbanya" 140))))
 #+end_src
-* Useful Packages And QOL Changes To Make Emacs Better
-** UI
-*** Add 'gruvbox' themes from MELPA
+* UI Changes
 #+begin_src emacs-lisp
-  (use-package gruvbox-theme
-    :ensure t)
+  ;; Color Theme (Include Doom Themes And Related Packages)
+  ;; Load color theme, and do 'org-restart' to make sure the theme loads correctly:
+  ;; (load-theme 'wordperfect-plus-emacs)
+  ;; (load-theme 'kojak-emacs)
+  ;; (load-theme 'super-nintendo-emacs)
+  ;; (load-theme 'morrowind)
+  ;; (load-theme 'kirby-emacs)
+  ;; (load-theme 'gruvbox-dark-hard)
+  ;; (load-theme 'base16-bespin t)
+  ;; (add-hook 'org-mode-hook (lambda () (load-theme 'morrowind t)))
+
+  ;; Add 'gruvbox' themes from MELPA
+    (use-package gruvbox-theme
+      :ensure t)
+
+      ;; Enable Doom Emacs themes:
+      ;; Install and configure doom-themes as well as any other related packages:
+      (use-package doom-themes
+      :ensure t
+      :config
+      ;; Global settings (defaults)
+      (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+      doom-themes-enable-italic t) ; if nil, italics is universally disabled
+      ;; Load the doom-solarized-dark theme
+      (load-theme 'doom-solarized-dark-high-contrast t)
+      ;; Enable flashing mode-line on errors
+      (doom-themes-visual-bell-config)
+      ;; Enable custom neotree theme
+      (doom-themes-neotree-config))  ; all-the-icons fonts must be installed!
+      (use-package all-the-icons
+      :ensure t)
+
+      (use-package doom-modeline
+      :ensure t
+      :init (doom-modeline-mode 1))
+
+      (use-package neotree
+      :ensure t
+      :bind (("M-n" . neotree-toggle)))
+
+      (use-package nerd-icons
+      :ensure t
+      )
+
+      (use-package all-the-icons
+      :ensure t
+      :init
+      ;; Install all-the-icons fonts if they are not already installed
+      (unless (member "all-the-icons" (font-family-list))
+        (all-the-icons-install-fonts t)))
+
+      ;; Themes list to try out later:
+      ;; https://melpa.org/#/doom-themes
+
+      ;; NOTE:
+      ;; In order to get the Doom Modeline to actually work with unicode charaters
+      ;; I had to download the 'NerdFontsSymbolsOnly.zip', extract it,
+      ;; and then install each of the .ttf files manually on MacOS:
+      ;; https://github.com/ryanoasis/nerd-fonts/releases
+
+      (org-mode-restart)
 #+end_src
-*** Color Theme (Include Doom Themes And Related Packages)
-#+BEGIN_SRC emacs-lisp
-    ;; Load color theme, and do 'org-restart' to make sure the theme loads correctly:
-    ;; (load-theme 'wordperfect-plus-emacs)
-    ;; (load-theme 'kojak-emacs)
-    ;; (load-theme 'super-nintendo-emacs)
-    ;; (load-theme 'morrowind)
-    ;; (load-theme 'kirby-emacs)
-    ;; (load-theme 'gruvbox-dark-hard)
-    ;; (load-theme 'base16-bespin t)
-    ;; (add-hook 'org-mode-hook (lambda () (load-theme 'morrowind t)))
-    ;; Enable Doom Emacs themes:
-    ;; Install and configure doom-themes as well as any other related packages:
-    (use-package doom-themes
+
+#+begin_src emacs-lisp
+  ;; Disable Default Tool Bar, Menu Bar, And Scroll Bar
+  ;; Disable default GUI based UI to allow more focus on the editor itself:
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Dashboard
+  (use-package dashboard
     :ensure t
     :config
-    ;; Global settings (defaults)
-    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-    doom-themes-enable-italic t) ; if nil, italics is universally disabled
-    ;; Load the doom-solarized-dark theme
-    (load-theme 'doom-solarized-dark-high-contrast t)
-    ;; Enable flashing mode-line on errors
-    (doom-themes-visual-bell-config)
-    ;; Enable custom neotree theme
-    (doom-themes-neotree-config))  ; all-the-icons fonts must be installed!
-    (use-package all-the-icons
-    :ensure t)
+    (dashboard-setup-startup-hook)
 
-    (use-package doom-modeline
+    (setq dashboard-banner-logo-title "Hello! Welcome to Emacs, have a fun time!"))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Rainbow-Mode
+  (use-package rainbow-mode
     :ensure t
-    :init (doom-modeline-mode 1))
+    :hook prog-mode
+    :config
+    (rainbow-mode))
+#+end_src
 
-    (use-package neotree
+#+begin_src emacs-lisp
+  ;; Beacon
+  (use-package beacon
+  :ensure t
+  :init
+  (beacon-mode 1))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Enable 'scroll-conservatively' to allow for sane scroll defaults at the bottom of a buffer instead of default jumping behavior
+  (setq scroll-conservatively 100)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Disable annoying default bell for warning messages:
+  (setq ring-bell-function 'ignore)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Which-Key
+  (use-package which-key
+    :defer 5
     :ensure t
-    :bind (("M-n" . neotree-toggle)))
+    :config
+    (which-key-mode))
+#+end_src
 
-    (use-package nerd-icons
+#+begin_src emacs-lisp
+  ;; Avy: Use 'M-s' for 'avy-goto-word-0', and use 'M-l' for 'avy-goto-line'
+  (use-package avy
     :ensure t
-    )
+    :bind
+    ("M-s" . avy-goto-word-0)
+    ("M-l" . avy-goto-line))
+#+end_src
 
-    (use-package all-the-icons
-    :ensure t
-    :init
-    ;; Install all-the-icons fonts if they are not already installed
-    (unless (member "all-the-icons" (font-family-list))
-      (all-the-icons-install-fonts t)))
-
-    ;; Themes list to try out later:
-    ;; https://melpa.org/#/doom-themes
-
-    ;; NOTE:
-    ;; In order to get the Doom Modeline to actually work with unicode charaters
-    ;; I had to download the 'NerdFontsSymbolsOnly.zip', extract it,
-    ;; and then install each of the .ttf files manually on MacOS:
-    ;; https://github.com/ryanoasis/nerd-fonts/releases
-
-    (org-mode-restart)
-#+END_SRC
-*** Disable Default Tool Bar, Menu Bar, And Scroll Bar
-   #+BEGIN_SRC emacs-lisp
-   ;; Disable default GUI based UI to allow more focus on the editor itself:
-   (tool-bar-mode -1)
-   (menu-bar-mode -1)
-   (scroll-bar-mode -1)
-   #+END_SRC
-*** Dashboard
-   #+BEGIN_SRC emacs-lisp
-     (use-package dashboard
-       :ensure t
-       :config
-       (dashboard-setup-startup-hook)
-
-       (setq dashboard-banner-logo-title "Hello! Welcome to Emacs, have a fun time!"))
-   #+END_SRC
-*** Rainbow-Mode
-#+BEGIN_SRC emacs-lisp
-     (use-package rainbow-mode
-       :ensure t
-       :hook prog-mode
-       :config
-       (rainbow-mode))
-#+END_SRC
-*** Beacon
-   #+BEGIN_SRC emacs-lisp
-   (use-package beacon
-   :ensure t
-   :init
-   (beacon-mode 1))
-   #+END_SRC
-*** Enable 'scroll-conservatively' to allow for sane scroll defaults at the bottom of a buffer instead of default jumping behavior
-   #+BEGIN_SRC emacs-lisp
-   (setq scroll-conservatively 100)
-   #+END_SRC
-*** Disable annoying default bell for warning messages:
-   #+BEGIN_SRC emacs-lisp
-   (setq ring-bell-function 'ignore)
-   #+END_SRC
-*** Which-Key
-   #+BEGIN_SRC emacs-lisp
-     (use-package which-key
-       :defer 5
-       :ensure t
-       :config
-       (which-key-mode))
-   #+END_SRC
-*** Avy: Use 'M-s' for 'avy-goto-word-0', and use 'M-l' for 'avy-goto-line'
-   #+BEGIN_SRC emacs-lisp
-     (use-package avy
-       :ensure t
-       :bind
-       ("M-s" . avy-goto-word-0)
-       ("M-l" . avy-goto-line))
-   #+END_SRC
-*** Add 'goto-line-preview' to replace default 'goto-line' Emacs function
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
+  ;; Add 'goto-line-preview' to replace default 'goto-line' Emacs function
   (use-package goto-line-preview
     :ensure t)
 
   (global-set-key [remap goto-line] 'goto-line-preview)
-#+END_SRC
-*** Add 'visual-regexp' to easily view soon-to-be replaced text with 'vr/replace' and 'vr/query command
-#+BEGIN_SRC emacs-lisp
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Add 'visual-regexp' to easily view soon-to-be replaced text with 'vr/replace' and 'vr/query command
   (use-package visual-regexp
     :ensure t)
-#+END_SRC
-*** Show lines and columns on the modeline
-   #+BEGIN_SRC emacs-lisp
-     (line-number-mode 1)
-     (column-number-mode 1)
-   #+END_SRC
-*** Show clock in 24-hr format, and display date + time
-   #+BEGIN_SRC emacs-lisp
-     (setq display-time-24hr-format t)
-     (setq display-time-day-and-date t)
-     (display-time-mode 1)
-   #+END_SRC
-*** Change 'yes or no' prompt to just 'y or n':
-   #+BEGIN_SRC emacs-lisp
-   (defalias 'yes-or-no-p 'y-or-n-p)
-   #+END_SRC
-*** Add 'switch-window' to use 'C-o' plus Vim style keys to quickly switch buffers to the desired on-screen buffer
-   #+BEGIN_SRC emacs-lisp
-     (use-package switch-window
-       :ensure t
-       :config
-       (setq switch-window-input-style 'minibuffer)
-       (setq switch-window-increase 4)
-       (setq switch-window-threshold 2)
-       (setq switch-window-shortcut-style 'qwerty)
-       (setq switch-window-querty-shortcuts
-       '("a" "s" "d" "f" "h" "j" "k" "l"))
-       :bind
-       ([remap other-window] . switch-window))
-   #+END_SRC
-*** Window Splitting Functions (Horizontal And Vertical)
-#+BEGIN_SRC emacs-lisp
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Show lines and columns on the modeline
+  (line-number-mode 1)
+  (column-number-mode 1)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Show clock in 24-hr format, and display date + time
+  (setq display-time-24hr-format t)
+  (setq display-time-day-and-date t)
+  (display-time-mode 1)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Change 'yes or no' prompt to just 'y or n':
+  (defalias 'yes-or-no-p 'y-or-n-p)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Add 'switch-window' to use 'C-o' plus Vim style keys to quickly switch buffers to the desired on-screen buffer
+  (use-package switch-window
+    :ensure t
+    :config
+    (setq switch-window-input-style 'minibuffer)
+    (setq switch-window-increase 4)
+    (setq switch-window-threshold 2)
+    (setq switch-window-shortcut-style 'qwerty)
+    (setq switch-window-querty-shortcuts
+    '("a" "s" "d" "f" "h" "j" "k" "l"))
+    :bind
+    ([remap other-window] . switch-window))
+#+end_src
+
+#+begin_src emacs-lisp
+;; Window Splitting Functions (Horizontal And Vertical)
 (defun split-and-follow-horizontally ()
   (interactive)
   (split-window-below)
@@ -357,43 +233,63 @@ Sam's Emacs Config
   (balance-windows)
   (other-window 1))
 (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
-#+END_SRC
-*** Enable Subword-Mode so that you can go forward and backward between camel-case words
-   #+BEGIN_SRC emacs-lisp
-     (global-subword-mode 1)
-   #+END_SRC
-*** Enable Hungry-Delete to delete white-space character regions more easily
-   #+BEGIN_SRC emacs-lisp
-     (use-package hungry-delete
-       :ensure t
-       :config (global-hungry-delete-mode))
-   #+END_SRC
-*** Add visual wordwrap in every text mode
-#+begin_src emacs-lisp
-;; From this post:
-;; https://www.reddit.com/r/emacs/comments/43vfl1/enable_wordwrap_in_orgmode/czl98d4/
-(add-hook 'text-mode-hook 'turn-on-visual-line-mode)
 #+end_src
-*** Add 'vertico' for Helm-style autocompletion in mini-buffer
+
 #+begin_src emacs-lisp
+  ;; Enable Subword-Mode so that you can go forward and backward between camel-case words
+  (global-subword-mode 1)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Enable Hungry-Delete to delete white-space character regions more easily
+  (use-package hungry-delete
+    :ensure t
+    :config (global-hungry-delete-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Add visual wordwrap in every text mode
+  ;; From this post:
+  ;; https://www.reddit.com/r/emacs/comments/43vfl1/enable_wordwrap_in_orgmode/czl98d4/
+  (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Add 'vertico' for Helm-style autocompletion in mini-buffer
   (use-package vertico
     :ensure t
     :init
     (vertico-mode))
 #+end_src
-*** Adding 'helm' just so that I can use 'helm-occur' to replace 'helm-swoop' (since it doesn't expand buffers like Org Mode buffers) and 'Swiper' (which does not have configurable search colors for my theme)
+
 #+begin_src emacs-lisp
-;; Ensure helm-swoop is installed and configured
-(use-package helm-swoop
-  :ensure t
-  :bind (("C-s" . helm-swoop))
-  :config
-  ;; Use Helm Swoop for fuzzy finding in Dired
-  (with-eval-after-load 'dired
-    (define-key dired-mode-map (kbd "C-s") 'helm-swoop)))
+  ;; Adding 'helm' just so that I can use 'helm-occur' to replace 'helm-swoop' (since it doesn't expand buffers like Org Mode buffers) and 'Swiper' (which does not have configurable search colors for my theme)
+  ;; Ensure helm-swoop is installed and configured
+  (use-package helm-swoop
+    :ensure t
+    :bind (("C-s" . helm-swoop))
+    :config
+    ;; Use Helm Swoop for fuzzy finding in Dired
+    (with-eval-after-load 'dired
+      (define-key dired-mode-map (kbd "C-s") 'helm-swoop)))
 #+end_src
-** Terminal
-*** Add 'vterm' to enable only decent Emacs terminal
+
+#+begin_src emacs-lisp
+  ;; Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
+  (setq ibuffer-expert t)
+#+end_src
+
+#+begin_src emacs-lisp
+(setq browse-url-browser-function 'eww-browse-url)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Force 'ediff' to open up vertically in new windows NOT frames
+  (advice-add 'ediff-window-display-p :override #'ignore) ; Open up ediff results in new windows not frames
+  (setq ediff-split-window-function 'split-window-vertically) ; Split the ediff results vertically
+#+end_src
+
+* Terminal Changes
 #+begin_src emacs-lisp
   (use-package vterm
     :ensure t)
@@ -403,7 +299,6 @@ Sam's Emacs Config
   (add-hook 'vterm-mode-hook 'rename-uniquely)
 #+end_src
 
-*** Add 'multi-vterm' to add 'tmux' style management of 'vterm' terminals
 #+begin_src emacs-lisp
   (use-package multi-vterm
     :ensure t
@@ -411,29 +306,28 @@ Sam's Emacs Config
            ("C-` n" . 'multi-vterm-prev)
            ("C-` p" . 'multi-vterm-next)))
 #+end_src
-** Programming
-*** Add 'magit' for making dealing with Git repositories easier
+* Programming Changes
 #+begin_src emacs-lisp
   (use-package magit
     :ensure t)
 #+end_src
-*** Add 'rainbow-delimiters' to easily view delimiters in code
-#+BEGIN_SRC emacs-lisp
+
+#+begin_src emacs-lisp
   (use-package rainbow-delimiters
     :ensure t
     :hook (prog-mode . rainbow-delimiters-mode))
-#+END_SRC
-*** Force 'tab-width' to be 2 spaces
+#+end_src
+
 #+begin_src emacs-lisp
   (setq-default tab-width 2)
 #+end_src
-*** Indent with spaces, not tabs, by nuking 'indent-tabs-mode'
+
 #+begin_src emacs-lisp
   (progn
     (setq-default indent-tabs-mode nil)
     )
 #+end_src
-*** Add 'enable-minor-mode' custom function from Luke Wesley-Holley
+
 #+begin_src emacs-lisp
   ;; Taken from here:
   ;; https://gist.github.com/Lukewh/2da7b54cd773f931b1bf710c84f2f0fb
@@ -443,8 +337,8 @@ Sam's Emacs Config
         (if (string-match (car my-pair) buffer-file-name)
       (funcall (cdr my-pair)))))
 #+end_src
-*** Use 'Diminish' to hide amazing minor modes which are not necessary to be reminded of all the time
-#+BEGIN_SRC emacs-lisp
+
+#+begin_src emacs-lisp
   (use-package diminish
     :ensure t
     :init
@@ -453,9 +347,11 @@ Sam's Emacs Config
     (diminish 'which-key-mode)
     (diminish 'subword-mode)
     (diminish 'rainbow-mode))
-#+END_SRC
-*** 'yasnippet' to utilize snippet templates with 'M-x yas-describe-tables' (Note: Make sure your created snippets match mode's name, ex: '~/.emacs.d/snippets/python-mode')
-#+BEGIN_SRC emacs-lisp
+#+end_src
+
+#+begin_src emacs-lisp
+;; 'yasnippet' to utilize snippet templates with 'M-x yas-describe-tables'
+;; (Note: Make sure your created snippets match mode's name, ex: '~/.emacs.d/snippets/python-mode')
   (use-package yasnippet
     :ensure t
     :config
@@ -465,9 +361,10 @@ Sam's Emacs Config
     ;; https://stackoverflow.com/questions/46696009/adding-a-custom-yasnippet-directory-to-spacemacs
     (setq yas-snippet-dirs (append yas-snippet-dirs '("~/.emacs.d/snippets")))
     (yas-reload-all))
-#+END_SRC
-*** Add hook so that 'yasnippet' minor mode is enabled for certain modes (programming: 'C, C++, Python, JS', 'nXML', Org-Mode)
-#+BEGIN_SRC emacs-lisp
+#+end_src
+
+#+begin_src emacs-lisp
+;; Add hook so that 'yasnippet' minor mode is enabled for certain modes (programming: 'C, C++, Python, JS', 'nXML', Org-Mode)
   (add-hook 'c-mode-hook 'yas-minor-mode)
   (add-hook 'c++-mode-hook 'yas-minor-mode)
   (add-hook 'python-mode-hook 'yas-minor-mode)
@@ -480,13 +377,15 @@ Sam's Emacs Config
   (add-hook 'web-mode-hook 'yas-minor-mode)
   (add-hook 'csharp-mode-hook 'yas-minor-mode)
   (add-hook 'vue-mode-hook 'yas-minor-mode)
-#+END_SRC
-*** Nuke Emacs 27.2's annoying issue of automatically expanding source blocks which ruins my Yasnippet override template
-#+BEGIN_SRC emacs-lisp
+#+end_src
+
+#+begin_src emacs-lisp
+;; Nuke Emacs 27.2's annoying issue of automatically expanding source blocks which ruins my Yasnippet override template
   (setq org-src-tab-acts-natively nil)
-#+END_SRC
-*** Enable 'electric-pair-mode' to auto-complete / add parentheses whenever possible
-#+BEGIN_SRC emacs-lisp
+#+end_src
+
+#+begin_src emacs-lisp
+;; Enable 'electric-pair-mode' to auto-complete / add parentheses whenever possible
      (setq electric-pair-pairs '(
 				 (?\( . ?\))
 				 (?\[ . ?\])
@@ -498,147 +397,134 @@ Sam's Emacs Config
      ;; Disable pairing of '<' with '>' to avoid weird expansion issues in Org-Mode for Yasnippets:
      (add-function :before-until electric-pair-inhibit-predicate
 		   (lambda (c) (eq c ?<)))
-#+END_SRC
-*** Enable LSP mode for the millionth-plus time
-#+BEGIN_SRC emacs-lisp
-(use-package lsp-mode
-  :ensure t
-  :commands lsp
-  :hook ((typescript-mode js2-mode rjsx-mode) . (lambda ()
-                                                  (display-line-numbers-mode 1) ;; Enable line numbers
-                                                  (lsp)))
-  :config
-  (setq lsp-prefer-flymake nil))  ;; Use Flycheck instead of Flymake
+#+end_src
 
-(use-package typescript-mode
-  :ensure t
-  :mode ("\\.tsx?\\'" . typescript-mode)  ;; This will handle both .ts and .tsx
-  :hook (typescript-mode . (lambda () (display-line-numbers-mode 1))) ;; Enable line numbers
-  :config
-  (setq typescript-indent-level 2)) ;; Set indentation level for TypeScript
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :ensure t
+    :commands lsp
+    :hook ((typescript-mode js2-mode rjsx-mode) . (lambda ()
+                                                    (display-line-numbers-mode 1) ;; Enable line numbers
+                                                    (lsp)))
+    :config
+    (setq lsp-prefer-flymake nil))  ;; Use Flycheck instead of Flymake
 
-(use-package js2-mode
-  :ensure t
-  :mode ("\\.jsx?\\'" . js2-mode)
-  :hook (js2-mode . (lambda () (display-line-numbers-mode 1))) ;; Enable line numbers
-  :config
-  (setq js2-basic-offset 2)         ;; Set indentation level for JavaScript
-  (setq js-indent-level 2)           ;; Ensure proper indentation
-  (setq js-switch-indent-offset 2))   ;; Set switch indent level
+  (use-package typescript-mode
+    :ensure t
+    :mode ("\\.tsx?\\'" . typescript-mode)  ;; This will handle both .ts and .tsx
+    :hook (typescript-mode . (lambda () (display-line-numbers-mode 1))) ;; Enable line numbers
+    :config
+    (setq typescript-indent-level 2)) ;; Set indentation level for TypeScript
 
-(use-package rjsx-mode
-  :ensure t
-  :mode ("\\.jsx?\\'" . rjsx-mode)  ;; Use rjsx-mode for better JSX support
-  :hook (rjsx-mode . (lambda () (display-line-numbers-mode 1))) ;; Enable line numbers
-  :config
-  (setq js-indent-level 2)           ;; Ensure proper indentation
-  (setq js-switch-indent-offset 2))   ;; Set switch indent level
+  (use-package js2-mode
+    :ensure t
+    :mode ("\\.jsx?\\'" . js2-mode)
+    :hook (js2-mode . (lambda () (display-line-numbers-mode 1))) ;; Enable line numbers
+    :config
+    (setq js2-basic-offset 2)         ;; Set indentation level for JavaScript
+    (setq js-indent-level 2)           ;; Ensure proper indentation
+    (setq js-switch-indent-offset 2))   ;; Set switch indent level
 
-(use-package css-mode
-  :ensure t
-  :mode ("\\.css\\'" . css-mode)
-  :config
-  (setq css-indent-offset 2))
+  (use-package rjsx-mode
+    :ensure t
+    :mode ("\\.jsx?\\'" . rjsx-mode)  ;; Use rjsx-mode for better JSX support
+    :hook (rjsx-mode . (lambda () (display-line-numbers-mode 1))) ;; Enable line numbers
+    :config
+    (setq js-indent-level 2)           ;; Ensure proper indentation
+    (setq js-switch-indent-offset 2))   ;; Set switch indent level
 
-(use-package lsp-ui
-  :ensure t
-  :after lsp
-  :commands lsp-ui-mode)
+  (use-package css-mode
+    :ensure t
+    :mode ("\\.css\\'" . css-mode)
+    :config
+    (setq css-indent-offset 2))
 
-(use-package company
-  :ensure t
-  :after lsp
-  :config
-  (setq company-minimum-prefix-length 1
-        company-idle-delay 0.0))
+  (use-package lsp-ui
+    :ensure t
+    :after lsp
+    :commands lsp-ui-mode)
 
-(use-package flycheck
-  :ensure t
-  :after lsp
-  :config
-  (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  (global-flycheck-mode))
+  (use-package company
+    :ensure t
+    :after lsp
+    :config
+    (setq company-minimum-prefix-length 1
+          company-idle-delay 0.0))
 
-(use-package prettier-js
-  :ensure t
-  :hook ((typescript-mode js2-mode rjsx-mode) . prettier-js-mode))  ;; Enable Prettier for all relevant modes
+  (use-package flycheck
+    :ensure t
+    :after lsp
+    :config
+    (setq flycheck-check-syntax-automatically '(save mode-enabled))
+    (global-flycheck-mode))
 
-(use-package highlight-indent-guides
-  :ensure t
-  :config
-  (setq highlight-indent-guides-method 'character)
-  (setq highlight-indent-guides-character ?\|)
-  (setq highlight-indent-guides-auto-odd-face-perc 0.2)
-  (setq highlight-indent-guides-auto-even-face-perc 0.2)
-  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))  ;; Enable for programming modes
+  (use-package prettier-js
+    :ensure t
+    :hook ((typescript-mode js2-mode rjsx-mode) . prettier-js-mode))  ;; Enable Prettier for all relevant modes
 
-(use-package indent-guide
-  :ensure t
-  :config
-  (setq indent-guide-char ?\|)
-  (setq indent-guide-delay 0)
-  (add-hook 'prog-mode-hook 'indent-guide-mode))  ;; Enable for programming modes
+  (use-package highlight-indent-guides
+    :ensure t
+    :config
+    (setq highlight-indent-guides-method 'character)
+    (setq highlight-indent-guides-character ?\|)
+    (setq highlight-indent-guides-auto-odd-face-perc 0.2)
+    (setq highlight-indent-guides-auto-even-face-perc 0.2)
+    (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))  ;; Enable for programming modes
 
-(use-package electric
-  :hook ((js2-mode rjsx-mode typescript-mode) . electric-layout-mode)) ;; Enable electric layout mode for better indentation handling
-#+END_SRC
+  (use-package indent-guide
+    :ensure t
+    :config
+    (setq indent-guide-char ?\|)
+    (setq indent-guide-delay 0)
+    (add-hook 'prog-mode-hook 'indent-guide-mode))  ;; Enable for programming modes
 
-** Keybinding Changes
-*** Intel Macbook specific change to swap command and option keys
-#+BEGIN_SRC emacs-lisp
+  (use-package electric
+    :hook ((js2-mode rjsx-mode typescript-mode) . electric-layout-mode)) ;; Enable electric layout mode for better indentation handling
+#+end_src
+
+* Keybinding Changes
+#+begin_src emacs-lisp
+;; Intel Macbook specific change to swap command and option keys
 (when (eq system-type 'darwin)
   ;; Swap Command and Option keys
   (setq mac-option-modifier 'super)
   (setq mac-command-modifier 'meta))
-#+END_SRC
-*** Add custom Org table that shows all keybindings with 'C-c k'
-#+begin_src emacs-lisp
-  (defun show-keybinding-table ()
-    "Display the keybinding table in an Org Mode buffer."
-    (interactive)
-    (let ((table (concat
-                  "|---------------+-----------------------------------------------------------------------------------------------------|\n"
-                  "| Keybindings   | Description                                                                                         |\n"
-                  "|---------------+-----------------------------------------------------------------------------------------------------|\n"
-                  "| C-M-z         | Enable 'evil' and 'evil-collection' for Vim keybindings                                            |\n"
-                  "| S-Return      | Launch 'vterm'                                                                                     |\n"
-                  "| C-x w         | Launch 'ranger.el'                                                                                 |\n"
-                  "| f12           | Toggle full screen for Macbook workaround                                                             |\n"
-                  "| C-x b         | Enable iBuffer to check available buffers                                                           |\n"
-                  "| f2            | Enable zoom-based Hydra to zoom in and out of available Emacs buffer                               |\n"
-                  "| C-c a         | Enable 'Org-Agenda' to view agenda of tasks                                                          |\n"
-                  "| M-s           | Jump to a specific word in a buffer with the 'avy-goto-word-0' function                             |\n"
-                  "| M-l           | Jump to a specific line in a buffer with the 'avy-goto-line' function                               |\n"
-                  "| M-y           | View the copy and paste clipboard via 'popup-kill-ring' package                                      |\n"
-                  "| C-s           | Search in a buffer with 'helm-swoop'                                                                 |\n"
-                  "| C-c q         | First mark a section of a buffer, and then enable this to see where the highlighted section appears next to edit all instances simultaneously |\n"
-                  "| <s tab        | Enable source code based yasnippet template for Org Mode                                             |\n"
-                  "| <b tab        | Enable bash code based yasnippet template for Org Mode                                               |\n"
-                  "| M-x free-keys | Show the available keybindings to use for later use in my Emacs config                               |\n"
-                  "| C-c e         | Edit Emacs config at any time                                                                       |\n"
-                  "| C-c r         | Reload Emacs config at any time                                                                     |\n"
-                  "| C-<up>        | Scroll up                                                                                            |\n"
-                  "| C-<down>      | Scroll down                                                                                          |\n"
-                  "| M-<up>        | Scroll other window up                                                                               |\n"
-                  "| M-<down>      | Scroll other window down                                                                             |\n"
-                  "| M-<left>      | Scroll other window left                                                                             |\n"
-                  "| M-<right>     | Scroll other window right                                                                            |\n"
-                  "| C-<left>      | Scroll left                                                                                          |\n"
-                  "| C-<right>     | Scroll right                                                                                         |\n"
-                  "| --            | --                                                                                                   |\n"
-                  "| C-c k         | Show this table                                                                                     |\n"
-                  "|---------------+-----------------------------------------------------------------------------------------------------|\n")))
-      (with-current-buffer (get-buffer-create "*Keybindings*")
-        (erase-buffer)
-        (org-mode)
-        (insert table)
-        (org-table-align)
-        (switch-to-buffer (current-buffer)))))
-
-  (global-set-key (kbd "C-c k") #'show-keybinding-table)
 #+end_src
-*** Add 'evil' and 'evil-collection' to switch to Vim keybindings for programming occassionally with 'C-M-z'
-#+BEGIN_SRC emacs-lisp
+
+#+begin_src emacs-lisp
+;; Add custom keybindings list to later display somehow:
+;; Keybindings List
+
+;; C-M-z         - Enable 'evil' and 'evil-collection' for Vim keybindings
+;; S-Return      - Launch 'vterm'
+;; C-x w         - Launch 'ranger.el'
+;; f12           - Toggle full screen for Macbook workaround
+;; C-x b         - Enable iBuffer to check available buffers
+;; f2            - Enable zoom-based Hydra to zoom in and out of available Emacs buffer
+;; C-c a         - Enable 'Org-Agenda' to view agenda of tasks
+;; M-s           - Jump to a specific word in a buffer with the 'avy-goto-word-0' function
+;; M-l           - Jump to a specific line in a buffer with the 'avy-goto-line' function
+;; M-y           - View the copy and paste clipboard via 'popup-kill-ring' package
+;; C-s           - Search in a buffer with 'helm-swoop'
+;; C-c q         - Mark a section and edit all instances simultaneously where it appears next
+;; <s tab>       - Enable source code-based yasnippet template for Org Mode
+;; <b tab>       - Enable bash code-based yasnippet template for Org Mode
+;; M-x free-keys - Show available keybindings for future customization
+;; C-c e         - Edit Emacs config at any time
+;; C-c r         - Reload Emacs config at any time
+;; C-<up>        - Scroll up
+;; C-<down>      - Scroll down
+;; M-<up>        - Scroll other window up
+;; M-<down>      - Scroll other window down
+;; M-<left>      - Scroll other window left
+;; M-<right>     - Scroll other window right
+;; C-<left>      - Scroll left
+;; C-<right>     - Scroll right
+;; C-c k         - Show this keybindings table
+#+end_src
+
+#+begin_src emacs-lisp
+;; Add 'evil' and 'evil-collection' to switch to Vim keybindings for programming occassionally with 'C-M-z'
   (use-package evil
     :ensure t
     :init
@@ -654,18 +540,20 @@ Sam's Emacs Config
     (evil-collection-init))
 
   (global-set-key (kbd "C-M-z") 'evil-mode)
-#+END_SRC
-*** Super+Return to launch 'vterm'
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "<s-return>") 'vterm)
-#+END_SRC
-*** Add '<f12>' keybinding for 'toggle-frame-fullscreen' function for Macbook workaround
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "<f12>") 'toggle-frame-fullscreen)
-#+END_SRC
+#+end_src
 
-*** Use 'get-youtube-video-name' to grab YouTube video name from YouTube link provided by user and place into buffer, set to '<f6>'
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
+;; Super+Return to launch 'vterm'
+(global-set-key (kbd "<s-return>") 'vterm)
+#+end_src
+
+#+begin_src emacs-lisp
+;; Add '<f12>' keybinding for 'toggle-frame-fullscreen' function for Macbook workaround
+  (global-set-key (kbd "<f12>") 'toggle-frame-fullscreen)
+#+end_src
+
+#+begin_src emacs-lisp
+;; Use 'get-youtube-video-name' to grab YouTube video name from YouTube link provided by user and place into buffer, set to '<f6>'
   (defun get-youtube-video-name ()
     "Grab the video title of a YouTube video using youtube-dl, and place it into an Emacs buffer."
     (interactive)
@@ -675,17 +563,15 @@ Sam's Emacs Config
 		  (shell-quote-argument
 		   (read-string "Enter your YouTube link here: "))))))
   (global-set-key (kbd "<f6>") 'get-youtube-video-name)
-#+END_SRC
-*** iBuffer Via 'C-x b'
-   #+BEGIN_SRC emacs-lisp
-     (global-set-key (kbd "C-x b") 'ibuffer)
-   #+END_SRC
-** Enable iBuffer Expert Mode To Instantly Killer Buffers With 'D'
-   #+BEGIN_SRC emacs-lisp
-   (setq ibuffer-expert t)
-   #+END_SRC
-*** Install 'Counsel' Which Installs 'Ivy' That Allows You To Switch Buffers Using 'ivy-switch-buffer' With 'C-x C-b'
+#+end_src
+
 #+begin_src emacs-lisp
+  ;; iBuffer Via 'C-x b'
+  (global-set-key (kbd "C-x b") 'ibuffer)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Install 'Counsel' Which Installs 'Ivy' That Allows You To Switch Buffers Using 'ivy-switch-buffer' With 'C-x C-b'
   (use-package counsel
       :ensure t)
 
@@ -696,207 +582,191 @@ Sam's Emacs Config
               (lambda ()  (ivy-mode 1)))
 #+end_src
 
-*** Hydra for zooming in and out of buffers with 'f2'
-   #+BEGIN_SRC emacs-lisp
-   (defhydra hydra-zoom (global-map "<f2>")
-   "zoom"
-   ("g" text-scale-increase "in")
-   ("l" text-scale-decrease "out"))
-   #+END_SRC
-*** 'C-c a' for Org-Agenda Keybinding
-   #+BEGIN_SRC emacs-lisp
-   (global-set-key "\C-ca" 'org-agenda)
-   #+END_SRC
-** Keybinding Packages
-*** Add 'free-keys' to determine the free keybindings present currently available in Emacs
 #+begin_src emacs-lisp
-  (use-package free-keys
-    :ensure t)
+  ;; 'C-c a' for Org-Agenda Keybinding
+  (global-set-key "\C-ca" 'org-agenda)
 #+end_src
-*** Add 'hydra' to do some cool keybinding macro functions
+
 #+begin_src emacs-lisp
-  (use-package hydra
-    :ensure t)
+  ;; Add 'free-keys' to determine the free keybindings present currently available in Emacs
+    (use-package free-keys
+      :ensure t)
 #+end_src
-** File Manager
-*** Make 'dired' less verbose aka use 'dired-hide-details-mode'
+
+* File Manager Changes
 #+begin_src emacs-lisp
+;; Make 'dired' less verbose aka use 'dired-hide-details-mode'
   ;; NOTE:
   ;; Idea Taken From 'Emacs Rocks Episode 16: Dired' But Implemented A Little Differently:
   (add-hook 'dired-mode-hook
             'dired-hide-details-mode)
 #+end_src
-*** Allow 'dired' to move files between panes just like 'Midnight Commander'
+
 #+begin_src emacs-lisp
+;; Allow 'dired' to move files between panes just like 'Midnight Commander'
   ;; NOTE:
   ;; From 'Emacs Rocks Episode 16: Dired':
   (setq dired-dwim-target t)
 #+end_src
-*** Make 'dired' sort by directories first
+
 #+begin_src emacs-lisp
+;; Make 'dired' sort by directories first
 (setq dired-listing-switches "-al --group-directories-first")
 #+end_src
-*** Force 'dired' to automatically update instantly when files change to prevent having to hit 'g' all the time
+
 #+begin_src emacs-lisp
+;; Force 'dired' to automatically update instantly when files change to prevent having to hit 'g' all the time
 ;; Taken from here:
 ;; https://superuser.com/questions/566393/how-to-configure-dired-to-update-instantly-when-files-folders-change
 (add-hook 'dired-mode-hook 'auto-revert-mode)
 #+end_src
-** eww
-*** Make 'eww' the default browser for Emacs
-#+BEGIN_SRC emacs-lisp
-(setq browse-url-browser-function 'eww-browse-url)
-#+END_SRC
-** Org-Mode
-*** Create custom 'my-org-capture' function to force 'Org-Capture' to split vertically
-#+BEGIN_SRC emacs-lisp
+* Org-Mode Changes
+#+begin_src emacs-lisp
+;; Create custom 'my-org-capture' function to force 'Org-Capture' to split vertically
   (defun my-org-capture (&rest args)
     (interactive)
     (let ((split-window-preferred-function 'split-window-vertically))
       (funcall 'org-capture)))
 
   (global-set-key (kbd "C-c c") 'my-org-capture)
-#+END_SRC
-*** Nuke 'org-adapt-indentation' variable setting value introduced in Emacs 27.2 so lines aren't auto-indented after headlines
-#+BEGIN_SRC emacs-lisp
-(setq org-adapt-indentation nil)
-#+END_SRC
-*** Nuke 'org-startup-folded' variable setting value introduced in Emacs 27.2 so org docs aren't automatically expanded
-#+BEGIN_SRC emacs-lisp
-(setq org-startup-folded t)
-#+END_SRC
-*** Add time-tracking for Org-Mode todo item state changes to place into ':LOGBOOK:' drawer
-   #+BEGIN_SRC emacs-lisp
-     (setq org-log-into-drawer "LOGBOOK")
-   #+END_SRC
-*** Set 'org-agenda-files' variable so that Org-Mode sees all scheduled items in Org-Agenda
-   #+BEGIN_SRC emacs-lisp
-     (setq org-agenda-files (append
-			     (file-expand-wildcards "~/hub/notes_private/*.org")))
-   #+END_SRC
-*** Allow Org-Mode to edit SRC blocks within the same window
-   #+BEGIN_SRC emacs-lisp
-   (setq org-src-window-setup 'current-window)
-   #+END_SRC
-*** Allow Org-Mode to use an emacs-lisp src block template
-   #+BEGIN_SRC emacs-lisp
-     (add-to-list 'org-structure-template-alist
-		  '("el" . "src emacs-lisp"))
-   #+END_SRC
-*** Remove '#' priority from tasks when changing task states
+#+end_src
+
 #+begin_src emacs-lisp
+;; Nuke 'org-adapt-indentation' variable setting value introduced in Emacs 27.2 so lines aren't auto-indented after headlines
+(setq org-adapt-indentation nil)
+#+end_src
+
+#+begin_src emacs-lisp
+;; Nuke 'org-startup-folded' variable setting value introduced in Emacs 27.2 so org docs aren't automatically expanded
+(setq org-startup-folded t)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Add time-tracking for Org-Mode todo item state changes to place into ':LOGBOOK:' drawer
+       (setq org-log-into-drawer "LOGBOOK")
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Set 'org-agenda-files' variable so that Org-Mode sees all scheduled items in Org-Agenda
+       (setq org-agenda-files (append
+             (file-expand-wildcards "~/hub/notes_private/*.org")))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Allow Org-Mode to edit SRC blocks within the same window
+  (setq org-src-window-setup 'current-window)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Allow Org-Mode to use an emacs-lisp src block template
+  (add-to-list 'org-structure-template-alist
+   '("el" . "src emacs-lisp"))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Remove '#' priority from tasks when changing task states
   ;; From a wonderful person named Samuel Loury from the Emacs Org Mode mailing list --> props to their assistance on this:
   (defun my/org-trigger-hook (change-plist)
     (let* ((type (plist-get change-plist :type))
-	   (pos (plist-get change-plist :position))
-	   (from (substring-no-properties (or (plist-get change-plist :from) "")))
-	   (to (substring-no-properties (or (plist-get change-plist :to) "")))
-	   )
+     (pos (plist-get change-plist :position))
+     (from (substring-no-properties (or (plist-get change-plist :from) "")))
+     (to (substring-no-properties (or (plist-get change-plist :to) "")))
+     )
       (when (and
-	     (eq type 'todo-state-change)
-	     (member to org-done-keywords)
-	     (member from org-not-done-keywords)
-	     )
-	(org-priority (string-to-char " ")))))
+       (eq type 'todo-state-change)
+       (member to org-done-keywords)
+       (member from org-not-done-keywords)
+       )
+  (org-priority (string-to-char " ")))))
 
   (add-hook #'org-trigger-hook
-	    #'my/org-trigger-hook)
+      #'my/org-trigger-hook)
 #+end_src
-*** Destroy annoying 'bookmark-set-fringe-mark' which shows up as a weird orange mark in Org Mode
+
 #+begin_src emacs-lisp
+;; Destroy annoying 'bookmark-set-fringe-mark' which shows up as a weird orange mark in Org Mode
 ;; Related post on this behavior:
 ;; https://www.reddit.com/r/orgmode/comments/u156dd/strange_orange_marker_on_captured_tasks/
 (setq-default bookmark-set-fringe-mark nil)
 #+end_src
-*** Add 'ox-hugo' so that I can export blog posts from Org mode to 'hugo'
+
 #+begin_src emacs-lisp
+;; Add 'ox-hugo' so that I can export blog posts from Org mode to 'hugo'
   (use-package ox-hugo
     :ensure t
     :after ox)
 #+end_src
-*** Add 'org-kanban' to allow for easy kanban boards for projects
+
 #+begin_src emacs-lisp
-  ;; From here:
-  ;; https://melpa.org/#/org-kanban
-  (use-package org-kanban
-    :ensure t)
-#+end_src
-*** Nuke Org Mode's use of 'electric-indent' mode which annoyingly indents list items by default
-#+begin_src emacs-lisp
+;; Nuke Org Mode's use of 'electric-indent' mode which annoyingly indents list items by default
 ;; Taken from here:
 ;; https://www.philnewton.net/blog/electric-indent-with-org-mode/
 (add-hook 'org-mode-hook
 	  (lambda () (electric-indent-local-mode -1)))
 #+end_src
-*** Add Latex to Emacs path to force Org Mode to properly export to PDF
+
 #+begin_src emacs-lisp
+;; Add Latex to Emacs path to force Org Mode to properly export to PDF
 (setenv "PATH" (concat "/Library/TeX/texbin:" (getenv "PATH")))
 (setq exec-path (append '("/Library/TeX/texbin") exec-path))
 #+end_src
-** ediff
-*** Force 'ediff' to open up vertically in new windows NOT frames
-#+BEGIN_SRC emacs-lisp
-(advice-add 'ediff-window-display-p :override #'ignore) ; Open up ediff results in new windows not frames
-(setq ediff-split-window-function 'split-window-vertically) ; Split the ediff results vertically
-#+END_SRC
-** Performance Tweaks
-*** Use 'no-littering' package to keep '~/.emacs.d' clean
+* Quality Of Life Changes
 #+begin_src emacs-lisp
-  (use-package no-littering
-    :ensure t
-    :demand t)
-#+end_src
-** Quality Of Life Custom Changes To Improve Default Emacs Behavior
-*** Config Edit / Reload Function
-**** Edit Config Function
-    #+BEGIN_SRC emacs-lisp
-      (defun config-edit ()
-	(interactive)
-	(find-file "~/hub/SamsEmacs/configuration.org"))
+  ;; Edit Config Function
+  (defun config-edit ()
+  (interactive)
+  (find-file "~/hub/SamsEmacs/configuration.org"))
       (global-set-key (kbd "C-c e") 'config-edit)
-    #+END_SRC
-**** Reload Config Function
-    #+BEGIN_SRC emacs-lisp
-      (defun config-reload ()
-	(interactive)
-	(org-babel-load-file (expand-file-name "~/hub/SamsEmacs/configuration.org")))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Reload Config Function
+
+  (defun config-reload ()
+  (interactive)
+  (org-babel-load-file (expand-file-name "~/hub/SamsEmacs/configuration.org")))
       (global-set-key (kbd "C-c r") 'config-reload)
-    #+END_SRC
-*** Nuke Emacs' ability to make backups and autosaves since its annoying and too bloated
-   #+BEGIN_SRC emacs-lisp
-     (setq make-backup-files nil)
-     (setq auto-save-default nil)
-   #+END_SRC
-*** Remove trailing whitespace on save
-#+begin_src emacs-lisp
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
-*** Default to UTF-8 encoding
+
 #+begin_src emacs-lisp
-(set-default-coding-systems 'utf-8)
-(set-language-environment "UTF-8")
-(prefer-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
+  ;; Nuke Emacs' ability to make backups and autosaves since its annoying and too bloated
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
 #+end_src
-*** Force Emacs to always follow symlinks by default
+
 #+begin_src emacs-lisp
+  ;; Remove trailing whitespace on save
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Default to UTF-8 encoding
+  (set-default-coding-systems 'utf-8)
+  (set-language-environment "UTF-8")
+  (prefer-coding-system 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Force Emacs to always follow symlinks by default
   ;; NOTE:
   ;; Taken from this StackOverflow post:
   ;; https://stackoverflow.com/questions/15390178/emacs-and-symbolic-links
   (setq vc-follow-symlinks t)
 #+end_src
-*** Force Emacs to copy to Windows based clipboard via 'wl-copy' workaround for WSL2
+
 #+begin_src emacs-lisp
+  ;; Force Emacs to copy to Windows based clipboard via 'wl-copy' workaround for WSL2
   ;; Taken from here:
   ;; https://github.com/microsoft/wslg/issues/15
-  (when (and (getenv "WAYLAND_DISPLAY") (not (equal (getenv "GDK_BACKEND") "x11")))
-    (setq
-     interprogram-cut-function
-     (lambda (text)
-       ;; strangest thing: gui-select-text leads to gui-set-selection 'CLIPBOARD
-       ;; text -- if I eval that with some string, it mostly lands on the wayland
-       ;; clipboard, but not when it's invoked from this context.
-       ;; (gui-set-selection 'CLIPBOARD text)
-       ;; without the charset=utf-8 in type, emacs / wl-copy will crash when you paste emojis into a windows app
-       (start-process "wl-copy" nil "wl-copy" "--trim-newline" "--type" "text/plain;charset=utf-8"  text))))
+    (when (and (getenv "WAYLAND_DISPLAY") (not (equal (getenv "GDK_BACKEND") "x11")))
+      (setq
+       interprogram-cut-function
+       (lambda (text)
+         ;; strangest thing: gui-select-text leads to gui-set-selection 'CLIPBOARD
+         ;; text -- if I eval that with some string, it mostly lands on the wayland
+         ;; clipboard, but not when it's invoked from this context.
+         ;; (gui-set-selection 'CLIPBOARD text)
+         ;; without the charset=utf-8 in type, emacs / wl-copy will crash when you paste emojis into a windows app
+         (start-process "wl-copy" nil "wl-copy" "--trim-newline" "--type" "text/plain;charset=utf-8"  text))))
 #+end_src
