@@ -12,15 +12,6 @@ Sam's Emacs Config
     :ensure t
     :demand t)
 #+end_src
-* Font Changes
-#+begin_src emacs-lisp
-  ;; Add font specific changes for personal machines
-  (when (member (system-name) '("notestation" "fossastation"))
-    (set-face-attribute 'default nil
-                        :height (pcase (system-name)
-                                  ("notestation" 125)
-                                  ("fossastation" 125))))
-#+end_src
 * Work Specific
 #+begin_src emacs-lisp
   ;; Adding M1 Mac specific change to use 'gls' instead of 'ls' for dired sorting options:
@@ -38,10 +29,10 @@ Sam's Emacs Config
 
 #+begin_src emacs-lisp
   ;; Add font specific changes for work Macbook to make it larger because default Mac font size sucks
-  (when (string= system-name "macboook-osm-sbanya")
+  (when (string= system-name "Macbook-sbanya")
     (set-face-attribute 'default nil
                         :height (pcase (system-name)
-                                  ("macboook-osm-sbanya" 140))))
+                                  ("Macbook-sbanya" 140))))
 #+end_src
 * UI Changes
 #+begin_src emacs-lisp
