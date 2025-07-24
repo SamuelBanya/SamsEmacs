@@ -256,13 +256,13 @@ Sam's Emacs Config
 #+begin_src emacs-lisp
   ;; Adding 'helm' just so that I can use 'helm-occur' to replace 'helm-swoop' (since it doesn't expand buffers like Org Mode buffers) and 'Swiper' (which does not have configurable search colors for my theme)
   ;; Ensure helm-swoop is installed and configured
-  (use-package helm-swoop
+  (use-package helm-occur
     :ensure t
-    :bind (("C-s" . helm-swoop))
+    :bind (("C-s" . helm-occur))
     :config
     ;; Use Helm Swoop for fuzzy finding in Dired
     (with-eval-after-load 'dired
-      (define-key dired-mode-map (kbd "C-s") 'helm-swoop)))
+      (define-key dired-mode-map (kbd "C-s") 'helm-occur)))
 #+end_src
 
 #+begin_src emacs-lisp
