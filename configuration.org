@@ -53,56 +53,52 @@ Sam's Emacs Config
   ;; (add-hook 'org-mode-hook (lambda () (load-theme 'morrowind t)))
 
   ;; Add 'gruvbox' themes from MELPA
-  (use-package gruvbox-theme
-      :ensure t)
+  ;; (use-package gruvbox-theme
+  ;; :ensure t)
 
-      ;; Enable Doom Emacs themes:
-      ;; Install and configure doom-themes as well as any other related packages:
-      (use-package doom-themes
-      :ensure t
-      :config
-      ;; Global settings (defaults)
-      (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-      doom-themes-enable-italic t) ; if nil, italics is universally disabled
-      ;; Load the doom-solarized-dark theme
-      (load-theme 'doom-solarized-dark-high-contrast t)
-      ;; Enable flashing mode-line on errors
-      (doom-themes-visual-bell-config)
-      ;; Enable custom neotree theme
-      (doom-themes-neotree-config))  ; all-the-icons fonts must be installed!
-      (use-package all-the-icons
-      :ensure t)
+  ;; Enable Doom Emacs themes:
+  ;; Install and configure doom-themes as well as any other related packages:
+  (use-package doom-themes
+    :ensure t
+    :config
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+    ;; Load the doom-solarized-dark theme
+    (load-theme 'doom-solarized-dark-high-contrast t)
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+    ;; Enable custom neotree theme
+    (doom-themes-neotree-config))  ; all-the-icons fonts must be installed!
+  (use-package all-the-icons
+    :ensure t)
 
-      (use-package doom-modeline
-      :ensure t
-      :init (doom-modeline-mode 1))
+  (use-package doom-modeline
+    :ensure t
+    :init (doom-modeline-mode 1))
 
-      (use-package neotree
-      :ensure t
-      :bind (("M-n" . neotree-toggle)))
+  (use-package neotree
+    :ensure t
+    :bind (("M-n" . neotree-toggle)))
 
-      (use-package nerd-icons
-      :ensure t
-      )
+  (use-package nerd-icons
+    :ensure t)
 
-      (use-package all-the-icons
-      :ensure t
-      :init
-      ;; Install all-the-icons fonts if they are not already installed
-      (unless (member "all-the-icons" (font-family-list))
-        (all-the-icons-install-fonts t)))
+  (use-package all-the-icons
+    :ensure t
+    :init
+    ;; Install all-the-icons fonts if they are not already installed
+    (unless (member "all-the-icons" (font-family-list))
+      (all-the-icons-install-fonts t)))
 
-      ;; Themes list to try out later:
-      ;; https://melpa.org/#/doom-themes
+  ;; Themes list to try out later:
+  ;; https://melpa.org/#/doom-themes
 
-      ;; NOTE:
-      ;; In order to get the Doom Modeline to actually work with unicode charaters
-      ;; I had to download the 'NerdFontsSymbolsOnly.zip', extract it,
-      ;; and then install each of the .ttf files manually on MacOS:;; https://github.com/ryanoasis/nerd-fonts/releases
+  ;; NOTE:
+  ;; In order to get the Doom Modeline to actually work with unicode charaters
+  ;; I had to download the 'NerdFontsSymbolsOnly.zip', extract it,
+  ;; and then install each of the .ttf files manually on MacOS:;; https://github.com/ryanoasis/nerd-fonts/releases
 
-  ;; ---------------------------
-  ;; 1️⃣ Ask user at startup
-  ;; ---------------------------
   (defun sam/ask-programming-theme ()
     "Prompt user if they are starting programming today and set theme accordingly."
     (let ((response (y-or-n-p "Enter programming mode with gruvbox? ")))
@@ -117,7 +113,7 @@ Sam's Emacs Config
           (load-theme 'doom-solarized-dark-high-contrast t)))))
 
   ;; ---------------------------
-  ;; 2️⃣ Run it after init
+  ;;️ Run custom programming theme hook after init
   ;; ---------------------------
   (add-hook 'emacs-startup-hook #'sam/ask-programming-theme)
 
