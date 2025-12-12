@@ -364,41 +364,6 @@ Sam's Emacs Config
 #+end_src
 
 #+begin_src emacs-lisp
-;; 'yasnippet' to utilize snippet templates with 'M-x yas-describe-tables'
-;; (Note: Make sure your created snippets match mode's name, ex: '~/.emacs.d/snippets/python-mode')
-  (use-package yasnippet
-    :ensure t
-    :config
-    (use-package yasnippet-snippets
-      :ensure t)
-    ;; Taken from this SO post:
-    ;; https://stackoverflow.com/questions/46696009/adding-a-custom-yasnippet-directory-to-spacemacs
-    (setq yas-snippet-dirs (append yas-snippet-dirs '("~/.emacs.d/snippets")))
-    (yas-reload-all))
-#+end_src
-
-#+begin_src emacs-lisp
-;; Add hook so that 'yasnippet' minor mode is enabled for certain modes (programming: 'C, C++, Python, JS', 'nXML', Org-Mode)
-  (add-hook 'c-mode-hook 'yas-minor-mode)
-  (add-hook 'c++-mode-hook 'yas-minor-mode)
-  (add-hook 'python-mode-hook 'yas-minor-mode)
-  (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
-  (add-hook 'org-mode-hook 'yas-minor-mode)
-  (add-hook 'ruby-mode-hook 'yas-minor-mode)
-  (add-hook 'js-mode-hook 'yas-minor-mode)
-  (add-hook 'rjsx-mode-hook 'yas-minor-mode)
-  (add-hook 'typescript-mode-hook 'yas-minor-mode)
-  (add-hook 'web-mode-hook 'yas-minor-mode)
-  (add-hook 'csharp-mode-hook 'yas-minor-mode)
-  (add-hook 'vue-mode-hook 'yas-minor-mode)
-#+end_src
-
-#+begin_src emacs-lisp
-;; Nuke Emacs 27.2's annoying issue of automatically expanding source blocks which ruins my Yasnippet override template
-  (setq org-src-tab-acts-natively nil)
-#+end_src
-
-#+begin_src emacs-lisp
 ;; Enable 'electric-pair-mode' to auto-complete / add parentheses whenever possible
      (setq electric-pair-pairs '(
 				 (?\( . ?\))
