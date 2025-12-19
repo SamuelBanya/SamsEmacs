@@ -81,6 +81,10 @@ Sam's Emacs Config
     :ensure t
     :bind (("M-n" . neotree-toggle)))
 
+  ;; NOTE FOR DOOM MODELINE FONTS:
+  ;; You have to manually install the fonts with this command in Emacs
+  ;; using 'Alt + x' aka 'M-x':
+  ;; M-x nerd-icons-install-fonts
   (use-package nerd-icons
     :ensure t)
 
