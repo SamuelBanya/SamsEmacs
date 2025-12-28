@@ -1,3 +1,6 @@
 .DS_store
 configuration.el
 elpa
+
+# Ignore Org-roam database:
+org-roam.db

@@ -271,25 +271,28 @@ Sam's Emacs Config
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; Add 'vertico' for Helm-style autocompletion in mini-buffer
+  ;; Use Vertico for minimal completion UI
   (use-package vertico
     :ensure t
     :init
     (vertico-mode))
-#+end_src
 
-#+begin_src emacs-lisp
-  ;; Install and configure Helm, which includes helm-occur
-  (use-package helm
+  ;; Use Orderless for fuzzy matching
+  (use-package orderless
     :ensure t
-    :bind (("C-s" . helm-occur))  ;; Bind helm-occur globally
-    :config
-    ;; Optional: Enable Helm mode if you want it globally
-    (helm-mode 1)
+    :custom
+    ;; Use orderless + basic for all completion
+    (completion-styles '(orderless basic))
+    (completion-category-defaults nil)
+    ;; Optional override for files
+    (completion-category-overrides '((file (styles basic partial-completion)))))
 
-    ;; Use helm-occur in Dired too
-    (with-eval-after-load 'dired
-      (define-key dired-mode-map (kbd "C-s") 'helm-occur)))
+  ;; Use Consult to replace helm-occur
+  (use-package consult
+    :ensure t
+    ;; C-s searches buffer lines with Vertico + fuzzy
+    :bind
+    (("C-s" . consult-line)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -693,6 +696,30 @@ Sam's Emacs Config
 (setenv "PATH" (concat "/Library/TeX/texbin:" (getenv "PATH")))
 (setq exec-path (append '("/Library/TeX/texbin") exec-path))
 #+end_src
+
+#+begin_src emacs-lisp
+  (use-package org-roam
+    :ensure t
+    :custom
+    ;; Keep notes where I actually store them:
+    (org-roam-directory (expand-file-name "~/hub/notes"))
+    ;; Keep the related database inside the same notes folder:
+    (org-roam-db-location (expand-file-name "org-roam.db" (expand-file-name "~/hub/notes")))
+    :config
+    ;; Automatically sync the database when files change:
+    (org-roam-db-autosync-mode))
+
+  ;; Use org-roam-ui for visualization graphs of notes
+  (use-package org-roam-ui
+    :after org-roam
+    :ensure t
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
+#+end_src
+
 * Quality Of Life Changes
 #+begin_src emacs-lisp
   ;; Edit Config Function
