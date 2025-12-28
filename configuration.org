@@ -271,28 +271,54 @@ Sam's Emacs Config
 #+end_src
 
 #+begin_src emacs-lisp
+  ;; Install and configure Helm, which includes helm-occur
+  (use-package helm
+    :ensure t
+    :bind (("C-s" . helm-occur))  ;; Bind helm-occur globally
+    :config
+    ;; Optional: Enable Helm mode if you want it globally
+    (helm-mode 1)
+
+    ;; case-insensitive matching everywhere
+    (setq helm-case-fold-search t)
+
+    ;; Use helm-occur in Dired too
+    (with-eval-after-load 'dired
+      (define-key dired-mode-map (kbd "C-s") 'helm-occur)))
+#+end_src
+
+#+begin_src emacs-lisp
   ;; Use Vertico for minimal completion UI
   (use-package vertico
     :ensure t
     :init
     (vertico-mode))
+#+end_src
 
-  ;; Use Orderless for fuzzy matching
-  (use-package orderless
+#+begin_src emacs-lisp
+  ;; Add org-roam to easily find notes throughout a given computer:
+  (use-package org-roam
     :ensure t
-    :custom
-    ;; Use orderless + basic for all completion
-    (completion-styles '(orderless basic))
-    (completion-category-defaults nil)
-    ;; Optional override for files
-    (completion-category-overrides '((file (styles basic partial-completion)))))
-
-  ;; Use Consult to replace helm-occur
-  (use-package consult
-    :ensure t
-    ;; C-s searches buffer lines with Vertico + fuzzy
     :bind
-    (("C-s" . consult-line)))
+    (("M-r" . org-roam-node-find))
+    :custom
+    ;; Keep notes where I actually store them:
+    (org-roam-directory (expand-file-name "~/hub/notes"))
+    ;; Keep the related database inside the same notes folder:
+    (org-roam-db-location (expand-file-name "org-roam.db" (expand-file-name "~/hub/notes")))
+    :config
+    ;; Automatically sync the database when files change:
+    (org-roam-db-autosync-mode))
+
+  ;; Use org-roam-ui for visualization graphs of notes
+  (use-package org-roam-ui
+    :after org-roam
+    :ensure t
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -695,29 +721,6 @@ Sam's Emacs Config
 ;; Add Latex to Emacs path to force Org Mode to properly export to PDF
 (setenv "PATH" (concat "/Library/TeX/texbin:" (getenv "PATH")))
 (setq exec-path (append '("/Library/TeX/texbin") exec-path))
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package org-roam
-    :ensure t
-    :custom
-    ;; Keep notes where I actually store them:
-    (org-roam-directory (expand-file-name "~/hub/notes"))
-    ;; Keep the related database inside the same notes folder:
-    (org-roam-db-location (expand-file-name "org-roam.db" (expand-file-name "~/hub/notes")))
-    :config
-    ;; Automatically sync the database when files change:
-    (org-roam-db-autosync-mode))
-
-  ;; Use org-roam-ui for visualization graphs of notes
-  (use-package org-roam-ui
-    :after org-roam
-    :ensure t
-    :config
-    (setq org-roam-ui-sync-theme t
-          org-roam-ui-follow t
-          org-roam-ui-update-on-save t
-          org-roam-ui-open-on-start t))
 #+end_src
 
 * Quality Of Life Changes
