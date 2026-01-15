@@ -103,25 +103,41 @@ Sam's Emacs Config
   ;; I had to download the 'NerdFontsSymbolsOnly.zip', extract it,
   ;; and then install each of the .ttf files manually on MacOS:;; https://github.com/ryanoasis/nerd-fonts/releases
 
-  (defun sam/ask-programming-theme ()
-    "Prompt user if they are starting programming today and set theme accordingly."
-    (let ((response (y-or-n-p "Enter programming mode with gruvbox? ")))
-      (if response
-          ;; Yes → programming → Gruvbox
-          (progn
-            (mapc #'disable-theme custom-enabled-themes)
-            (load-theme 'doom-gruvbox t))
-        ;; No → default → Solarized
-        (progn
-          (mapc #'disable-theme custom-enabled-themes)
-          (load-theme 'doom-solarized-dark-high-contrast t)))))
+  ;; THEME SWITCHING SECTION:
+  ;; Fix C-M-t conflict with Org Mode:
+  ;; This is because 'C-M-t' is already taken by Org Mode by some random function I don't care about or don't need,
+  ;; so let's unbind it since I will never use this random thing anyway
+  (with-eval-after-load 'org
+    ;; Unbind Org's local C-M-t so the global binding takes over
+    (define-key org-mode-map (kbd "C-M-t") nil))
 
-  ;; ---------------------------
-  ;;️ Run custom programming theme hook after init
-  ;; ---------------------------
-  (add-hook 'emacs-startup-hook #'sam/ask-programming-theme)
+  ;; Now your global binding works even in Org buffers
+  (global-set-key (kbd "C-M-t") #'sam/switch-theme)
 
-  (org-mode-restart)
+  ;; Custom Emacs theme switching function:
+  ;; Use this with the 'C-M-t' keybinding to prevent weird clobbering between keybindings:
+  (defun switch-emacs-theme (theme)
+    "Disable all current themes and load THEME, refreshing Org buffers and modeline."
+    (interactive
+     (list
+      (intern (completing-read "Choose theme: "
+                               (mapcar #'symbol-name
+                                       (custom-available-themes))))))
+    ;; Disable all active themes
+    (mapc #'disable-theme custom-enabled-themes)
+    ;; Load new theme
+    (load-theme theme t)
+    ;; Refresh Doom modeline
+    (when (fboundp 'doom-modeline-refresh-bars)
+      (doom-modeline-refresh-bars))
+    ;; Refresh all Org buffers
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (when (derived-mode-p 'org-mode)
+          (org-mode-restart)))))
+
+  ;; Set the keybinding to 'C-M-t' to switch themes:
+  (global-set-key (kbd "C-M-t") #'switch-emacs-theme)
 #+end_src
 
 #+begin_src emacs-lisp
