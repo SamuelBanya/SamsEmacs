@@ -634,6 +634,81 @@ Sam's Emacs Config
 #+end_src
 * Org-Mode Changes
 #+begin_src emacs-lisp
+  ;; NOTE:
+  ;; Use 'C-c C-q' to set tags interactively with Org Mode in a given Org Mode file
+  ;; To clear a tag, just clear all of the tags, hit space, and hit enter
+
+  ;; Global Org mode settings
+  (with-eval-after-load 'org
+    ;; Set TODO keywords to include specific states
+    (setq org-todo-keywords
+          '((sequence "TODO(t)" "IN-PROGRESS(p)" "|" "DONE(d)" "CANCELLED(c)")))
+
+  ;; Set priorities to include: 1, 3, 5
+    (setq org-priority-highest 1
+          org-priority-lowest 5
+          org-default-priority 3))
+
+  ;; Add Org Mode tags so that they appear universally among all of my Org Mode docs:
+  (setq org-tag-alist
+        '(("Idea")
+          ("YouTube_Video")
+          ("Movie")
+          ("Cool_Package")
+          ("Purchase")
+          ("Work")
+          ("Taxes")
+          ("Finances")
+          ("Moving")
+          ("House_Chores")
+          ("Video_Game")
+          ("Linux")
+          ("Emacs")
+          ("Music")
+          ("Art")
+          ("Programming")
+          ("House_Research")
+          ("Random_Research")
+          ("Emulator")
+          ("Relaxing")
+          ("Musimatic_Website")
+          ("SamBanya_Website")
+          ("Ham_Radio")
+          ("Jailbreaking_Devices")
+          ("Selfhosting_Email")
+          ("Reflections")
+          ("Family")
+          ("Book")
+          ("Job_Search")
+          ("Medical")
+          ("401K")
+          ("Electronics")
+          ("Web_Development")
+          ("Advice")
+          ("Exercise")
+          ("Food")))
+
+  ;; Setup Org Mode so that the Org Mode tags can be used interactively with Helm or any auto-completion package:
+  ;; Disable fast-tag single-key interface
+  ;; Forces completing-read instead of shortcut keys
+  (setq org-fast-tag-selection-single-key nil)
+
+  ;; Always use completion when setting tags
+  (setq org-tags-column 0)
+
+  ;; Make tag completion use your global completion system
+  ;; (works with Helm, Vertico, Ivy, Corfu, etc.)
+  (setq org-completion-use-ido nil)
+
+  ;; Make tag completion case-insensitive
+  (setq org-completion-ignore-case t)
+
+  ;; Also make general minibuffer completion case-insensitive
+  (setq completion-ignore-case t)
+  (setq read-file-name-completion-ignore-case t)
+#+end_src
+
+#+begin_src emacs-lisp
 ;; Create custom 'my-org-capture' function to force 'Org-Capture' to split vertically
   (defun my-org-capture (&rest args)
     (interactive)
