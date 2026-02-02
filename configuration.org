@@ -153,9 +153,15 @@ Sam's Emacs Config
   (use-package dashboard
     :ensure t
     :config
-    (dashboard-setup-startup-hook)
+    (setq dashboard-banner-logo-title "Hello! Welcome to Emacs, have a fun time!")
 
-    (setq dashboard-banner-logo-title "Hello! Welcome to Emacs, have a fun time!"))
+    ;; Only show the sections you want, remove agenda
+    (setq dashboard-items '((recents  . 5)
+                            (bookmarks . 5)
+                            (projects  . 5))))
+
+  ;; Initialize dashboard:
+  (dashboard-setup-startup-hook)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -309,32 +315,6 @@ Sam's Emacs Config
     :ensure t
     :init
     (vertico-mode))
-#+end_src
-
-#+begin_src emacs-lisp
-  ;; Add org-roam to easily find notes throughout a given computer:
-  (use-package org-roam
-    :ensure t
-    :bind
-    (("M-r" . org-roam-node-find))
-    :custom
-    ;; Keep notes where I actually store them:
-    (org-roam-directory (expand-file-name "~/hub/notes"))
-    ;; Keep the related database inside the same notes folder:
-    (org-roam-db-location (expand-file-name "org-roam.db" (expand-file-name "~/hub/notes")))
-    :config
-    ;; Automatically sync the database when files change:
-    (org-roam-db-autosync-mode))
-
-  ;; Use org-roam-ui for visualization graphs of notes
-  (use-package org-roam-ui
-    :after org-roam
-    :ensure t
-    :config
-    (setq org-roam-ui-sync-theme t
-          org-roam-ui-follow t
-          org-roam-ui-update-on-save t
-          org-roam-ui-open-on-start t))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -650,6 +630,37 @@ Sam's Emacs Config
 #+end_src
 * Org-Mode Changes
 #+begin_src emacs-lisp
+  ;; Add org-roam to easily find notes throughout a given computer:
+  (use-package org-roam
+    :ensure t
+    :bind
+    (("M-r" . org-roam-node-find))
+    :custom
+    ;; Keep notes where I actually store them:
+    (org-roam-directory (expand-file-name "~/hub/notes"))
+    ;; Keep the related database inside the same notes folder:
+    (org-roam-db-location (expand-file-name "org-roam.db" (expand-file-name "~/hub/notes")))
+    :config
+    ;; Automatically sync the database when files change:
+    (org-roam-db-autosync-mode))
+
+  ;; Use org-roam-ui for visualization graphs of notes
+  (use-package org-roam-ui
+    :after org-roam
+    :ensure t
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
+
+  ;; Use 'org-ql' to search for org mode tags with a sane approach with tags:
+  ;; NOTE:
+  ;; Use 'M-x org-ql-search' to search, and use the following option to search by tags:
+  ;; (tags "Emacs")
+  (use-package org-ql
+    :ensure t)
+
   ;; NOTE:
   ;; Use 'C-c C-q' to set tags interactively with Org Mode in a given Org Mode file
   ;; To clear a tag, just clear all of the tags, hit space, and hit enter
@@ -782,13 +793,14 @@ Sam's Emacs Config
 
 #+begin_src emacs-lisp
   ;; Add time-tracking for Org-Mode todo item state changes to place into ':LOGBOOK:' drawer
-       (setq org-log-into-drawer "LOGBOOK")
+  (setq org-log-into-drawer "LOGBOOK")
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; Set 'org-agenda-files' variable so that Org-Mode sees all scheduled items in Org-Agenda
-       (setq org-agenda-files (append
-             (file-expand-wildcards "~/hub/notes_private/*.org")))
+  ;; This annoying portion is required in order to be able to search all my notes with specific tags with the
+  ;; 'M-x org-tags-view' function, so awkward
+  (setq org-agenda-files
+        (directory-files-recursively "~/hub/notes" "\\.org$"))
 #+end_src
 
 #+begin_src emacs-lisp

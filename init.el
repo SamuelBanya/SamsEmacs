@@ -23,7 +23,7 @@
  '(helm-minibuffer-history-key "M-p")
  '(inhibit-startup-screen t)
  '(package-selected-packages
-   '(consult-notes consult orderless org-roam-ui org-roam yasnippet-snippets which-key visual-regexp vertico typescript-mode switch-window rjsx-mode rainbow-mode rainbow-delimiters prettier-js ox-hugo no-littering neotree multi-vterm magit lsp-ui indent-guide hydra hungry-delete highlight-indent-guides helm gruvbox-theme goto-line-preview free-keys flycheck evil-collection doom-themes doom-modeline diminish dashboard counsel company beacon avy all-the-icons)))
+   '(org-ql consult-notes consult orderless org-roam-ui org-roam yasnippet-snippets which-key visual-regexp vertico typescript-mode switch-window rjsx-mode rainbow-mode rainbow-delimiters prettier-js ox-hugo no-littering neotree multi-vterm magit lsp-ui indent-guide hydra hungry-delete highlight-indent-guides helm gruvbox-theme goto-line-preview free-keys flycheck evil-collection doom-themes doom-modeline diminish dashboard counsel company beacon avy all-the-icons)))
 
 
 (custom-set-faces
