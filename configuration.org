@@ -671,7 +671,7 @@ Sam's Emacs Config
     (setq org-todo-keywords
           '((sequence "TODO(t)" "IN-PROGRESS(p)" "|" "DONE(d)" "CANCELLED(c)")))
 
-  ;; Set priorities to include: 1, 3, 5
+    ;; Set priorities to include: 1, 3, 5
     (setq org-priority-highest 1
           org-priority-lowest 5
           org-default-priority 3))
@@ -769,6 +769,48 @@ Sam's Emacs Config
   ;; Also make general minibuffer completion case-insensitive
   (setq completion-ignore-case t)
   (setq read-file-name-completion-ignore-case t)
+
+  ;; Get the files we can use to dump Org headings from notespace.org:
+  (defun sam/org-get-dynamic-project-files ()
+    "Return the current list of `Projects/*.org` files."
+    (directory-files "~/hub/notes/Projects/" t "\\.org$"))
+
+  ;; Compute all refile targets dynamically, including Links.org and notespace.org
+  (defun sam/org-get-dynamic-refile-targets ()
+    "Return a list of refile targets dynamically."
+    (append
+     ;; Project files
+     (mapcar (lambda (f) (cons f '(:maxlevel . 3)))
+             (sam/org-get-dynamic-project-files))
+     ;; Links.org and notespace.org
+     '(("~/hub/notes/Links/Links.org" :maxlevel . 3)
+       ("~/hub/notes/notespace.org" :maxlevel . 3))))
+
+  ;; Wrap org-refile so we always update targets first (safe with arguments)
+  (advice-add 'org-refile :around
+              (lambda (orig-fun &rest args)
+                ;; refresh dynamic targets
+                (setq org-refile-targets (sam/org-get-dynamic-refile-targets))
+                ;; call the original org-refile command with all args
+                (apply orig-fun args)))
+
+  ;; Automatically timestamp refile actions
+  (setq org-log-refile 'time)
+  (setq org-log-into-drawer t)
+
+  ;; Force Org Mode to insert refiled headings at the TOP of a target
+  (setq org-reverse-note-order t)
+
+  ;; Auto-generate Org IDs on refile
+  (require 'org-id)
+
+  (defun sam/org-auto-id-on-refile ()
+    "Ensure any newly refiled heading gets an Org ID."
+    (when (org-at-heading-p)
+      (org-id-get-create)))
+
+  ;; Run the auto-ID hook after refile
+  (add-hook 'org-after-refile-insert-hook #'sam/org-auto-id-on-refile)
 #+end_src
 
 #+begin_src emacs-lisp
