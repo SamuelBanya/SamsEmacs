@@ -629,18 +629,6 @@ Sam's Emacs Config
 (add-hook 'dired-mode-hook 'auto-revert-mode)
 #+end_src
 
-#+begin_src emacs-lisp
-  (use-package ranger
-    :ensure t
-    :config
-    ;; Disable Ranger overriding Dired globally
-    (when (boundp 'ranger-override-dired-mode)
-      (ranger-override-dired-mode -1))
-
-    ;; Enable file previews in the side preview pane for Ranger only
-    (setq ranger-preview-file t
-          ranger-show-preview t))
-#+end_src
 * Org-Mode Changes
 #+begin_src emacs-lisp
   ;; Add org-roam to easily find notes throughout a given computer:
