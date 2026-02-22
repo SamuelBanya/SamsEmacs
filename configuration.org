@@ -633,12 +633,11 @@ Sam's Emacs Config
   (use-package ranger
     :ensure t
     :config
-    ;; Disable automatic Dired override
-    (ranger-override-dired-mode nil)
+    ;; Disable Ranger overriding Dired globally
+    (when (boundp 'ranger-override-dired-mode)
+      (ranger-override-dired-mode -1))
 
-    ;; Enable file previews in the side preview pane
-    ;; Preview files when cursor moves
-    ;; Actually display the preview window
+    ;; Enable file previews in the side preview pane for Ranger only
     (setq ranger-preview-file t
           ranger-show-preview t))
 #+end_src
