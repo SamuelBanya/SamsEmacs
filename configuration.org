@@ -327,6 +327,11 @@ Sam's Emacs Config
 #+end_src
 
 #+begin_src emacs-lisp
+  (when (string= system-name "Tinas-MacBook-Air.local")
+    (setenv "W3MIMGDISPLAY_PATH" "/usr/local/bin/w3mimgdisplay"))
+#+end_src
+
+#+begin_src emacs-lisp
   ;; Force 'ediff' to open up vertically in new windows NOT frames
   (advice-add 'ediff-window-display-p :override #'ignore) ; Open up ediff results in new windows not frames
   (setq ediff-split-window-function 'split-window-vertically) ; Split the ediff results vertically
@@ -627,6 +632,17 @@ Sam's Emacs Config
 ;; Taken from here:
 ;; https://superuser.com/questions/566393/how-to-configure-dired-to-update-instantly-when-files-folders-change
 (add-hook 'dired-mode-hook 'auto-revert-mode)
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package ranger
+    :ensure t
+    :config
+    ;; Enable file previews in the side preview pane
+    ;; Preview files when cursor moves
+    ;; Actually display the preview window
+    (setq ranger-preview-file t
+          ranger-show-preview t))
 #+end_src
 * Org-Mode Changes
 #+begin_src emacs-lisp
