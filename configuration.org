@@ -327,11 +327,6 @@ Sam's Emacs Config
 #+end_src
 
 #+begin_src emacs-lisp
-  (when (string= system-name "Tinas-MacBook-Air.local")
-    (setenv "W3MIMGDISPLAY_PATH" "/usr/local/bin/w3mimgdisplay"))
-#+end_src
-
-#+begin_src emacs-lisp
   ;; Force 'ediff' to open up vertically in new windows NOT frames
   (advice-add 'ediff-window-display-p :override #'ignore) ; Open up ediff results in new windows not frames
   (setq ediff-split-window-function 'split-window-vertically) ; Split the ediff results vertically
