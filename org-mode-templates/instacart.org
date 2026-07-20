@@ -1,0 +1,13 @@
+* Grocery %<%Y-%m-%d>
+- [ ] Ripple milk
+- [ ] Almond milk
+- [ ] Yogurts
+- [ ] Rice pudding
+- [ ] Paper towels
+- [ ] Meat
+- [ ] Deli turkey
+- [ ] Deli cheese
+- [ ] Cereal
+- [ ] Watermelon
+- [ ] Coffee creamer
+- [ ] Gatorade

@@ -905,6 +905,22 @@ Sam's Emacs Config
 (setq exec-path (append '("/Library/TeX/texbin") exec-path))
 #+end_src
 
+#+begin_src emacs-lisp
+(defun my/instacart-new-buffer ()
+  "Open a new Org buffer with grocery template."
+  (interactive)
+  (let ((buf (generate-new-buffer "*Instacart*")))
+    (with-current-buffer buf
+      (org-mode)
+      (insert-file-contents "~/org/templates/instacart.org")
+      (goto-char (point-min))
+      (message "Instacart template loaded. Save with C-x C-s when complete."))
+    (switch-to-buffer buf)))
+
+(global-set-key (kbd "C-c g") 'my/instacart-new-buffer)
+(setq org-log-done 'time)
+#+end_src
+
 * RSS Feed Changes
 #+begin_src emacs-lisp
   (when (string= system-name "MacBook-Air")
