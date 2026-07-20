@@ -912,7 +912,7 @@ Sam's Emacs Config
   (let ((buf (generate-new-buffer "*Instacart*")))
     (with-current-buffer buf
       (org-mode)
-      (insert-file-contents "~/org/templates/instacart.org")
+      (insert-file-contents "~/.emacs.d/org-mode-templates/instacart.org")
       (goto-char (point-min))
       (message "Instacart template loaded. Save with C-x C-s when complete."))
     (switch-to-buffer buf)))
